@@ -73,6 +73,8 @@ export interface Config {
     categories: Category;
     users: User;
     members: Member;
+    sponsors: Sponsor;
+    partners: Partner;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -96,6 +98,8 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     members: MembersSelect<false> | MembersSelect<true>;
+    sponsors: SponsorsSelect<false> | SponsorsSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -200,7 +204,15 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | TeamBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | TeamBlock
+    | SponsorPartnerBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -786,8 +798,20 @@ export interface Form {
  */
 export interface TeamBlock {
   blockName?: string | null;
+  memberText?: string | null;
   id?: string | null;
   blockType: 'teamBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SponsorPartnerBlock".
+ */
+export interface SponsorPartnerBlock {
+  blockType: 'sponsorPartnerBlock';
+  sponsorText?: string | null;
+  partnerText?: string | null;
+  id?: string | null;
+  blockName?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -799,6 +823,31 @@ export interface Member {
   role: string;
   image?: (number | null) | Media;
   linkedinUrl: string;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sponsors".
+ */
+export interface Sponsor {
+  id: number;
+  name: string;
+  image: number | Media;
+  websiteUrl: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  name: string;
+  image: number | Media;
+  websiteUrl: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1017,6 +1066,14 @@ export interface PayloadLockedDocument {
         value: number | Member;
       } | null)
     | ({
+        relationTo: 'sponsors';
+        value: number | Sponsor;
+      } | null)
+    | ({
+        relationTo: 'partners';
+        value: number | Partner;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
@@ -1115,6 +1172,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         teamBlock?: T | TeamBlockSelect<T>;
+        sponsorPartnerBlock?: T | SponsorPartnerBlockSelect<T>;
       };
   meta?:
     | T
@@ -1220,7 +1278,19 @@ export interface FormBlockSelect<T extends boolean = true> {
  */
 export interface TeamBlockSelect<T extends boolean = true> {
   blockName?: T;
+  memberText?: T;
   id?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SponsorPartnerBlock_select".
+ */
+export interface SponsorPartnerBlockSelect<T extends boolean = true> {
+  blockType?: T;
+  sponsorText?: T;
+  partnerText?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1399,6 +1469,29 @@ export interface MembersSelect<T extends boolean = true> {
   role?: T;
   image?: T;
   linkedinUrl?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sponsors_select".
+ */
+export interface SponsorsSelect<T extends boolean = true> {
+  name?: T;
+  image?: T;
+  websiteUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  name?: T;
+  image?: T;
+  websiteUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }

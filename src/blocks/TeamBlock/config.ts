@@ -12,6 +12,11 @@ export const TeamBlock: Block = {
         description: 'The block which displays all Alacrity team members',
       },
     },
+    {
+      name: 'memberText',
+      type: 'text',
+      label: 'Team Section Text',
+    },
   ],
   labels: {
     plural: 'Team Blocks',
