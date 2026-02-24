@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
-export const Member: CollectionConfig = {
-  slug: 'members',
+export const Sponsor: CollectionConfig = {
+  slug: 'sponsors',
   admin: {
     useAsTitle: 'name',
   },
@@ -12,23 +12,15 @@ export const Member: CollectionConfig = {
       required: true,
     },
     {
-      name: 'role',
-      type: 'text',
-      required: true,
-    },
-    {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
-    },
-    {
-      name: 'linkedinUrl',
-      type: 'text',
       required: true,
     },
     {
-      name: 'order',
-      type: 'number',
+      name: 'websiteUrl',
+      type: 'text',
+      required: true,
     },
   ],
 }

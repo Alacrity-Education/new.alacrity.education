@@ -4,19 +4,27 @@ import config from '@payload-config'
 import { Member } from '@/payload-types'
 //import { getMediaUrl } from '@/utilities/getMediaUrl'
 
-export default async function TeamComponent() {
+interface TeamComponentProps {
+  memberText?: string | null
+}
+
+export default async function TeamComponent({
+  memberText = 'Meet the team behind Alacrity',
+}: TeamComponentProps) {
   const payload = await getPayload({ config })
 
   const { docs: members } = await payload.find({
     collection: 'members',
     limit: 100,
     depth: 2,
+    sort: 'order',
   })
 
   return (
     <div className="z-20 h-max bg-base-100 flex flex-col items-center py-10 ">
       <div className="text-2xl md:text-4xl lg:text-5xl font-semibold py-10">
-        Meet the team behind <span className="text-primary">Alacrity</span>
+        {/*Meet the team behind <span className="text-primary">Alacrity</span>*/}
+        {memberText || 'Meet the team behind Alacrity'}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-rows-2">
         {members.map((member) => (
