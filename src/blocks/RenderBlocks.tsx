@@ -9,6 +9,9 @@ import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { TeamBlock } from '@/blocks/TeamBlock/Component'
 import { SponsorPartnerBlock } from '@/blocks/SponsorPartnerBlock/Component'
+import { ProjectBlock } from '@/blocks/ProjectBlock/Component'
+import { ShowcaseBlock } from '@/blocks/ShowcaseBlock/Component'
+import { GalleryBlock } from '@/blocks/GalleryBlock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -18,6 +21,9 @@ const blockComponents = {
   mediaBlock: MediaBlock,
   teamBlock: TeamBlock,
   sponsorPartnerBlock: SponsorPartnerBlock,
+  projectBlock: ProjectBlock,
+  showcaseBlock: ShowcaseBlock,
+  galleryBlock: GalleryBlock,
 }
 
 export const RenderBlocks: React.FC<{

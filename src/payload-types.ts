@@ -75,6 +75,9 @@ export interface Config {
     members: Member;
     sponsors: Sponsor;
     partners: Partner;
+    projects: Project;
+    showcase: Showcase;
+    gallery: Gallery;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -100,6 +103,9 @@ export interface Config {
     members: MembersSelect<false> | MembersSelect<true>;
     sponsors: SponsorsSelect<false> | SponsorsSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    showcase: ShowcaseSelect<false> | ShowcaseSelect<true>;
+    gallery: GallerySelect<false> | GallerySelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -212,6 +218,9 @@ export interface Page {
     | FormBlock
     | TeamBlock
     | SponsorPartnerBlock
+    | ProjectBlock
+    | ShowcaseBlock
+    | GalleryBlock
   )[];
   meta?: {
     title?: string | null;
@@ -815,6 +824,38 @@ export interface SponsorPartnerBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProjectBlock".
+ */
+export interface ProjectBlock {
+  blockName?: string | null;
+  heading?: string | null;
+  id?: string | null;
+  blockType: 'projectBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ShowcaseBlock".
+ */
+export interface ShowcaseBlock {
+  blockName?: string | null;
+  heading?: string | null;
+  id?: string | null;
+  blockType: 'showcaseBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  blockName?: string | null;
+  heading?: string | null;
+  headingHighlight?: string | null;
+  subtitle?: string | null;
+  id?: string | null;
+  blockType: 'galleryBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "members".
  */
 export interface Member {
@@ -848,6 +889,52 @@ export interface Partner {
   name: string;
   image: number | Media;
   websiteUrl: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  name: string;
+  description?: string | null;
+  image: number | Media;
+  cardText?: string | null;
+  link?: string | null;
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "showcase".
+ */
+export interface Showcase {
+  id: number;
+  title: string;
+  description?: string | null;
+  image?: (number | null) | Media;
+  linkText?: string | null;
+  linkUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery".
+ */
+export interface Gallery {
+  id: number;
+  images: {
+    image: number | Media;
+    alt: string;
+    id?: string | null;
+  }[];
+  title?: string | null;
+  description?: string | null;
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1074,6 +1161,18 @@ export interface PayloadLockedDocument {
         value: number | Partner;
       } | null)
     | ({
+        relationTo: 'projects';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'showcase';
+        value: number | Showcase;
+      } | null)
+    | ({
+        relationTo: 'gallery';
+        value: number | Gallery;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
@@ -1173,6 +1272,9 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         teamBlock?: T | TeamBlockSelect<T>;
         sponsorPartnerBlock?: T | SponsorPartnerBlockSelect<T>;
+        projectBlock?: T | ProjectBlockSelect<T>;
+        showcaseBlock?: T | ShowcaseBlockSelect<T>;
+        galleryBlock?: T | GalleryBlockSelect<T>;
       };
   meta?:
     | T
@@ -1291,6 +1393,35 @@ export interface SponsorPartnerBlockSelect<T extends boolean = true> {
   partnerText?: T;
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProjectBlock_select".
+ */
+export interface ProjectBlockSelect<T extends boolean = true> {
+  blockName?: T;
+  heading?: T;
+  id?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ShowcaseBlock_select".
+ */
+export interface ShowcaseBlockSelect<T extends boolean = true> {
+  blockName?: T;
+  heading?: T;
+  id?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock_select".
+ */
+export interface GalleryBlockSelect<T extends boolean = true> {
+  blockName?: T;
+  heading?: T;
+  headingHighlight?: T;
+  subtitle?: T;
+  id?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1492,6 +1623,51 @@ export interface PartnersSelect<T extends boolean = true> {
   name?: T;
   image?: T;
   websiteUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  image?: T;
+  cardText?: T;
+  link?: T;
+  url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "showcase_select".
+ */
+export interface ShowcaseSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  image?: T;
+  linkText?: T;
+  linkUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery_select".
+ */
+export interface GallerySelect<T extends boolean = true> {
+  images?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+        id?: T;
+      };
+  title?: T;
+  description?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
