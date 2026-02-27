@@ -2,20 +2,15 @@ import type { Block } from 'payload'
 
 export const TeamBlock: Block = {
   slug: 'teamBlock',
-  interfaceName: 'TeamBlock',
+  interfaceName: 'Team',
   fields: [
     {
-      name: 'blockName',
+      name: 'blockTitle',
       type: 'text',
-      label: 'Block Name',
+      label: 'Block Title',
       admin: {
-        description: 'The block which displays all Alacrity team members',
+        description: 'Text that appears before the content of the block as a title.',
       },
-    },
-    {
-      name: 'memberText',
-      type: 'text',
-      label: 'Team Section Text',
     },
   ],
   labels: {
