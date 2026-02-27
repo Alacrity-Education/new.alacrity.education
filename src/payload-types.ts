@@ -210,8 +210,9 @@ export interface Page {
     | MediaBlock
     | ArchiveBlock
     | FormBlock
-    | TeamBlock
+    | Team
     | SponsorPartnerBlock
+    | Timeline
   )[];
   meta?: {
     title?: string | null;
@@ -794,12 +795,15 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TeamBlock".
+ * via the `definition` "Team".
  */
-export interface TeamBlock {
-  blockName?: string | null;
-  memberText?: string | null;
+export interface Team {
+  /**
+   * Text that appears before the content of the block as a title.
+   */
+  blockTitle?: string | null;
   id?: string | null;
+  blockName?: string | null;
   blockType: 'teamBlock';
 }
 /**
@@ -812,6 +816,40 @@ export interface SponsorPartnerBlock {
   partnerText?: string | null;
   id?: string | null;
   blockName?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Timeline".
+ */
+export interface Timeline {
+  /**
+   * Text that appears before the content of the block as a title.
+   */
+  blockTitle?: string | null;
+  timelineElements?:
+    | {
+        date?: string | null;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'timeline';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1171,8 +1209,9 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
-        teamBlock?: T | TeamBlockSelect<T>;
+        teamBlock?: T | TeamSelect<T>;
         sponsorPartnerBlock?: T | SponsorPartnerBlockSelect<T>;
+        timeline?: T | TimelineSelect<T>;
       };
   meta?:
     | T
@@ -1274,12 +1313,12 @@ export interface FormBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TeamBlock_select".
+ * via the `definition` "Team_select".
  */
-export interface TeamBlockSelect<T extends boolean = true> {
-  blockName?: T;
-  memberText?: T;
+export interface TeamSelect<T extends boolean = true> {
+  blockTitle?: T;
   id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1289,6 +1328,22 @@ export interface SponsorPartnerBlockSelect<T extends boolean = true> {
   blockType?: T;
   sponsorText?: T;
   partnerText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Timeline_select".
+ */
+export interface TimelineSelect<T extends boolean = true> {
+  blockTitle?: T;
+  timelineElements?:
+    | T
+    | {
+        date?: T;
+        description?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

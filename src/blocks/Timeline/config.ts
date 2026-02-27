@@ -1,25 +1,41 @@
 import type { Block } from 'payload'
 
-export const TeamBlock: Block = {
-  slug: 'teamBlock',
-  interfaceName: 'TeamBlock',
+export const Timeline: Block = {
+  slug: 'timeline',
+  interfaceName: 'Timeline',
+
   fields: [
     {
-      name: 'blockName',
+      name: 'blockTitle',
       type: 'text',
-      label: 'Block Name',
+      label: 'Block Title',
       admin: {
-        description: 'The block which displays all Alacrity team members',
+        description: 'Text that appears before the content of the block as a title.',
       },
     },
     {
-      name: 'memberText',
-      type: 'text',
-      label: 'Team Section Text',
-    },
+      name: "timelineElements",
+      type:"array",
+      labels:{
+        plural: "Timeline Elements",
+        singular: "Timeline Element"
+      },
+      fields: [
+        {
+          name:"date",
+          type:'date',
+          label: "Date"
+        },
+        {
+          name: "description",
+          type:'richText',
+          label: "Description"
+        }
+      ]
+    }
   ],
   labels: {
-    plural: 'Team Blocks',
-    singular: 'Team Block',
+    plural: 'Timeline',
+    singular: 'Timelines',
   },
 }

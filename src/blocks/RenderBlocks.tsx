@@ -9,6 +9,7 @@ import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { TeamBlock } from '@/blocks/TeamBlock/Component'
 import { SponsorPartnerBlock } from '@/blocks/SponsorPartnerBlock/Component'
+import {Timeline} from "@/blocks/Timeline/Component"
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -18,6 +19,7 @@ const blockComponents = {
   mediaBlock: MediaBlock,
   teamBlock: TeamBlock,
   sponsorPartnerBlock: SponsorPartnerBlock,
+  timeline: Timeline,
 }
 
 export const RenderBlocks: React.FC<{
@@ -39,7 +41,7 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <div className="my-16" key={index}>
-                  {/* @ts-expect-error there may be some mismatch between the expected types here */}
+
                   <Block {...block} disableInnerContainer />
                 </div>
               )
