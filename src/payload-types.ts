@@ -203,6 +203,32 @@ export interface Page {
         }[]
       | null;
     media?: (number | null) | Media;
+    layout?: {
+      textPosition?: ('left' | 'center' | 'right') | null;
+      imagePosition?: ('left' | 'right') | null;
+      /**
+       * Use Hex, RGB, or names (e.g., #ffffff, black, transparent)
+       */
+      backgroundColor?: string | null;
+      /**
+       * Use Hex, RGB, or names (e.g., #000000, white)
+       */
+      textColor?: string | null;
+      /**
+       * e.g., 100%, 500px, 20rem
+       */
+      imageWidth?: string | null;
+      /**
+       * e.g., auto, 400px, 100%
+       */
+      imageHeight?: string | null;
+      padding?: {
+        top?: string | null;
+        right?: string | null;
+        bottom?: string | null;
+        left?: string | null;
+      };
+    };
   };
   layout: (
     | CallToActionBlock
@@ -1200,6 +1226,24 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        layout?:
+          | T
+          | {
+              textPosition?: T;
+              imagePosition?: T;
+              backgroundColor?: T;
+              textColor?: T;
+              imageWidth?: T;
+              imageHeight?: T;
+              padding?:
+                | T
+                | {
+                    top?: T;
+                    right?: T;
+                    bottom?: T;
+                    left?: T;
+                  };
+            };
       };
   layout?:
     | T
