@@ -1,5 +1,19 @@
 import type { CollectionConfig } from 'payload'
 
+import { authenticated } from '../../access/authenticated'
+import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
+import { Archive } from '../../blocks/ArchiveBlock/config'
+import { CallToAction } from '../../blocks/CallToAction/config'
+import { Content } from '../../blocks/Content/config'
+import { FormBlock } from '../../blocks/Form/config'
+import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { TeamBlock } from '../../blocks/TeamBlock/config'
+import { SponsorPartnerBlockConfig } from '../../blocks/CarouselLogoBlock/config'
+import { ProjectBlock } from '../../blocks/ProjectBlock/config'
+import { ShowcaseBlock } from '../../blocks/ShowcaseBlock/config'
+import { GalleryBlock } from '../../blocks/GalleryBlock/config'
+import { CardBlock } from '@/blocks/CardBlock/config'
+import { CarouselLogoBlock } from '@/blocks/CarouselLogoBlock/CarouselLogoBlockConfig'
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 import { Archive } from '@/blocks/ArchiveBlock/config'
@@ -83,6 +97,13 @@ export const Pages: CollectionConfig<'pages'> = {
                 FormBlock,
                 TeamBlock,
                 SponsorPartnerBlockConfig,
+                ProjectBlock,
+                ShowcaseBlock,
+                GalleryBlock,
+                CardBlock,
+                CarouselLogoBlock,
+
+                
                 Timeline
               ],
               required: true,
