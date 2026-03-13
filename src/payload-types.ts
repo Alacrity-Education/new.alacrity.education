@@ -221,6 +221,8 @@ export interface Page {
     | ProjectBlock
     | ShowcaseBlock
     | GalleryBlock
+    | CardBlock
+    | CarouselLogoBlock
   )[];
   meta?: {
     title?: string | null;
@@ -856,6 +858,28 @@ export interface GalleryBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardBlock".
+ */
+export interface CardBlock {
+  type: 'projects' | 'perks';
+  heading?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cardBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarouselLogoBlock".
+ */
+export interface CarouselLogoBlock {
+  type: 'partners' | 'sponsors';
+  title?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carouselLogoBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "members".
  */
 export interface Member {
@@ -1275,6 +1299,8 @@ export interface PagesSelect<T extends boolean = true> {
         projectBlock?: T | ProjectBlockSelect<T>;
         showcaseBlock?: T | ShowcaseBlockSelect<T>;
         galleryBlock?: T | GalleryBlockSelect<T>;
+        cardBlock?: T | CardBlockSelect<T>;
+        carouselLogoBlock?: T | CarouselLogoBlockSelect<T>;
       };
   meta?:
     | T
@@ -1422,6 +1448,26 @@ export interface GalleryBlockSelect<T extends boolean = true> {
   headingHighlight?: T;
   subtitle?: T;
   id?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardBlock_select".
+ */
+export interface CardBlockSelect<T extends boolean = true> {
+  type?: T;
+  heading?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarouselLogoBlock_select".
+ */
+export interface CarouselLogoBlockSelect<T extends boolean = true> {
+  type?: T;
+  title?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

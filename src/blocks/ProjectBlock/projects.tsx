@@ -8,6 +8,7 @@ import {
   CardBody as ProjectCardBody,
   CardCTA,
 } from '@/components/primitives/card'
+import { CardBlock } from '@/blocks/CardBlock/Component'
 
 interface ProjectContentProps {
   heading?: string | null
@@ -18,29 +19,20 @@ export default async function ProjectContent({
 }: ProjectContentProps) {
   const payload = await getPayload({ config })
 
-  const { docs: projects } = await payload.find({
+  const { docs: _projects } = await payload.find({
     collection: 'projects',
     limit: 100,
     depth: 2,
   })
 
-  return (
-    <div className="w-screen min-h-max bg-gradient-to-b from-base-300 to-base-100 dark:via-base-300 px-4 pb-10 lg:px-20 h-max">
-      <h2 className="text-2xl sm:text-5xl font-semibold py-16 text-center">{heading}</h2>
-      <div className="flex flex-col md:flex-row items-center md:justify-center gap-6">
-        {projects.map((project) => (
-          <ProjectCardItem key={project.id} project={project} />
-        ))}
-      </div>
-    </div>
-  )
+  return <CardBlock type="projects" heading={heading} />
 }
 
 interface ProjectCardItemProps {
   project: Project
 }
 
-function ProjectCardItem({ project }: ProjectCardItemProps) {
+function _ProjectCardItem({ project }: ProjectCardItemProps) {
   let imageUrl = '/Falcon.svg'
 
   if (project.image) {

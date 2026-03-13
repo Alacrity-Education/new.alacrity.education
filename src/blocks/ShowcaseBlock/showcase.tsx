@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Showcase } from '@/payload-types'
 import { Card, CardBody, CardCTA, CardImage } from '@/components/primitives/card'
+import { CardBlock } from '@/blocks/CardBlock/Component'
 
 interface ShowcaseContentProps {
   heading?: string | null
@@ -13,7 +14,7 @@ export default async function ShowcaseContent({
 }: ShowcaseContentProps) {
   const payload = await getPayload({ config })
 
-  const { docs: showcase } = await payload.find({
+  const { docs: _showcase } = await payload.find({
     collection: 'showcase',
     limit: 100,
     depth: 2,
@@ -21,14 +22,11 @@ export default async function ShowcaseContent({
   })
 
   return (
-    <div className="h-max bg-base-100 z-20 flex flex-col items-center py-10 pb-20">
-      <h2 className="text-2xl sm:text-5xl font-semibold py-16">{heading}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {showcase.map((showcase) => (
-          <ShowcaseCard key={showcase.id} showcase={showcase} />
-        ))}
-      </div>
-    </div>
+    <CardBlock
+      type="perks"
+      heading={heading}
+      className="bg-base-100 z-20 flex flex-col items-center py-10 pb-20"
+    />
   )
 }
 
@@ -36,7 +34,7 @@ interface ShowcaseCardProps {
   showcase: Showcase
 }
 
-const ShowcaseCard = ({ showcase }: ShowcaseCardProps) => {
+const _ShowcaseCard = ({ showcase }: ShowcaseCardProps) => {
   let imageUrl: React.ReactNode = null
 
   if (showcase.image) {

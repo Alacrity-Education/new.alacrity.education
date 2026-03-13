@@ -1,7 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { Sponsor, Media } from '@/payload-types' // Import Media type too
-import Carousel, { CarouselCard } from './primitives/carousel'
+import { Sponsor, Media } from '@/payload-types'
+import { CarouselLogoBlock, CarouselLogoItem } from './CarouselLogoBlock'
 
 interface SponsorsProps {
   title?: string
@@ -16,8 +16,7 @@ export default async function Sponsors({ title = 'Sponsors' }: SponsorsProps) {
     depth: 2,
   })
 
-  const sponsorItems = sponsors.map((sponsor: Sponsor) => {
-    // Determine the image source safely
+  const _sponsorItems: CarouselLogoItem[] = sponsors.map((sponsor: Sponsor) => {
     let imageSrc = ''
 
     if (sponsor.image && typeof sponsor.image === 'object') {
@@ -33,14 +32,5 @@ export default async function Sponsors({ title = 'Sponsors' }: SponsorsProps) {
     }
   })
 
-  // Optional: Filter out items that have no image source to avoid broken layouts
-  const validSponsors = sponsorItems.filter((item) => item.src !== '')
-
-  return (
-    <Carousel title={title} items={validSponsors}>
-      {validSponsors.map((item, index) => (
-        <CarouselCard key={`${index}-${item.alt}`} href={item.href} alt={item.alt} src={item.src} />
-      ))}
-    </Carousel>
-  )
+  return <CarouselLogoBlock type="sponsors" title={title} />
 }

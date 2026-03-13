@@ -8,10 +8,12 @@ import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { TeamBlock } from '../../blocks/TeamBlock/config'
-import { SponsorPartnerBlockConfig } from '../../blocks/SponsorPartnerBlock/config'
+import { SponsorPartnerBlockConfig } from '../../blocks/CarouselLogoBlock/config'
 import { ProjectBlock } from '../../blocks/ProjectBlock/config'
 import { ShowcaseBlock } from '../../blocks/ShowcaseBlock/config'
 import { GalleryBlock } from '../../blocks/GalleryBlock/config'
+import { CardBlock } from '@/blocks/CardBlock/config'
+import { CarouselLogoBlock } from '@/blocks/CarouselLogoBlock/CarouselLogoBlockConfig'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -88,6 +90,10 @@ export const Pages: CollectionConfig<'pages'> = {
                 ProjectBlock,
                 ShowcaseBlock,
                 GalleryBlock,
+                CardBlock,
+                CarouselLogoBlock,
+
+                
               ],
               required: true,
               admin: {
