@@ -5,12 +5,10 @@ import { Member } from '@/payload-types'
 //import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 interface TeamComponentProps {
-  memberText?: string | null
+  blockTitle?: string | null
 }
 
-export default async function TeamComponent({
-  memberText = 'Meet the team behind Alacrity',
-}: TeamComponentProps) {
+export default async function TeamComponent({ blockTitle = 'Meet the team behind Alacrity' }: TeamComponentProps) {
   const payload = await getPayload({ config })
 
   const { docs: members } = await payload.find({
@@ -24,7 +22,7 @@ export default async function TeamComponent({
     <div className="z-20 h-max bg-base-100 flex flex-col items-center py-10 ">
       <div className="text-2xl md:text-4xl lg:text-5xl font-semibold py-10">
         {/*Meet the team behind <span className="text-primary">Alacrity</span>*/}
-        {memberText || 'Meet the team behind Alacrity'}
+        {blockTitle || 'Meet the team behind Alacrity'}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-rows-2">
         {members.map((member) => (

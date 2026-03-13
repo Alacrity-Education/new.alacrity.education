@@ -14,10 +14,20 @@ import { ShowcaseBlock } from '../../blocks/ShowcaseBlock/config'
 import { GalleryBlock } from '../../blocks/GalleryBlock/config'
 import { CardBlock } from '@/blocks/CardBlock/config'
 import { CarouselLogoBlock } from '@/blocks/CarouselLogoBlock/CarouselLogoBlockConfig'
+import { authenticated } from '@/access/authenticated'
+import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { Archive } from '@/blocks/ArchiveBlock/config'
+import { CallToAction } from '@/blocks/CallToAction/config'
+import { Content } from '@/blocks/Content/config'
+import { FormBlock } from '@/blocks/Form/config'
+import { MediaBlock } from '@/blocks/MediaBlock/config'
+import { TeamBlock } from '@/blocks/TeamBlock/config'
+import { Timeline } from '@/blocks/Timeline/config'
+import { SponsorPartnerBlockConfig } from '@/blocks/SponsorPartnerBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
-import { populatePublishedAt } from '../../hooks/populatePublishedAt'
-import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { populatePublishedAt } from '@/hooks/populatePublishedAt'
+import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 
 import {
@@ -94,6 +104,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 CarouselLogoBlock,
 
                 
+                Timeline
               ],
               required: true,
               admin: {
