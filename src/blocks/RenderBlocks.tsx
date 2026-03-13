@@ -14,6 +14,8 @@ import { ShowcaseBlock } from '@/blocks/ShowcaseBlock/Component'
 import { GalleryBlock } from '@/blocks/GalleryBlock/Component'
 import { CardBlock } from './CardBlock/Component'
 import { CarouselLogoBlock } from './CarouselLogoBlock/CarouselLogoBlock'
+import { SponsorPartnerBlock } from '@/blocks/SponsorPartnerBlock/Component'
+import {Timeline} from "@/blocks/Timeline/Component"
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -28,6 +30,7 @@ const blockComponents = {
   galleryBlock: GalleryBlock,
   cardBlock: CardBlock,
   carouselLogoBlock: CarouselLogoBlock,
+  timeline: Timeline,
 }
 
 export const RenderBlocks: React.FC<{
@@ -47,6 +50,7 @@ export const RenderBlocks: React.FC<{
             const Block = blockComponents[blockType]
 
             if (Block) {
+
               return (
                 <div className="my-16" key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}

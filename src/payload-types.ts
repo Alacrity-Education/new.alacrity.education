@@ -216,7 +216,7 @@ export interface Page {
     | MediaBlock
     | ArchiveBlock
     | FormBlock
-    | TeamBlock
+    | Team
     | SponsorPartnerBlock
     | ProjectBlock
     | ShowcaseBlock
@@ -805,12 +805,15 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TeamBlock".
+ * via the `definition` "Team".
  */
-export interface TeamBlock {
-  blockName?: string | null;
-  memberText?: string | null;
+export interface Team {
+  /**
+   * Text that appears before the content of the block as a title.
+   */
+  blockTitle?: string | null;
   id?: string | null;
+  blockName?: string | null;
   blockType: 'teamBlock';
 }
 /**
@@ -1294,7 +1297,7 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
-        teamBlock?: T | TeamBlockSelect<T>;
+        teamBlock?: T | TeamSelect<T>;
         sponsorPartnerBlock?: T | SponsorPartnerBlockSelect<T>;
         projectBlock?: T | ProjectBlockSelect<T>;
         showcaseBlock?: T | ShowcaseBlockSelect<T>;
@@ -1402,12 +1405,12 @@ export interface FormBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TeamBlock_select".
+ * via the `definition` "Team_select".
  */
-export interface TeamBlockSelect<T extends boolean = true> {
-  blockName?: T;
-  memberText?: T;
+export interface TeamSelect<T extends boolean = true> {
+  blockTitle?: T;
   id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
