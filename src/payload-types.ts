@@ -217,12 +217,12 @@ export interface Page {
     | ArchiveBlock
     | FormBlock
     | Team
-    | SponsorPartnerBlock
+    | LogoCarousel
     | ProjectBlock
     | ShowcaseBlock
     | GalleryBlock
     | CardBlock
-    | CarouselLogoBlock
+    | Timeline
   )[];
   meta?: {
     title?: string | null;
@@ -818,14 +818,24 @@ export interface Team {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "SponsorPartnerBlock".
+ * via the `definition` "Logo Carousel".
  */
-export interface SponsorPartnerBlock {
-  blockType: 'sponsorPartnerBlock';
-  sponsorText?: string | null;
-  partnerText?: string | null;
+export interface LogoCarousel {
+  /**
+   * Text that appears before the content of the block as a title.
+   */
+  blockTitle?: string | null;
+  items?:
+    | {
+        title: string;
+        media: number | Media;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   id?: string | null;
   blockName?: string | null;
+  blockType: 'carouselLogoBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -872,14 +882,37 @@ export interface CardBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CarouselLogoBlock".
+ * via the `definition` "Timeline".
  */
-export interface CarouselLogoBlock {
-  type: 'partners' | 'sponsors';
-  title?: string | null;
+export interface Timeline {
+  /**
+   * Text that appears before the content of the block as a title.
+   */
+  blockTitle?: string | null;
+  timelineElements?:
+    | {
+        date?: string | null;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'carouselLogoBlock';
+  blockType: 'timeline';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1298,12 +1331,12 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         teamBlock?: T | TeamSelect<T>;
-        sponsorPartnerBlock?: T | SponsorPartnerBlockSelect<T>;
+        carouselLogoBlock?: T | LogoCarouselSelect<T>;
         projectBlock?: T | ProjectBlockSelect<T>;
         showcaseBlock?: T | ShowcaseBlockSelect<T>;
         galleryBlock?: T | GalleryBlockSelect<T>;
         cardBlock?: T | CardBlockSelect<T>;
-        carouselLogoBlock?: T | CarouselLogoBlockSelect<T>;
+        timeline?: T | TimelineSelect<T>;
       };
   meta?:
     | T
@@ -1414,14 +1447,20 @@ export interface TeamSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "SponsorPartnerBlock_select".
+ * via the `definition` "Logo Carousel_select".
  */
-export interface SponsorPartnerBlockSelect<T extends boolean = true> {
-  blockType?: T;
-  sponsorText?: T;
-  partnerText?: T;
-  id?: T;
-  blockName?: T;
+export interface LogoCarouselSelect {
+  blockTitle?: boolean;
+  items?:
+    | boolean
+    | {
+        title?: boolean;
+        media?: boolean;
+        link?: boolean;
+        id?: boolean;
+      };
+  id?: boolean;
+  blockName?: boolean;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1464,11 +1503,17 @@ export interface CardBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CarouselLogoBlock_select".
+ * via the `definition` "Timeline_select".
  */
-export interface CarouselLogoBlockSelect<T extends boolean = true> {
-  type?: T;
-  title?: T;
+export interface TimelineSelect<T extends boolean = true> {
+  blockTitle?: T;
+  timelineElements?:
+    | T
+    | {
+        date?: T;
+        description?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

@@ -3,6 +3,8 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Media as MediaType } from '@/payload-types'
+import { Media } from '@/components/Media'
 
 //const SCROLL_INTERVAL_MS = 1000
 const SCROLL_THRESHOLD = 1
@@ -15,19 +17,14 @@ interface CarouselItem {
 
 interface CarouselProps {
   title: string
-  items: CarouselItem[]
   children?: ReactNode
 }
 
-export const CarouselCard: React.FC<{
-  href: string
-  src: string
-  alt: string
-}> = ({ href, src, alt }) => {
+export const CarouselCard = ({ media, link } : {media:MediaType | number, link:string}) => {
   return (
-    <Link href={href} target="_blank" rel="noopener noreferrer">
+    <Link href={link} target="_blank" rel="noopener noreferrer">
       <div className="flex items-center justify-center h-40 bg-white rounded-lg overflow-hidden flex-shrink-0 min-w-[250px] hover:shadow-lg transition-shadow">
-        <Image src={src} alt={alt} width={200} height={140} className="object-contain p-4" />
+        <Media resource={media} />
       </div>
     </Link>
   )

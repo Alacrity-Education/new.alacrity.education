@@ -8,13 +8,11 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { TeamBlock } from '@/blocks/TeamBlock/Component'
-import { SponsorPartnerBlock } from '@/blocks/CarouselLogoBlock/Component'
+import { CarouselLogoBlock } from '@/blocks/CarouselLogoBlock/Component'
 import { ProjectBlock } from '@/blocks/ProjectBlock/Component'
 import { ShowcaseBlock } from '@/blocks/ShowcaseBlock/Component'
 import { GalleryBlock } from '@/blocks/GalleryBlock/Component'
 import { CardBlock } from './CardBlock/Component'
-import { CarouselLogoBlock } from './CarouselLogoBlock/CarouselLogoBlock'
-import { SponsorPartnerBlock } from '@/blocks/SponsorPartnerBlock/Component'
 import {Timeline} from "@/blocks/Timeline/Component"
 
 const blockComponents = {
@@ -24,12 +22,11 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   teamBlock: TeamBlock,
-  sponsorPartnerBlock: SponsorPartnerBlock,
+  carouselLogoBlock: CarouselLogoBlock,
   projectBlock: ProjectBlock,
   showcaseBlock: ShowcaseBlock,
   galleryBlock: GalleryBlock,
   cardBlock: CardBlock,
-  carouselLogoBlock: CarouselLogoBlock,
   timeline: Timeline,
 }
 

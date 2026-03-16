@@ -1,27 +1,39 @@
 import type { Block } from 'payload'
 
-export const SponsorPartnerBlockConfig: Block = {
-  slug: 'sponsorPartnerBlock',
-  interfaceName: 'SponsorPartnerBlock',
+export const CarouselLogoBlock: Block = {
+  slug: 'carouselLogoBlock',
+  interfaceName: 'Logo Carousel',
   fields: [
     {
-      name: 'blockType',
+      name: 'blockTitle',
       type: 'text',
-      defaultValue: 'sponsorPartnerBlock',
+      label: 'Block Title',
       admin: {
-        hidden: true,
-        description: 'The block which displays all sponsors and partners of Alacrity',
+        description: 'Text that appears before the content of the block as a title.',
       },
     },
     {
-      name: 'sponsorText',
-      type: 'text',
-      label: 'Sponsor Section Text',
-    },
-    {
-      name: 'partnerText',
-      type: 'text',
-      label: 'Partner Section Text',
+      name: 'items',
+      type: 'array',
+      label: 'Logos to be displayed',
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          label: 'Logo title',
+          required: true,
+        },
+        {
+          name: 'media',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+        },
+        {
+          name: "link",
+          type: 'text',
+        }
+      ],
     },
   ],
 }

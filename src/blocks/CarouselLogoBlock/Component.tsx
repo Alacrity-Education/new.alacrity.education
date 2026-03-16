@@ -1,17 +1,15 @@
 import React from 'react'
-import type { SponsorPartnerBlock as SponsorPartnerBlockProps } from '@/payload-types'
-import Sponsors from './Sponsors'
-import Partners from './Partners'
+import Carousel, { CarouselCard } from './primitives/carousel'
+import { LogoCarousel } from '@/payload-types'
 
-type Props = {
-  className?: string
-} & SponsorPartnerBlockProps
 
-export const SponsorPartnerBlock: React.FC<Props> = ({ className, sponsorText, partnerText }) => {
+export const CarouselLogoBlock: React.FC<LogoCarousel> = async ({ blockTitle = '', items }) => {
+
   return (
-    <div className={className}>
-      <Sponsors title={sponsorText || undefined} />
-      <Partners title={partnerText || undefined} />
-    </div>
+    <Carousel title={blockTitle || ""}>
+      {items?.map((item, index) => (
+        (item.media && <CarouselCard key={ index } link={item.link || ""} media={item.media} />)
+      ))}
+    </Carousel>
   )
 }
