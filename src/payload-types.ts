@@ -651,6 +651,20 @@ export interface FormBlock {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Show interactive map on the right side (requires map component)
+   */
+  enableMap?: boolean | null;
+  mapLatitude: number;
+  mapLongitude: number;
+  /**
+   * Show contact information section below the map
+   */
+  enableContactInfo?: boolean | null;
+  contactTitle?: string | null;
+  contactPhone?: string | null;
+  contactPhoneHref?: string | null;
+  contactEmail?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'formBlock';
@@ -1477,6 +1491,14 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  enableMap?: T;
+  mapLatitude?: T;
+  mapLongitude?: T;
+  enableContactInfo?: T;
+  contactTitle?: T;
+  contactPhone?: T;
+  contactPhoneHref?: T;
+  contactEmail?: T;
   id?: T;
   blockName?: T;
 }
