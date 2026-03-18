@@ -13,7 +13,8 @@ import { ProjectBlock } from '@/blocks/ProjectBlock/Component'
 import { ShowcaseBlock } from '@/blocks/ShowcaseBlock/Component'
 import { GalleryBlock } from '@/blocks/GalleryBlock/Component'
 import { CardBlock } from './CardBlock/Component'
-import {Timeline} from "@/blocks/Timeline/Component"
+import { Timeline } from '@/blocks/Timeline/Component'
+import ContactMap from '@/blocks/Form/Map'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -47,6 +48,15 @@ export const RenderBlocks: React.FC<{
             const Block = blockComponents[blockType]
 
             if (Block) {
+              // Special handling for FormBlock to include map component
+              if (blockType === 'formBlock') {
+                return (
+                  <div className="my-16" key={index}>
+                    {/* @ts-expect-error there may be some mismatch between the expected types here */}
+                    <FormBlock {...block} disableInnerContainer mapComponent={ContactMap} />
+                  </div>
+                )
+              }
 
               return (
                 <div className="my-16" key={index}>
