@@ -209,6 +209,32 @@ export interface Page {
         }[]
       | null;
     media?: (number | null) | Media;
+    layout?: {
+      textPosition?: ('left' | 'center' | 'right') | null;
+      imagePosition?: ('left' | 'right') | null;
+      /**
+       * Use Hex, RGB, or names (e.g., #ffffff, black, transparent)
+       */
+      backgroundColor?: string | null;
+      /**
+       * Use Hex, RGB, or names (e.g., #000000, white)
+       */
+      textColor?: string | null;
+      /**
+       * e.g., 100%, 500px, 20rem
+       */
+      imageWidth?: string | null;
+      /**
+       * e.g., auto, 400px, 100%
+       */
+      imageHeight?: string | null;
+      padding?: {
+        top?: string | null;
+        right?: string | null;
+        bottom?: string | null;
+        left?: string | null;
+      };
+    };
   };
   layout: (
     | CallToActionBlock
@@ -1321,6 +1347,24 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        layout?:
+          | T
+          | {
+              textPosition?: T;
+              imagePosition?: T;
+              backgroundColor?: T;
+              textColor?: T;
+              imageWidth?: T;
+              imageHeight?: T;
+              padding?:
+                | T
+                | {
+                    top?: T;
+                    right?: T;
+                    bottom?: T;
+                    left?: T;
+                  };
+            };
       };
   layout?:
     | T
@@ -2048,6 +2092,7 @@ export interface Header {
   id: number;
   navItems?:
     | {
+        itemType?: ('link' | 'parent') | null;
         link: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -2063,6 +2108,26 @@ export interface Header {
           url?: string | null;
           label: string;
         };
+        subItems?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -2106,6 +2171,7 @@ export interface HeaderSelect<T extends boolean = true> {
   navItems?:
     | T
     | {
+        itemType?: T;
         link?:
           | T
           | {
@@ -2114,6 +2180,20 @@ export interface HeaderSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+            };
+        subItems?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
             };
         id?: T;
       };

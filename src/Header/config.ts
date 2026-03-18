@@ -13,9 +13,26 @@ export const Header: GlobalConfig = {
       name: 'navItems',
       type: 'array',
       fields: [
+        {
+          name: 'itemType',
+          type: 'select',
+          defaultValue: 'link',
+          options: [
+            { label: 'Link', value: 'link' },
+            { label: 'Parent (submenu)', value: 'parent' },
+          ],
+        },
         link({
           appearances: false,
         }),
+        {
+          name: 'subItems',
+          type: 'array',
+          admin: {
+            condition: (_, sibling) => sibling?.itemType === 'parent',
+          },
+          fields: [link({ appearances: false })],
+        },
       ],
       maxRows: 6,
       admin: {
