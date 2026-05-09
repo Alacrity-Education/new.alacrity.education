@@ -21,6 +21,7 @@ import type {
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { cn } from '@/utilities/ui'
+import { customConverters } from '@/components/RichText/CustomConverter'
 
 type NodeTypes =
   | DefaultNodeTypes
@@ -59,19 +60,20 @@ type Props = {
   data: DefaultTypedEditorState
   enableGutter?: boolean
   enableProse?: boolean
+  converter?: JSXConvertersFunction<NodeTypes>
 } & React.HTMLAttributes<HTMLDivElement>
 
 export default function RichText(props: Props) {
-  const { className, enableProse = true, enableGutter = true, ...rest } = props
+  const { className, enableProse = true, converter, enableGutter = true, ...rest } = props
   return (
     <ConvertRichText
-      converters={jsxConverters}
+      converters={converter || jsxConverters}
       className={cn(
         'payload-richtext',
         {
           container: enableGutter,
           'max-w-none': !enableGutter,
-          'mx-auto prose md:prose-md dark:prose-invert': enableProse,
+          'mx-auto prose  md:prose-xl md:prose-md dark:prose-invert': enableProse,
         },
         className,
       )}

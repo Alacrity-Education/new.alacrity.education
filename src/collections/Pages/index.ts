@@ -7,13 +7,13 @@ import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { TeamBlock } from '../../blocks/TeamBlock/config'
 import { CarouselLogoBlock } from '../../blocks/CarouselLogoBlock/config'
-import { ProjectBlock } from '../../blocks/ProjectBlock/config'
-import { ShowcaseBlock } from '../../blocks/ShowcaseBlock/config'
 import { GalleryBlock } from '../../blocks/GalleryBlock/config'
 import { CardBlock } from '@/blocks/CardBlock/config'
 import { Timeline } from '@/blocks/Timeline/config'
+import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/config'
+import { GridBlock } from '@/blocks/GridBlock/config'
+import { PersonCardBlock } from '@/blocks/PersonCardBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '@/hooks/populatePublishedAt'
@@ -85,13 +85,13 @@ export const Pages: CollectionConfig<'pages'> = {
                 MediaBlock,
                 Archive,
                 FormBlock,
-                TeamBlock,
                 CarouselLogoBlock,
-                ProjectBlock,
-                ShowcaseBlock,
                 GalleryBlock,
                 CardBlock,
-                Timeline
+                Timeline,
+                FeaturedCardsBlock,
+                GridBlock,
+                PersonCardBlock,
               ],
               required: true,
               admin: {

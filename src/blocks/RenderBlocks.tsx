@@ -7,13 +7,13 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
-import { TeamBlock } from '@/blocks/TeamBlock/Component'
 import { CarouselLogoBlock } from '@/blocks/CarouselLogoBlock/Component'
-import { ProjectBlock } from '@/blocks/ProjectBlock/Component'
-import { ShowcaseBlock } from '@/blocks/ShowcaseBlock/Component'
 import { GalleryBlock } from '@/blocks/GalleryBlock/Component'
 import { CardBlock } from './CardBlock/Component'
 import { Timeline } from '@/blocks/Timeline/Component'
+import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/Component'
+import { GridBlock } from '@/blocks/GridBlock/Component'
+import { PersonCardBlock } from '@/blocks/PersonCardBlock/Component'
 import ContactMap from '@/blocks/Form/Map'
 
 const blockComponents = {
@@ -22,13 +22,13 @@ const blockComponents = {
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
-  teamBlock: TeamBlock,
   carouselLogoBlock: CarouselLogoBlock,
-  projectBlock: ProjectBlock,
-  showcaseBlock: ShowcaseBlock,
   galleryBlock: GalleryBlock,
   cardBlock: CardBlock,
   timeline: Timeline,
+  fcardsBlock: FeaturedCardsBlock,
+  gridBlock: GridBlock,
+  personCardBlock: PersonCardBlock,
 }
 
 export const RenderBlocks: React.FC<{

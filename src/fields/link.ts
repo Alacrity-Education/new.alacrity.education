@@ -2,18 +2,55 @@ import type { Field, GroupField } from 'payload'
 
 import deepMerge from '@/utilities/deepMerge'
 
-export type LinkAppearances = 'default' | 'outline'
+export type LinkAppearances =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'ghost'
+  | 'inlinePrimary'
+  | 'inline'
+  | 'primaryOverlap'
+  | 'baseOverlap'
 
-export const appearanceOptions: Record<LinkAppearances, { label: string; value: string }> = {
+export const LinkAppearanceVariants = {
+  inlinePrimary: 'bg-primary text-primary-content p-2 rounded-lg px-3 lg:btn text-start active:invert hover:bg-primary/50',
+  inline: ''
+}
+
+export const appearanceOptions: Record<LinkAppearances, { label: string; value: LinkAppearances }> = {
   default: {
     label: 'Default',
     value: 'default',
   },
-  outline: {
-    label: 'Outline',
-    value: 'outline',
+  primary: {
+    label: 'Primary',
+    value: 'primary',
   },
-}
+  secondary: {
+    label: 'Secondary',
+    value: 'secondary',
+  },
+  ghost: {
+    label: 'Ghost',
+    value: 'ghost',
+  },
+  inlinePrimary: {
+    label: 'Inline Primary',
+    value: 'inlinePrimary',
+  },
+  inline: {
+    label: 'Inline',
+    value: 'inline',
+  },
+  primaryOverlap: {
+    label: 'Primary Overlap',
+    value: 'primaryOverlap',
+  },
+  baseOverlap: {
+    label: 'Base Overlap',
+    value: 'baseOverlap',
+  },
+} as const;
 
 type LinkType = (options?: {
   appearances?: LinkAppearances[] | false
@@ -118,7 +155,16 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
   }
 
   if (appearances !== false) {
-    let appearanceOptionsToUse = [appearanceOptions.default, appearanceOptions.outline]
+    let appearanceOptionsToUse = [
+      appearanceOptions.default,
+      appearanceOptions.primary,
+      appearanceOptions.secondary,
+      appearanceOptions.ghost,
+      appearanceOptions.inlinePrimary,
+      appearanceOptions.inline,
+      appearanceOptions.primaryOverlap,
+      appearanceOptions.baseOverlap,
+    ]
 
     if (appearances) {
       appearanceOptionsToUse = appearances.map((appearance) => appearanceOptions[appearance])
