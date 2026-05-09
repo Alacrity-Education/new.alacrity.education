@@ -15,11 +15,6 @@ import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { Member } from './collections/Member'
-import { Sponsor } from './collections/Sponsor'
-import { Partner } from './collections/Partner'
-import { Project } from './collections/Project'
-import { Showcase } from './collections/Showcase'
-import { Gallery } from './collections/Gallery'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -75,11 +70,6 @@ export default buildConfig({
     Categories,
     Users,
     Member,
-    Sponsor,
-    Partner,
-    Project,
-    Showcase,
-    Gallery,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
