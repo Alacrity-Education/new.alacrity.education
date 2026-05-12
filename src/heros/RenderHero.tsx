@@ -3,23 +3,26 @@ import React from 'react'
 import type { Page } from '@/payload-types'
 
 import { HighImpactHero } from '@/heros/HighImpact'
-import { LowImpactHero } from '@/heros/LowImpact'
-import { MediumImpactHero } from '@/heros/MediumImpact'
 
-const heroes = {
+
+type HeroType = 'highImpact' | 'slide';
+
+const heroes: Record<HeroType, React.FC<any>> = {
   highImpact: HighImpactHero,
-  lowImpact: LowImpactHero,
-  mediumImpact: MediumImpactHero,
+  slide: HighImpactHero,
 }
 
-export const RenderHero: React.FC<Page['hero']> = (props) => {
-  const { type } = props || {}
+export const RenderHero: React.FC<{ hero?: any }> = (props) => {
+  // 1. Safely extract the hero object that Next.js passed down
+  const heroData = props?.hero || props || {}
+  const { type } = heroData as { type?: string }
 
+  // 3. Render logic
   if (!type || type === 'none') return null
 
-  const HeroToRender = heroes[type]
+  if (!(type in heroes)) return null
 
-  if (!HeroToRender) return null
+  const HeroToRender = heroes[type as HeroType]
 
-  return <HeroToRender {...props} />
+  return <HeroToRender {...heroData} />
 }

@@ -4,9 +4,10 @@ import Link from 'next/link'
 import React from 'react'
 
 import type { Page, Post } from '@/payload-types'
+import { LinkAppearanceVariants } from '@/fields/link'
 
 type CMSLinkType = {
-  appearance?: 'inline' | ButtonProps['variant']
+  appearance?: 'inline' | "inlinePrimary" | ButtonProps['variant']
   children?: React.ReactNode
   className?: string
   label?: string | null
@@ -46,9 +47,13 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 
   /* Ensure we don't break any styles set by richText */
-  if (appearance === 'inline') {
+  if (appearance === 'inline' || appearance === 'inlinePrimary' ) {
     return (
-      <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
+      <Link
+        className={cn(LinkAppearanceVariants[appearance], className)}
+        href={href || url || ''}
+        {...newTabProps}
+      >
         {label && label}
         {children && children}
       </Link>
