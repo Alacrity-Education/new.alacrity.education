@@ -5,9 +5,12 @@ import {
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  TextStateFeature,
+  defaultColors,
 } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '@/fields/linkGroup'
+
 
 export const hero: Field = {
   name: 'hero',
@@ -16,25 +19,12 @@ export const hero: Field = {
     {
       name: 'type',
       type: 'select',
-      defaultValue: 'lowImpact',
+      defaultValue: 'highImpact',
       label: 'Type',
       options: [
-        {
-          label: 'None',
-          value: 'none',
-        },
-        {
-          label: 'High Impact',
-          value: 'highImpact',
-        },
-        {
-          label: 'Medium Impact',
-          value: 'mediumImpact',
-        },
-        {
-          label: 'Low Impact',
-          value: 'lowImpact',
-        },
+        { label: 'None', value: 'none' },
+        { label: 'High Impact', value: 'highImpact' },
+        { label: 'Slide', value: 'slide' },
       ],
       required: true,
     },
@@ -48,16 +38,60 @@ export const hero: Field = {
             HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
             FixedToolbarFeature(),
             InlineToolbarFeature(),
+            TextStateFeature({
+              state: {
+                color: {
+                  primary: {
+                    label: 'Primary',
+                    css: {
+                      color: 'purple',
+                    },
+                  },
+                  secondary: {
+                    label: 'Secondary',
+                    css: {
+                      color: 'pink',
+                    },
+                  },
+                  arrowHighlighted: {
+                    label: 'Arrow Highlighted',
+                    css: {
+                      color: 'blue',
+                    },
+                  },
+                },
+              },
+            }),
           ]
         },
       }),
       label: false,
     },
-    linkGroup({
-      overrides: {
-        maxRows: 2,
-      },
-    }),
+    {
+      type: 'group',
+      label: 'Call To Action',
+      name: 'cta',
+      fields: [
+        {
+          type: 'select',
+          name: 'selectCTA',
+          label: 'Select Call To Action',
+          options: ['None', 'Button'],
+          defaultValue: 'None',
+        },
+        linkGroup({
+          overrides: {
+            maxRows: 2,
+            admin: {
+              condition: (_, { selectCTA } = {}) => {
+
+                return ['Button'].includes(selectCTA)
+              },
+            },
+          },
+        }),
+      ],
+    },
     {
       name: 'media',
       type: 'upload',
