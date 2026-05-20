@@ -15,6 +15,8 @@ import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/Component'
 import { GridBlock } from '@/blocks/GridBlock/Component'
 import { PersonCardBlock } from '@/blocks/PersonCardBlock/Component'
 import ContactMap from '@/blocks/Form/Map'
+import { MapBlockComponent } from '@/blocks/Map/Component'
+import { ContactBlockComponent } from '@/blocks/Contact/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -29,6 +31,8 @@ const blockComponents = {
   fcardsBlock: FeaturedCardsBlock,
   gridBlock: GridBlock,
   personCardBlock: PersonCardBlock,
+  mapBlock: MapBlockComponent,
+  contactBlock: ContactBlockComponent,
 }
 
 export const RenderBlocks: React.FC<{

@@ -8,8 +8,9 @@ import type { FeaturedCardsBlock as FeaturedCardsBlockProps } from '@/payload-ty
 import RichText from '@/components/RichText'
 import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
+import { SectionTitle } from '@/components/SectionTitle'
 
-export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ sectionTitle, cards }) => {
+export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, cards }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
   const CARD_STAGGER = 24
@@ -20,7 +21,7 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ sectionT
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia()
 
-      mm.add('(min-width: 640px)', () => {
+      mm.add('all', () => {
         const wrappers = gsap.utils.toArray<HTMLElement>('.gsap-card-wrapper')
         const cardsElements = gsap.utils.toArray<HTMLElement>('.gsap-card')
         const sectionEl = containerRef.current
@@ -88,36 +89,27 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ sectionT
   return (
     <section
       ref={containerRef}
-      className="container relative pb-12 sm:pb-[40vh] gsap-section-wrapper"
+      className="container relative pb-[40vh] gsap-section-wrapper"
     >
-      {sectionTitle && (
-        <div ref={titleRef} className="relative sm:top-[15vh] z-0 bg-base-100 py-4 h-fit">
-          <p className="text-primary text-2xl md:text-3xl lg:text-4xl font-extrabold mt-0 mb-2  md:mb-6 lg:mb-8">
-            {sectionTitle} &rarr;
-          </p>
-        </div>
-      )}
+      <SectionTitle
+        ref={titleRef}
+        title={title}
+        arrow
+        className="relative top-[15vh] z-0 bg-base-100 py-4 h-fit"
+      />
 
-      <div className="flex flex-row sm:flex-col gap-6 sm:gap-0 mt-8 items-stretch sm:items-center overflow-x-auto sm:overflow-x-visible snap-x snap-mandatory sm:snap-none pb-8 sm:pb-0">
+      <div className="flex flex-col gap-0 mt-8 items-center">
         {(cards || []).map((card, i) => (
           <div
             key={i}
-            className="
-              gsap-card-wrapper
-              relative
-              shrink-0 sm:shrink
-              w-[85vw] max-w-xs sm:w-full sm:max-w-full
-              snap-center sm:snap-align-none
-              mb-0 sm:mb-[40vh] sm:last:mb-[15vh]
-              [perspective:1000px]
-            "
+            className="gsap-card-wrapper relative w-full mb-[40vh] last:mb-[15vh] [perspective:1000px]"
           >
             <div className="gsap-card w-full h-max rounded-2xl border-2 border-base-300 bg-base-100 shadow-xl overflow-hidden">
-              <div className="flex flex-col-reverse sm:flex-row h-128 sm:h-max p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 gap-6">
+              <div className="flex flex-col-reverse sm:flex-row h-max p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 gap-6">
                 <div className="flex flex-col flex-1 min-w-0">
                   {card.richText && (
                     <RichText
-                      className="mb-0 prose-h2:text-primary prose-h3:text-primary w-full"
+                      className="mb-0 prose-h2:text-primary prose-h3:text-primary prose-sm! lg:prose-base! w-full"
                       data={card.richText}
                       enableGutter={false}
                     />
