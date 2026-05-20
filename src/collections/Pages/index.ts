@@ -135,6 +135,35 @@ export const Pages: CollectionConfig<'pages'> = {
       ],
     },
     {
+      name: 'background',
+      type: 'group',
+      label: 'Page Background',
+      admin: {
+        position: 'sidebar',
+      },
+      fields: [
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Pattern (SVG)',
+        },
+        {
+          name: 'opacity',
+          type: 'number',
+          label: 'Opacity (%)',
+          min: 0,
+          max: 100,
+          defaultValue: 10,
+          admin: {
+            step: 1,
+            condition: (_, siblingData) => Boolean(siblingData?.image),
+            description: 'How visible the pattern is (0 = invisible, 100 = full strength)',
+          },
+        },
+      ],
+    },
+    {
       name: 'publishedAt',
       type: 'date',
       admin: {

@@ -13,11 +13,11 @@ import { cn } from '@/utilities/ui'
 type CTAsType = Page['hero']['cta']
 type RichTextType = Page['hero']['richText']
 
-export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText }) => {
+export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText, imageVariant }) => {
   const className = media ? "" : "justify-center";
   return (
     <Hero className={className}>
-      {media&& <HeroImage media={media} />}
+      {media && <HeroImage media={media} imageVariant={imageVariant} />}
       <HeroText cta={cta} richText={richText} />
     </Hero>
   )
@@ -26,7 +26,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText })
 export default function Hero({ children, className }: { children?: React.ReactNode, className?: string }) {
   return (
     <div
-      className={"hero z-0 relative bg-base-100 overflow-x-clip min-h-[60vh] sm:min-h-[70vh] md:min-h-[70vh] pt-8 pb-12 sm:pt-12 sm:pb-16 md:-mt-10 md:pb-0"}
+      className={"hero z-0 relative bg-base-100/30 overflow-x-clip min-h-[60vh] sm:min-h-[70vh] md:min-h-[70vh] pt-8 pb-12 sm:pt-12 sm:pb-16 md:-mt-10 md:pb-0"}
     >
       <div
         className={cn("container mx-auto px-4 flex flex-col-reverse lg:flex-row-reverse gap-8 sm:gap-10 lg:gap-0 items-center justify-between h-full w-full",className)}
@@ -93,8 +93,16 @@ export const HeroCTA = (props?: CTAsType) => {
     )
 }
 
-export const HeroImage = ({ media }: { media?: MediaType | number | null }) => {
+export const HeroImage = ({
+  media,
+  imageVariant,
+}: {
+  media?: MediaType | number | null
+  imageVariant?: Page['hero']['imageVariant']
+}) => {
   if (!media && !(typeof media === 'object')) return null
+
+  const isCircle = imageVariant === 'circle'
 
   return (
     <div
@@ -103,12 +111,15 @@ export const HeroImage = ({ media }: { media?: MediaType | number | null }) => {
                     pt-2 sm:pt-0"
     >
       <Media
-        pictureClassName="w-full lg:h-full overflow-visible
-                          hover:-translate-y-1 transition-transform
-                          aspect-video z-10 rounded-lg"
+        pictureClassName={cn(
+          'w-full lg:h-full overflow-visible hover:-translate-y-1 transition-transform z-10',
+          isCircle ? 'aspect-square rounded-full' : 'aspect-video rounded-lg',
+        )}
         className="h-max w-full"
-        imgClassName="z-20 object-cover w-full object-bottom
-                      shadow-2xl rounded-lg aspect-video"
+        imgClassName={cn(
+          'z-20 object-cover w-full shadow-2xl',
+          isCircle ? 'aspect-square rounded-full object-center' : 'aspect-video rounded-lg object-bottom',
+        )}
         priority
         resource={media}
       />
