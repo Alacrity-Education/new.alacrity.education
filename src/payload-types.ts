@@ -161,7 +161,7 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'slide';
+    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'slide';
     richText?: {
       root: {
         type: string;
@@ -216,6 +216,7 @@ export interface Page {
         | null;
     };
     media?: (number | null) | Media;
+    imageVariant?: ('rectangle' | 'circle') | null;
   };
   layout: (
     | CallToActionBlock
@@ -240,6 +241,13 @@ export interface Page {
      */
     image?: (number | null) | Media;
     description?: string | null;
+  };
+  background?: {
+    image?: (number | null) | Media;
+    /**
+     * How visible the pattern is (0 = invisible, 100 = full strength)
+     */
+    opacity?: number | null;
   };
   publishedAt?: string | null;
   /**
@@ -1492,6 +1500,7 @@ export interface PagesSelect<T extends boolean = true> {
                   };
             };
         media?: T;
+        imageVariant?: T;
       };
   layout?:
     | T
@@ -1517,6 +1526,12 @@ export interface PagesSelect<T extends boolean = true> {
         title?: T;
         image?: T;
         description?: T;
+      };
+  background?:
+    | T
+    | {
+        image?: T;
+        opacity?: T;
       };
   publishedAt?: T;
   generateSlug?: T;

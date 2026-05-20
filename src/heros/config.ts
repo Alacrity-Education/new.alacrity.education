@@ -24,6 +24,8 @@ export const hero: Field = {
       options: [
         { label: 'None', value: 'none' },
         { label: 'High Impact', value: 'highImpact' },
+        { label: 'Medium Impact', value: 'mediumImpact' },
+        { label: 'Low Impact', value: 'lowImpact' },
         { label: 'Slide', value: 'slide' },
       ],
       required: true,
@@ -96,10 +98,24 @@ export const hero: Field = {
       name: 'media',
       type: 'upload',
       admin: {
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact', 'slide'].includes(type),
       },
       relationTo: 'media',
       required: false,
+    },
+    {
+      name: 'imageVariant',
+      type: 'select',
+      label: 'Image Shape',
+      defaultValue: 'rectangle',
+      options: [
+        { label: 'Rectangle', value: 'rectangle' },
+        { label: 'Circle', value: 'circle' },
+      ],
+      admin: {
+        condition: (_, { media, type } = {}) =>
+          Boolean(media) && ['highImpact', 'slide'].includes(type),
+      },
     },
   ],
   label: false,
