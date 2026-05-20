@@ -23,12 +23,8 @@ export const Banner: Block = {
     },
     {
       name: 'content',
-      type: 'richText',
-      editor: lexicalEditor({
-        features: ({ rootFeatures }) => {
-          return [...rootFeatures, FixedToolbarFeature(), InlineToolbarFeature()]
-        },
-      }),
+      type: 'textarea',
+
       label: false,
       required: true,
     },

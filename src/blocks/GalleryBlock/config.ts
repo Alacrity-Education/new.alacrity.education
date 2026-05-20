@@ -5,14 +5,6 @@ export const GalleryBlock: Block = {
   interfaceName: 'GalleryBlock',
   fields: [
     {
-      name: 'blockName',
-      type: 'text',
-      label: 'Block Name',
-      admin: {
-        description: 'The block which displays gallery images',
-      },
-    },
-    {
       name: 'heading',
       type: 'text',
       label: 'Main Heading',
@@ -29,6 +21,19 @@ export const GalleryBlock: Block = {
       type: 'text',
       label: 'Subtitle',
       defaultValue: 'Some pictures from our projects.',
+    },
+    {
+      name: 'images',
+      type: 'array',
+      label: 'Images',
+      fields: [
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+        },
+      ],
     },
   ],
   labels: {

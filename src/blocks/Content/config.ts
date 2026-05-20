@@ -1,13 +1,18 @@
 import type { Block, Field } from 'payload'
 
 import {
+  BlocksFeature,
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  UploadFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { link } from '@/fields/link'
+import { Banner } from '@/blocks/Banner/config'
+import { Code } from '@/blocks/Code/config'
+import { MapBlock } from '@/blocks/Map/config'
 
 const columnFields: Field[] = [
   {
@@ -37,30 +42,22 @@ const columnFields: Field[] = [
     name: 'richText',
     type: 'richText',
     editor: lexicalEditor({
-      features: ({ rootFeatures }) => {
+      features: ({ rootFeatures, defaultFeatures }) => {
         return [
           ...rootFeatures,
+          ...defaultFeatures,
           HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
+          UploadFeature(),
+          BlocksFeature({ blocks: [Banner, Code, MapBlock] }),
         ]
       },
     }),
     label: false,
   },
-  {
-    name: 'enableLink',
-    type: 'checkbox',
-  },
-  link({
-    overrides: {
-      admin: {
-        condition: (_data, siblingData) => {
-          return Boolean(siblingData?.enableLink)
-        },
-      },
-    },
-  }),
+
+
 ]
 
 export const Content: Block = {

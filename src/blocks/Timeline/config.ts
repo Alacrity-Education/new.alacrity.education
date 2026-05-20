@@ -7,12 +7,9 @@ export const Timeline: Block = {
 
   fields: [
     {
-      name: 'blockTitle',
+      name: 'title',
       type: 'text',
-      label: 'Block Title',
-      admin: {
-        description: 'Text that appears before the content of the block as a title.',
-      },
+      label: 'Section Title',
     },
     {
       name: 'timelineElements',
