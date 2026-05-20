@@ -8,32 +8,28 @@ import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 import { customConverters } from '@/components/RichText/CustomConverter'
+import { cn } from '@/utilities/ui'
 
 type CTAsType = Page['hero']['cta']
 type RichTextType = Page['hero']['richText']
 
 export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText }) => {
+  const className = media ? "" : "justify-center";
   return (
-    <Hero>
-      <HeroImage media={media} />
+    <Hero className={className}>
+      {media&& <HeroImage media={media} />}
       <HeroText cta={cta} richText={richText} />
     </Hero>
   )
 }
 
-export default function Hero({ children }: { children?: React.ReactNode }) {
+export default function Hero({ children, className }: { children?: React.ReactNode, className?: string }) {
   return (
     <div
-      className="hero z-0 relative bg-base-100 overflow-x-clip
-                    min-h-[60vh] sm:min-h-[70vh] md:min-h-[70vh]
-                    pt-8 pb-12 sm:pt-12 sm:pb-16 md:-mt-10 md:pb-0"
+      className={"hero z-0 relative bg-base-100 overflow-x-clip min-h-[60vh] sm:min-h-[70vh] md:min-h-[70vh] pt-8 pb-12 sm:pt-12 sm:pb-16 md:-mt-10 md:pb-0"}
     >
       <div
-        className="container mx-auto px-4
-                      flex flex-col-reverse lg:flex-row-reverse
-                      gap-8 sm:gap-10 lg:gap-0
-                      items-center justify-between
-                      h-full w-full"
+        className={cn("container mx-auto px-4 flex flex-col-reverse lg:flex-row-reverse gap-8 sm:gap-10 lg:gap-0 items-center justify-between h-full w-full",className)}
       >
         {children}
       </div>
@@ -44,9 +40,11 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 export const HeroText = ({
   richText,
   cta,
+  className,
 }: {
   richText?: RichTextType | null
   cta?: CTAsType | null
+  className?: string
 }) => {
   if (!richText) return null
 
@@ -61,7 +59,7 @@ export const HeroText = ({
                       lg:items-start lg:text-left"
       >
         <RichText
-          className="max-w-md w-full sm:!mx-0 sm:!px-0 relative z-20"
+          className="max-w-md w-full sm:!mx-0 sm:!px-0 relative z-20!"
           data={richText}
           converter={customConverters}
         />
@@ -87,7 +85,7 @@ export const HeroCTA = (props?: CTAsType) => {
                           w-full z-30"
           >
             {links.map(({ link }, i) => (
-              <CMSLink key={i} {...link} />
+              <CMSLink key={i} size={"lg"} {...link} />
             ))}
           </div>
         )}

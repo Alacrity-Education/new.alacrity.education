@@ -20,7 +20,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
     return null
   }
   return (
-    <div className={''}>
+    <div className={'navbar-center'}>
       {/* Desktop nav with submenu support */}
       <ul className="menu menu-horizontal lg:flex flex-row px-1 hidden gap-3">
         {navItems.map((item, i) => {
@@ -157,7 +157,12 @@ export const HighlightButton = ({ highlightButton }: { highlightButton: Highligh
   if (!highlightButton) {
     return null
   }
-  return <CMSLink className={'lg:ml-10 overflow-visible font-bold '}  {...highlightButton.link} />
+  return (
+    <div className={"navbar-end"}>
+
+      <CMSLink className={'lg:ml-10 overflow-visible font-bold '} {...highlightButton.link} />
+    </div>
+  )
 }
 
 type HighlightBannerType = HeaderType['highlightBanner']

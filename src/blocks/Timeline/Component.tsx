@@ -7,6 +7,7 @@ import RichText from '@/components/RichText'
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 import { cn } from '@/utilities/ui'
 import { CMSLink } from '@/components/Link'
+import { SectionTitle } from '@/components/SectionTitle'
 import { link } from 'node:fs'
 
 const Tbr = ({ className }: { className?: string }) => (
@@ -28,10 +29,9 @@ type LinkType = NonNullable<TimelineProps['timelineElements']>[number]['link']
 
 export function TimelineCard({ time, text, link }: { time: string; text: DefaultTypedEditorState | undefined | null, link: LinkType }) {
   return (
-    <div className="relative flex flex-col w-xs">
+    <div className="relative flex flex-col w-[80vw] sm:w-xs">
       <Tbr />
-      <div className="h-1 bg-primary w-10 left-0 top-7 absolute sm:hidden"></div>
-      <div className=" relative badge badge-primary badge-sm sm:badge-md text-base-300 shadow-lg rounded-md">
+      <div className="relative badge badge-primary badge-md text-base-300 shadow-lg rounded-md">
         {new Date(time).toLocaleString('en-US', {
           month: 'long',
           year: 'numeric',
@@ -45,7 +45,7 @@ export function TimelineCard({ time, text, link }: { time: string; text: Default
   )
 }
 
-export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, blockTitle }) => {
+export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, title }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const scrollAmount = 400
 
@@ -69,11 +69,12 @@ export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, blockTit
 
   return (
     <div className="w-full container">
-      <div className="relative min-h-[45vh] h-max w-full bg-base-200 flex flex-col items-start p-10 border-4 border-primary dark:border-primary/30 rounded-lg shadow-xl">
+      <SectionTitle title={title} className="mb-6" />
+      <div className="relative min-h-[60vh] sm:min-h-[45vh] h-max w-full bg-base-100 flex flex-col items-start p-10 border-4 border-primary dark:border-primary/30 rounded-lg shadow-xl">
         {/* Left arrow → older elements */}
         <button
           onClick={scrollLeft}
-          className="hidden sm:block btn btn-xl z-10 absolute left-10 bottom-10 btn-circle btn-primary hover:-translate-y-1 transition-all"
+          className="block btn btn-xl z-10 absolute left-10 bottom-10 btn-circle btn-primary hover:-translate-y-1 transition-all"
         >
           <LeftArrow className="h-full w-full invert" />
         </button>
@@ -81,12 +82,12 @@ export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, blockTit
         <div
           ref={scrollContainerRef}
           style={{ scrollbarGutter: 'stable' }}
-          className="max-w-full h-full w-full sm:w-max overflow-x-scroll absolute top-0 left-0 scrollbar-visible px-4 sm:px-0"
+          className="h-full w-full max-w-full overflow-x-scroll absolute top-0 left-0 scrollbar-visible"
         >
-          <div className="relative w-full sm:w-max sm:min-w-screen h-max py-4 sm:p-10 flex flex-row sm:flex-col">
-            {/* border-t-4 is the horizontal timeline line; elements hang below it left→right oldest→newest */}
-            <div className={'absolute h-1 w-full bg-primary z-10 -left-[20vw] '}></div>
-            <div className="flex flex-col sm:flex-row gap-4 border-l-4 border-primary/60 sm:border-l-0 border-dashed  sm:border-t-4 sm:border-primary/60">
+          <div className="relative w-max min-w-full h-max py-10 sm:py-10 pl-10 flex flex-col">
+            {/* horizontal timeline line; elements hang below it left→right oldest→newest */}
+            <div className={'absolute h-1.5 w-full bg-primary z-10 -left-[70vw] md:-left-[50vw] lg:-left-[20vw]'}></div>
+            <div className="flex flex-row gap-4 border-t-6 border-dashed border-primary/60">
               {elements.map((timelineElement, index) => (
                 <TimelineCard
                   key={index}
@@ -95,8 +96,7 @@ export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, blockTit
                   link={timelineElement.link}
                 />
               ))}
-              <div className={'w-10 sm:w-20 md:w-xs'}></div>
-
+              <div className="w-0 sm:w-20 md:w-xs"></div>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, blockTit
         {/* Right arrow → newer elements */}
         <button
           onClick={scrollRight}
-          className="hidden sm:block btn btn-xl z-10 absolute right-10 bottom-10 btn-circle btn-primary hover:-translate-y-1 transition-all"
+          className="block btn btn-xl z-10 absolute right-10 bottom-10 btn-circle btn-primary hover:-translate-y-1 transition-all"
         >
           <RightArrow className="h-full w-full invert" />
         </button>

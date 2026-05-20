@@ -120,6 +120,9 @@ export interface Config {
     footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
+  widgets: {
+    collections: CollectionsWidget;
+  };
   user: User;
   jobs: {
     tasks: {
@@ -227,6 +230,8 @@ export interface Page {
     | FeaturedCardsBlock
     | GridBlock
     | PersonCardBlock
+    | MapBlock
+    | ContactBlock
   )[];
   meta?: {
     title?: string | null;
@@ -538,37 +543,6 @@ export interface ContentBlock {
           };
           [k: string]: unknown;
         } | null;
-        enableLink?: boolean | null;
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?:
-            | (
-                | 'default'
-                | 'primary'
-                | 'secondary'
-                | 'ghost'
-                | 'inlinePrimary'
-                | 'inline'
-                | 'primaryOverlap'
-                | 'baseOverlap'
-              )
-            | null;
-        };
         id?: string | null;
       }[]
     | null;
@@ -839,10 +813,7 @@ export interface Form {
  * via the `definition` "Logo Carousel".
  */
 export interface LogoCarousel {
-  /**
-   * Text that appears before the content of the block as a title.
-   */
-  blockTitle?: string | null;
+  title?: string | null;
   items?:
     | {
         title: string;
@@ -860,11 +831,17 @@ export interface LogoCarousel {
  * via the `definition` "GalleryBlock".
  */
 export interface GalleryBlock {
-  blockName?: string | null;
   heading?: string | null;
   headingHighlight?: string | null;
   subtitle?: string | null;
+  images?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
   id?: string | null;
+  blockName?: string | null;
   blockType: 'galleryBlock';
 }
 /**
@@ -872,7 +849,7 @@ export interface GalleryBlock {
  * via the `definition` "CardBlock".
  */
 export interface CardBlock {
-  heading?: string | null;
+  title?: string | null;
   cards?:
     | {
         variant?: ('base' | 'primary') | null;
@@ -910,10 +887,7 @@ export interface CardBlock {
  * via the `definition` "Timeline".
  */
 export interface Timeline {
-  /**
-   * Text that appears before the content of the block as a title.
-   */
-  blockTitle?: string | null;
+  title?: string | null;
   timelineElements?:
     | {
         date?: string | null;
@@ -964,7 +938,7 @@ export interface Timeline {
  * via the `definition` "FeaturedCardsBlock".
  */
 export interface FeaturedCardsBlock {
-  sectionTitle?: string | null;
+  title?: string | null;
   cards?:
     | {
         richText?: {
@@ -1125,6 +1099,90 @@ export interface Member {
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MapBlock".
+ */
+export interface MapBlock {
+  latitude: number;
+  longitude: number;
+  zoom?: number | null;
+  markerLabel?: string | null;
+  /**
+   * Address shown under the label in the popup.
+   */
+  markerSubtitle?: string | null;
+  /**
+   * Optional. If empty, a Google Maps link is generated from the coordinates.
+   */
+  openInMapsUrl?: string | null;
+  showContactCard?: boolean | null;
+  contactCard?: {
+    heading?: string | null;
+    phone?: string | null;
+    /**
+     * e.g. "(Vavilov Iris)"
+     */
+    phoneLabel?: string | null;
+    email?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mapBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock".
+ */
+export interface ContactBlock {
+  heading?: string | null;
+  /**
+   * Select a form created via the Form Builder.
+   */
+  form: number | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  map: {
+    latitude: number;
+    longitude: number;
+    zoom?: number | null;
+    markerLabel?: string | null;
+    /**
+     * Address shown under the label in the popup.
+     */
+    markerSubtitle?: string | null;
+    /**
+     * Optional. If empty, a Google Maps link is generated from the coordinates.
+     */
+    openInMapsUrl?: string | null;
+  };
+  contactInfo?: {
+    heading?: string | null;
+    phone?: string | null;
+    /**
+     * e.g. "(Vavilov Iris)"
+     */
+    phoneLabel?: string | null;
+    email?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1450,6 +1508,8 @@ export interface PagesSelect<T extends boolean = true> {
         fcardsBlock?: T | FeaturedCardsBlockSelect<T>;
         gridBlock?: T | GridBlockSelect<T>;
         personCardBlock?: T | PersonCardBlockSelect<T>;
+        mapBlock?: T | MapBlockSelect<T>;
+        contactBlock?: T | ContactBlockSelect<T>;
       };
   meta?:
     | T
@@ -1501,17 +1561,6 @@ export interface ContentBlockSelect<T extends boolean = true> {
     | {
         size?: T;
         richText?: T;
-        enableLink?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-              appearance?: T;
-            };
         id?: T;
       };
   id?: T;
@@ -1564,7 +1613,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  * via the `definition` "Logo Carousel_select".
  */
 export interface LogoCarouselSelect {
-  blockTitle?: boolean;
+  title?: boolean;
   items?:
     | boolean
     | {
@@ -1581,18 +1630,24 @@ export interface LogoCarouselSelect {
  * via the `definition` "GalleryBlock_select".
  */
 export interface GalleryBlockSelect<T extends boolean = true> {
-  blockName?: T;
   heading?: T;
   headingHighlight?: T;
   subtitle?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
   id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "CardBlock_select".
  */
 export interface CardBlockSelect<T extends boolean = true> {
-  heading?: T;
+  title?: T;
   cards?:
     | T
     | {
@@ -1620,7 +1675,7 @@ export interface CardBlockSelect<T extends boolean = true> {
  * via the `definition` "Timeline_select".
  */
 export interface TimelineSelect<T extends boolean = true> {
-  blockTitle?: T;
+  title?: T;
   timelineElements?:
     | T
     | {
@@ -1647,7 +1702,7 @@ export interface TimelineSelect<T extends boolean = true> {
  * via the `definition` "FeaturedCardsBlock_select".
  */
 export interface FeaturedCardsBlockSelect<T extends boolean = true> {
-  sectionTitle?: T;
+  title?: T;
   cards?:
     | T
     | {
@@ -1730,6 +1785,59 @@ export interface PersonCardBlockSelect<T extends boolean = true> {
               appearance?: T;
             };
         id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MapBlock_select".
+ */
+export interface MapBlockSelect<T extends boolean = true> {
+  latitude?: T;
+  longitude?: T;
+  zoom?: T;
+  markerLabel?: T;
+  markerSubtitle?: T;
+  openInMapsUrl?: T;
+  showContactCard?: T;
+  contactCard?:
+    | T
+    | {
+        heading?: T;
+        phone?: T;
+        phoneLabel?: T;
+        email?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock_select".
+ */
+export interface ContactBlockSelect<T extends boolean = true> {
+  heading?: T;
+  form?: T;
+  enableIntro?: T;
+  introContent?: T;
+  map?:
+    | T
+    | {
+        latitude?: T;
+        longitude?: T;
+        zoom?: T;
+        markerLabel?: T;
+        markerSubtitle?: T;
+        openInMapsUrl?: T;
+      };
+  contactInfo?:
+    | T
+    | {
+        heading?: T;
+        phone?: T;
+        phoneLabel?: T;
+        email?: T;
       };
   id?: T;
   blockName?: T;
@@ -2291,23 +2399,26 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
+  navColumns?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
+        title: string;
+        links?:
+          | {
+              label: string;
+              href: string;
+              newTab?: boolean | null;
+              download?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  tagline?: string | null;
+  socialLinks?:
+    | {
+        platform: 'instagram' | 'linkedin' | 'facebook' | 'youtube' | 'twitter';
+        url: string;
         id?: string | null;
       }[]
     | null;
@@ -2380,23 +2491,42 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  navColumns?:
     | T
     | {
-        link?:
+        title?: T;
+        links?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
               label?: T;
+              href?: T;
+              newTab?: T;
+              download?: T;
+              id?: T;
             };
+        id?: T;
+      };
+  tagline?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
         id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collections_widget".
+ */
+export interface CollectionsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2426,21 +2556,7 @@ export interface TaskSchedulePublish {
  */
 export interface BannerBlock {
   style: 'info' | 'warning' | 'error' | 'success';
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  content: string;
   id?: string | null;
   blockName?: string | null;
   blockType: 'banner';

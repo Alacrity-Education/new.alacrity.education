@@ -4,8 +4,10 @@ import config from '@payload-config'
 
 import type { PersonCardBlock as PersonCardBlockProps, Member } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
+import { SectionTitle } from '@/components/SectionTitle'
 import Image from 'next/image'
 import { cn } from '@/utilities/ui'
+import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
 
 const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
   const imageUrl =
@@ -18,8 +20,15 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
       ? member.image.alt
       : member.name
 
-  return (
-    <div className="rounded-2xl shadow-lg overflow-hidden flex flex-col h-full aspect-[4/5] bg-primary">
+  const card = (
+    <div className="rounded-2xl shadow-lg overflow-hidden flex flex-col h-full aspect-[4/5] bg-primary relative group/card">
+      {/* LinkedIn link indicator */}
+      {member.linkedinUrl && (
+        <div className="absolute top-3 right-3 z-10 bg-base-100 text-primary rounded-full p-2 shadow-md transition-transform duration-200 group-hover/card:scale-110">
+          <FaArrowUpRightFromSquare className="h-3.5 w-3.5 font-semibold" />
+        </div>
+      )}
+
       {/* Square image at the top with effects */}
       <div className="relative aspect-square w-full">
         <Image
@@ -33,7 +42,7 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
         <div className="absolute inset-0 bg-primary mix-blend-screen" />
         {/* Bottom half gradient fading into the text area below */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-primary via-transparent to-transparent">
-          <div className={"h-3/5"}></div>
+          <div className="h-3/5" />
           <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-lg lg:text-lg xl:text-base 2xl:text-xl">
             <p className="text-primary-content font-bold leading-snug">{member.name}</p>
             {member.role && (
@@ -42,10 +51,24 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
           </div>
         </div>
       </div>
-
-      {/* Text below the image */}
     </div>
   )
+
+  if (member.linkedinUrl) {
+    return (
+      <a
+        href={member.linkedinUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block h-full"
+        aria-label={`${member.name} on LinkedIn`}
+      >
+        {card}
+      </a>
+    )
+  }
+
+  return card
 }
 
 export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({ title, members, links }) => {
@@ -108,8 +131,6 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({ title, m
     always: 'text-xl shrink-0',
   }
 
-  const baseTypography =
-    'text-2xl md:text-3xl lg:text-4xl font-extrabold text-primary mt-0 mb-2 sm:mb-4 md:mb-6 lg:mb-8'
   // Card widths sized to show exactly N cards; extras overflow and scroll
   // gap-20 = 80px. N=2: 50%-40px, N=3: 33.33%-53px, N=4: 25%-60px
   const cardWrapperClass =
@@ -117,13 +138,12 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({ title, m
 
   return (
     <section className="container">
-      {title && (
-        <div className={cn(titleWrapperClass[overflowBreak],"lg:py-4")}>
-          <p className={cn(`mb-0 ${titleTextClass[overflowBreak]}`, baseTypography)}>
-            {title} <span className={cn(arrowClass[overflowBreak], baseTypography)}>→</span>
-          </p>
-        </div>
-      )}
+      <SectionTitle
+        title={title}
+        arrow={arrowClass[overflowBreak]}
+        className={cn(titleWrapperClass[overflowBreak], 'lg:py-4')}
+        textClassName={titleTextClass[overflowBreak]}
+      />
 
       <div className="flex flex-row gap-4 sm:gap-10 md:gap-16 py-2 px-2 lg:gap-20 overflow-x-auto snap-x snap-mandatory pb-2">
         {resolvedMembers.map((member) => (

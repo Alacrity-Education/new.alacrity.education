@@ -23,7 +23,7 @@ export const FeaturedCardsBlock: Block = {
   interfaceName: 'FeaturedCardsBlock',
   fields: [
     {
-      name: 'sectionTitle',
+      name: 'title',
       type: 'text',
       label: 'Section Title',
     },

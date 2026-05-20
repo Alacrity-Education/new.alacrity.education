@@ -21,8 +21,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     <nav className=" bg-primary shadow-sm fixed top-0 z-50 flex flex-col">
       <HighlightBanner highlightBanner={data.highlightBanner} />
       <div className="navbar flex flex-row items-center bg-primary lg:px-8 w-screen ">
+
         <MobileHeaderNav data={data} />
-        <div className="flex-1">
+        <div className="navbar-start">
           <Link href="/" className="btn btn-ghost text-primary-content hover:text-primary md:text-xl">
             <Logo loading="eager" priority="high"  />
           </Link>
