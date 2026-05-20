@@ -14,6 +14,8 @@ import { Timeline } from '@/blocks/Timeline/config'
 import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/config'
 import { GridBlock } from '@/blocks/GridBlock/config'
 import { PersonCardBlock } from '@/blocks/PersonCardBlock/config'
+import { MapBlock } from '@/blocks/Map/config'
+import { ContactBlock } from '@/blocks/Contact/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '@/hooks/populatePublishedAt'
@@ -92,6 +94,8 @@ export const Pages: CollectionConfig<'pages'> = {
                 FeaturedCardsBlock,
                 GridBlock,
                 PersonCardBlock,
+                MapBlock,
+                ContactBlock,
               ],
               required: true,
               admin: {

@@ -5,12 +5,9 @@ export const CarouselLogoBlock: Block = {
   interfaceName: 'Logo Carousel',
   fields: [
     {
-      name: 'blockTitle',
+      name: 'title',
       type: 'text',
-      label: 'Block Title',
-      admin: {
-        description: 'Text that appears before the content of the block as a title.',
-      },
+      label: 'Section Title',
     },
     {
       name: 'items',
@@ -30,9 +27,9 @@ export const CarouselLogoBlock: Block = {
           required: true,
         },
         {
-          name: "link",
+          name: 'link',
           type: 'text',
-        }
+        },
       ],
     },
   ],

@@ -4,6 +4,7 @@ import { Card, CardImage, CardBody, CardCTA } from '@/components/primitives/card
 import { cn } from '@/utilities/ui'
 import type { Media as MediaType } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
+import { SectionTitle } from '@/components/SectionTitle'
 
 type CardVariant = 'base' | 'primary'
 
@@ -27,11 +28,11 @@ interface CardItem {
 }
 
 interface CardBlockProps {
-  heading?: string | null
+  title?: string | null
   cards?: CardItem[] | null
 }
 
-export const CardBlock: React.FC<CardBlockProps> = ({  heading, cards }) => {
+export const CardBlock: React.FC<CardBlockProps> = ({ title, cards }) => {
   const count = (cards || []).length
 
   type OverflowBreak = 'never' | 'md' | 'lg' | 'always'
@@ -62,19 +63,14 @@ export const CardBlock: React.FC<CardBlockProps> = ({  heading, cards }) => {
     always: 'shrink-0',
   }
 
-  const baseTypography = 'text-2xl md:text-3xl lg:text-4xl font-extrabold text-primary mt-0 mb-2 sm:mb-4 md:mb-6 lg:mb-8'
-
-
   return (
     <div className="container ">
-      {heading && (
-        <div className={cn(titleWrapperClass[overflowBreak], 'lg:py-4')}>
-          <p className={cn('mb-0', titleTextClass[overflowBreak], baseTypography)}>
-            {heading}{' '}
-            <span className={cn(arrowClass[overflowBreak], baseTypography)}>→</span>
-          </p>
-        </div>
-      )}
+      <SectionTitle
+        title={title}
+        arrow={arrowClass[overflowBreak]}
+        className={cn(titleWrapperClass[overflowBreak], 'lg:py-4')}
+        textClassName={titleTextClass[overflowBreak]}
+      />
 
       {/* py-6 -my-6 creates vertical room inside the scroll container so box-shadows aren't clipped */}
       <div className="overflow-x-auto snap-x snap-mandatory px-4 py-6 -my-6">

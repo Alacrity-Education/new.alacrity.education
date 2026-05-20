@@ -7,9 +7,9 @@ export const CardBlock: Block = {
   interfaceName: 'CardBlock',
   fields: [
     {
-      name: 'heading',
+      name: 'title',
       type: 'text',
-      label: 'Heading',
+      label: 'Section Title',
     },
     {
       name: 'cards',
