@@ -50,7 +50,7 @@ const containerBg: Record<string, string> = {
 const textProseClass: Record<string, string> = {
   base: '',
   primary:
-    'prose-p:text-primary-content prose-h1:text-primary-content prose-h2:text-primary-content prose-h3:text-primary-content prose-b:text-primary-content prose-b:text-semibold',
+    'prose-sm sm:prose-base prose-p:text-primary-content prose-h1:text-primary-content prose-h2:text-primary-content prose-h3:text-primary-content prose-b:text-primary-content prose-b:text-semibold',
 }
 const linkCellBg: Record<string, string> = {
   base: 'bg-primary prose-p:text-primary-content prose-h1:text-primary-content prose-h2:text-primary-content prose-h3:text-primary-content prose-b:text-primary-content prose-b:text-semibold hover:bg-primary/90',
