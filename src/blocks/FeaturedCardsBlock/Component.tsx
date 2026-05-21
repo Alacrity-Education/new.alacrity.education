@@ -21,7 +21,7 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia()
 
-      mm.add('all', () => {
+      mm.add('(min-width: 800px)', () => {
         const wrappers = gsap.utils.toArray<HTMLElement>('.gsap-card-wrapper')
         const cardsElements = gsap.utils.toArray<HTMLElement>('.gsap-card')
         const sectionEl = containerRef.current
@@ -57,26 +57,91 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
             scale = 0.9 + 0.025 * i
             rotation = -10
           }
+          if (card) {
+            console.log('card')
+            gsap.to(card, {
+              scale: scale,
+              rotationX: rotation,
+              transformOrigin: 'top center',
+              ease: 'none',
+              scrollTrigger: {
+                trigger: wrapper,
+                start: () => `top top+=${window.innerHeight * 0.10 + 100 + i * CARD_STAGGER}`,
+                endTrigger: sectionEl,
+                end: () =>
+                  `bottom top+=${
+                    window.innerHeight * 0.10 + 100 + i * CARD_STAGGER + wrapper.offsetHeight
+                  }`,
+                scrub: true,
+                pin: wrapper,
+                pinSpacing: false,
+                invalidateOnRefresh: true,
+              },
+            })
+          }
+        })
 
-          gsap.to(card, {
-            scale: scale,
-            rotationX: rotation,
-            transformOrigin: 'top center',
-            ease: 'none',
-            scrollTrigger: {
-              trigger: wrapper,
-              start: () => `top top+=${window.innerHeight * 0.15 + 100 + i * CARD_STAGGER}`,
-              endTrigger: sectionEl,
-              end: () =>
-                `bottom top+=${
-                  window.innerHeight * 0.15 + 100 + i * CARD_STAGGER + wrapper.offsetHeight
-                }`,
-              scrub: true,
-              pin: wrapper,
-              pinSpacing: false,
-              invalidateOnRefresh: true,
-            },
+        ScrollTrigger.refresh()
+      })
+
+      mm.add('(max-width: 799px)', () => {
+        const wrappers = gsap.utils.toArray<HTMLElement>('.gsap-card-wrapper')
+        const cardsElements = gsap.utils.toArray<HTMLElement>('.gsap-card')
+        const sectionEl = containerRef.current
+        const titleEl = titleRef.current
+        const lastWrapper = wrappers[wrappers.length - 1]
+        const lastCard = cardsElements[cardsElements.length - 1]
+
+        // Pin the title for the same scroll distance as the last card's pin.
+        // The last card pins at: top+=15vh + 100 + (n-1)*CARD_STAGGER
+        // and releases when the section bottom passes that line + card height.
+        if (titleEl && lastWrapper && lastCard) {
+          const lastIndex = cardsElements.length - 1
+          ScrollTrigger.create({
+            trigger: sectionEl,
+            start: 'top top',
+            endTrigger: sectionEl,
+            end: () =>
+              `bottom top+=${
+                window.innerHeight * 0.15 + 100 + lastIndex * CARD_STAGGER + lastCard.offsetHeight
+              }`,
+            pin: titleEl,
+            pinSpacing: false,
+            invalidateOnRefresh: true,
           })
+        }
+
+        wrappers.forEach((wrapper, i) => {
+          const card = cardsElements[i]
+          let scale = 1
+          let rotation = 0
+
+          if (i !== cardsElements.length - 1) {
+            scale = 0.9 + 0.025 * i
+            rotation = -10
+          }
+          if (card) {
+            console.log('card')
+            gsap.to(card, {
+              scale: scale,
+              rotationX: rotation,
+              transformOrigin: 'top center',
+              ease: 'none',
+              scrollTrigger: {
+                trigger: wrapper,
+                start: () => `top top+=${window.innerHeight * 0.02 + 100 + i * CARD_STAGGER}`,
+                endTrigger: sectionEl,
+                end: () =>
+                  `bottom top+=${
+                    window.innerHeight * 0.02 + 100 + i * CARD_STAGGER + wrapper.offsetHeight
+                  }`,
+                scrub: true,
+                pin: wrapper,
+                pinSpacing: false,
+                invalidateOnRefresh: true,
+              },
+            })
+          }
         })
 
         ScrollTrigger.refresh()
@@ -87,24 +152,21 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
   }, [cards])
 
   return (
-    <section
-      ref={containerRef}
-      className="container relative pb-[40vh] gsap-section-wrapper"
-    >
+    <section ref={containerRef} className="container relative pb-[40lvh] gsap-section-wrapper">
       <SectionTitle
         ref={titleRef}
         title={title}
         arrow
-        className="relative top-[15vh] z-0 bg-base-100 py-4 h-fit"
+        className="relative top-[0lvh] sm:top-[6lvh] z-0 py-4 h-fit bg-transparent"
       />
 
       <div className="flex flex-col gap-0 mt-8 items-center">
         {(cards || []).map((card, i) => (
           <div
             key={i}
-            className="gsap-card-wrapper relative w-full mb-[40vh] last:mb-[15vh] [perspective:1000px]"
+            className="gsap-card-wrapper relative w-full mb-[40lvh] last:mb-[15lvh] [perspective:1000px]"
           >
-            <div className="gsap-card w-full h-max rounded-2xl border-2 border-base-300 bg-base-100 shadow-xl overflow-hidden">
+            <div className="gsap-card w-full h-max rounded-2xl border-4 border-primary/50 bg-base-100 shadow-xl overflow-hidden">
               <div className="flex flex-col-reverse sm:flex-row h-max p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 gap-6">
                 <div className="flex flex-col flex-1 min-w-0">
                   {card.richText && (
