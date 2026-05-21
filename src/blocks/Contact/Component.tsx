@@ -1,5 +1,6 @@
 import React from 'react'
-import type { ContactBlock, Form } from '@/payload-types'
+import type { ContactBlock } from '@/payload-types'
+import type { Form as FormType } from '@payloadcms/plugin-form-builder/types'
 import RichText from '@/components/RichText'
 import { Map } from '@/components/Map'
 import { ContactInfoCard } from '@/components/ContactInfoCard'
@@ -14,7 +15,6 @@ export const ContactBlockComponent: React.FC<ContactBlock> = ({
   contactInfo,
 }) => {
   if (typeof form === 'number') return null
-  const { id: formId, confirmationType, redirect } = form as Form
 
   return (
     <section className="container my-16">
@@ -29,11 +29,7 @@ export const ContactBlockComponent: React.FC<ContactBlock> = ({
             {heading && (
               <h2 className="text-3xl font-bold mb-6 text-base-content">{heading}</h2>
             )}
-            <ContactForm
-              formId={String(formId)}
-              confirmationType={confirmationType ?? undefined}
-              redirectUrl={redirect?.url ?? undefined}
-            />
+            <ContactForm form={form as unknown as FormType} />
           </div>
 
           {/* Right: map + contact info card (stacked, visually attached) */}
