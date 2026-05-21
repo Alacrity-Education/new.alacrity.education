@@ -13,9 +13,9 @@ export const CarouselCard = ({ media, link }: { media: MediaType | number; link:
   <Link href={link} target="_blank" rel="noopener noreferrer">
     <div className="flex items-center justify-center h-30 sm:h-40 aspect-square bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow shrink-0">
       <Media
-        imgClassName="h-full w-full object-cover"
-        pictureClassName="h-full w-full"
-        className="h-full w-full"
+        imgClassName="h-full w-full object-contain"
+        pictureClassName="h-full w-full object-contain"
+        className="h-full w-full object-contain"
         resource={media}
       />
     </div>

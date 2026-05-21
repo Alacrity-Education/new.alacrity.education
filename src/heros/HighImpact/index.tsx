@@ -112,8 +112,10 @@ export const HeroImage = ({
     >
       <Media
         pictureClassName={cn(
-          'w-full lg:h-full overflow-visible hover:-translate-y-1 transition-transform z-10',
-          isCircle ? 'aspect-square rounded-full' : 'aspect-video rounded-lg',
+          'overflow-visible hover:-translate-y-1 transition-transform z-10',
+          isCircle
+            ? 'w-2/3 lg:w-full aspect-square rounded-full'
+            : 'w-full lg:h-full aspect-video rounded-lg',
         )}
         className="h-max w-full"
         imgClassName={cn(
