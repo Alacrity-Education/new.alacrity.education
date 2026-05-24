@@ -119,8 +119,8 @@ export const HeroImage = ({
         )}
         className="h-max w-full"
         imgClassName={cn(
-          'z-20 object-cover w-full shadow-2xl',
-          isCircle ? 'aspect-square rounded-full object-center' : 'aspect-video rounded-lg object-bottom',
+          'z-20 object-fit w-full shadow-2xl',
+          isCircle ? 'aspect-cover rounded-full object-center' : 'aspect-video rounded-lg object-bottom',
         )}
         priority
         resource={media}

@@ -157,7 +157,7 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
         ref={titleRef}
         title={title}
         arrow
-        className="relative top-[0lvh] sm:top-[6lvh] z-0 py-4 h-fit bg-transparent"
+        className="relative top-[0lvh] sm:top-[6lvh] lg:top-[8lvh] z-0 py-4 h-fit bg-transparent"
       />
 
       <div className="flex flex-col gap-0 mt-8 items-center">
