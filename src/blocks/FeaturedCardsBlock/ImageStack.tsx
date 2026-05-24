@@ -47,7 +47,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
     resource: item.image,
     width: item.image.width ?? undefined,
     height: item.image.height ?? undefined,
-    alt: item.image.alt ?? '',
+    alt: item.image.alt ?? 'Gallery image',
   }))
 
   return (
@@ -59,12 +59,19 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
         aria-label={hasStack ? `View all ${populated.length} photos` : undefined}
         tabIndex={hasStack ? 0 : undefined}
         onKeyDown={
-          hasStack ? (e) => e.key === 'Enter' && setOpen(true) : undefined
+          hasStack
+            ? (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setOpen(true)
+                }
+              }
+            : undefined
         }
       >
         {/* Layer 0: back — 3+ images only; rests at rotate(0), fans to -4deg on hover */}
         {backImage && (
-          <div className="absolute inset-0 rounded-xl overflow-hidden transition-transform duration-[350ms] [transition-timing-function:cubic-bezier(.34,1.56,.64,1)] group-hover:-rotate-[4deg] group-hover:-translate-y-1">
+          <div className="absolute inset-0 z-0 rounded-xl overflow-hidden transition-transform duration-[350ms] [transition-timing-function:cubic-bezier(.34,1.56,.64,1)] group-hover:-rotate-[4deg] group-hover:-translate-y-1">
             <Media
               className="w-full h-full"
               imgClassName="w-full h-full object-cover"
@@ -75,7 +82,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
 
         {/* Layer 1: mid — 2+ images; rests at rotate(0), fans to +4deg on hover */}
         {midImage && (
-          <div className="absolute inset-0 rounded-xl overflow-hidden transition-transform duration-[350ms] [transition-timing-function:cubic-bezier(.34,1.56,.64,1)] [transition-delay:40ms] group-hover:rotate-[4deg] group-hover:-translate-y-1">
+          <div className="absolute inset-0 z-[1] rounded-xl overflow-hidden transition-transform duration-[350ms] [transition-timing-function:cubic-bezier(.34,1.56,.64,1)] [transition-delay:40ms] group-hover:rotate-[4deg] group-hover:-translate-y-1">
             <Media
               className="w-full h-full"
               imgClassName="w-full h-full object-cover"
@@ -85,7 +92,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
         )}
 
         {/* Layer 2: front — always on top, no animation */}
-        <div className="absolute inset-0 rounded-xl overflow-hidden shadow-lg">
+        <div className="absolute inset-0 z-[2] rounded-xl overflow-hidden shadow-lg">
           <Media
             className="w-full h-full"
             imgClassName="w-full h-full object-cover"
@@ -95,7 +102,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
 
         {/* Photo count badge — fades out on hover */}
         {hasStack && (
-          <div className="absolute bottom-2 right-2 z-10 bg-black/50 text-white text-xs px-1.5 py-0.5 rounded transition-opacity duration-200 group-hover:opacity-0 pointer-events-none select-none">
+          <div className="absolute bottom-2 right-2 z-20 bg-black/50 text-white text-xs px-1.5 py-0.5 rounded transition-opacity duration-200 group-hover:opacity-0 pointer-events-none select-none">
             📷 {populated.length}
           </div>
         )}
@@ -110,6 +117,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
           render={{
             slide: ({ slide }) => {
               const s = slide as MediaSlide
+              if (!s.resource) return undefined
               return (
                 <div className="relative flex items-center justify-center w-full h-full">
                   <Media resource={s.resource} imgClassName="object-contain max-h-full" />
