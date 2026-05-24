@@ -51,7 +51,7 @@ const titleClass: Record<string, string> = {
 }
 const descriptionProseClass: Record<string, string> = {
   base: 'prose-sm sm:prose-base',
-  primary: 'prose-sm sm:prose-base prose-p:text-primary-content',
+  primary: 'prose-sm sm:prose-base [&_p]:text-primary-content',
 }
 const linkCellBg: Record<string, string> = {
   base: 'bg-primary hover:bg-primary/90',
@@ -62,11 +62,11 @@ const linkCellTitleClass: Record<string, string> = {
   primary: '',
 }
 const linkCellProseClass: Record<string, string> = {
-  base: 'prose-p:text-primary-content',
+  base: '[&_p]:text-primary-content',
   primary: '',
 }
 
-const noProseMargins = 'prose-p:!my-0'
+const noProseMargins = '[&_p]:!my-0'
 const aspectRatioClass = '[aspect-ratio:var(--aspect-mobile)] lg:[aspect-ratio:var(--aspect-desktop)]'
 
 type LinkField = NonNullable<NonNullable<GridBlockProps['cells']>[0]['link']>
@@ -169,7 +169,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                   )}
                   {cell.description && (
                     <RichText
-                      className={cn('mb-0 w-full mx-0 prose-sm sm:prose-base prose-p:text-primary-content', noProseMargins)}
+                      className={cn('mb-0 w-full mx-0 prose-sm sm:prose-base [&_p]:text-primary-content', noProseMargins)}
                       data={cell.description}
                       enableGutter={false}
                       enableProse={false}
