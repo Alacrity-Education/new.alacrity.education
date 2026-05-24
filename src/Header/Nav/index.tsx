@@ -26,12 +26,14 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
         {navItems.map((item, i) => {
           const { itemType, link, subItems } = item
           if (itemType === 'parent') {
-            const {appearance} = item
+            const {appearance,label} = item
             return (
               <li key={i} className="h-max w-max overflow-visible">
                 <details className="dropdown-end overflow-visible">
-                  <Button asChild variant={appearance} className={"overflow-visible"}>
-                    <summary className="h-max overflow-visible rounded-md">{link?.label || 'Menu'}</summary>
+                  <Button asChild variant={appearance} className={'overflow-visible'}>
+                    <summary className="h-max overflow-visible rounded-md">
+                      {label || 'Menu'}
+                    </summary>
                   </Button>
                   <ul className="menu dropdown-content rounded-xl rounded-box shadow-2xl bg-base-100 z-80 w-52 p-2 gap-2">
                     {(subItems || []).map((sub: any, idx: number) => (

@@ -86,6 +86,15 @@ export const Header: GlobalConfig = {
           },
         },
         {
+          name: "label",
+          label: "Label",
+          type:"text",
+          required: true,
+          admin: {
+            condition: (_, sibling) => sibling?.itemType === 'parent',
+          },
+        },
+        {
           name: 'subItems',
           type: 'array',
           admin: {

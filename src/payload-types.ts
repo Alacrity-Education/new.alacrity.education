@@ -2396,6 +2396,7 @@ export interface Header {
           appearance?: ('default' | 'inlinePrimary') | null;
         };
         appearance?: ('primary' | 'default' | 'primaryOverlap') | null;
+        label?: string | null;
         subItems?:
           | {
               link: {
@@ -2495,6 +2496,7 @@ export interface HeaderSelect<T extends boolean = true> {
               appearance?: T;
             };
         appearance?: T;
+        label?: T;
         subItems?:
           | T
           | {
