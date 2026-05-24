@@ -64,9 +64,12 @@ export const Header: GlobalConfig = {
         },
 
         link({
-          appearances: [appearanceOptions.default, appearanceOptions.inlinePrimary].map(
-            (option) => option.value,
-          ),
+          appearances: [
+            appearanceOptions.default,
+            appearanceOptions.primaryOverlap,
+
+            appearanceOptions.primary,
+          ].map((option) => option.value),
           overrides: {
             admin: {
               condition: (_, sibling) => sibling?.itemType === 'link',
@@ -86,9 +89,9 @@ export const Header: GlobalConfig = {
           },
         },
         {
-          name: "label",
-          label: "Label",
-          type:"text",
+          name: 'label',
+          label: 'Label',
+          type: 'text',
           required: true,
           admin: {
             condition: (_, sibling) => sibling?.itemType === 'parent',

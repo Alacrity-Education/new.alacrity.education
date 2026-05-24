@@ -61,7 +61,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
     <div className="container">
       <div
         className={cn(
-          'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8 rounded-2xl p-3 sm:p-8',
+          'grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-3 sm:gap-8 rounded-2xl p-3 sm:p-8',
           containerBg[v],
         )}
       >
@@ -69,15 +69,15 @@ export const GridBlock: React.FC<GridBlockProps> = ({
           // ── Text cell ────────────────────────────────────────────────────
           if (cell.cellType === 'text') {
             return (
-              <div key={cell.id ?? i} className="flex flex-col rounded-xl p-4 sm:p-6">
+              <div key={cell.id ?? i} className="flex flex-col rounded-xl aspect-square p-10 sm:p-4  md:p-6 lg:p-4 xl:p-6 border-b rounded-b-none border-base-100/20 sm:border-none">
                 {cell.title && (
-                  <p className={cn('text-4xl sm:text-5xl font-bold mb-2', titleClass[v])}>
+                  <p className={cn('text-6xl sm:text-5xl lg:text-4xl xl:text-5xl font-bold mb-2', titleClass[v])}>
                     {cell.title}
                   </p>
                 )}
                 {cell.description && (
                   <RichText
-                    className={cn('mb-0 w-full mx-0', descriptionProseClass[v], noProseMargins)}
+                    className={cn('mb-0 w-full max-w-full mx-0', descriptionProseClass[v], noProseMargins)}
                     data={cell.description}
                     enableGutter={false}
                     enableProse={false}
@@ -90,7 +90,10 @@ export const GridBlock: React.FC<GridBlockProps> = ({
           // ── Text + Image cell ─────────────────────────────────────────────
           if (cell.cellType === 'textImage') {
             return (
-              <div key={cell.id ?? i} className="relative rounded-xl overflow-hidden min-h-48 sm:min-h-64">
+              <div
+                key={cell.id ?? i}
+                className="relative rounded-xl overflow-hidden aspect-square min-h-48 sm:min-h-64"
+              >
                 {cell.media && (
                   <Media
                     className="absolute inset-0 w-full h-full"
@@ -107,7 +110,10 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                   )}
                   {cell.description && (
                     <RichText
-                      className={cn('mb-0 w-full mx-0 text-base lg:text-lg xl:text-xl [&_p]:text-primary-content', noProseMargins)}
+                      className={cn(
+                        'mb-0 w-full mx-0 text-base lg:text-lg xl:text-xl [&_p]:text-primary-content',
+                        noProseMargins,
+                      )}
                       data={cell.description}
                       enableGutter={false}
                       enableProse={false}
@@ -131,7 +137,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                 href={href}
                 {...newTabProps}
                 className={cn(
-                  'group flex flex-col rounded-xl p-4 sm:p-6 transition-colors',
+                  'group flex flex-col rounded-xl p-4 sm:p-6 transition-colors aspect-square',
                   linkCellBg[v],
                 )}
               >

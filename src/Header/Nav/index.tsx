@@ -112,11 +112,12 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
             {navItems.map((item, i) => {
               const { itemType, link, subItems } = item as any
               if (itemType === 'parent') {
+                const { label } = item
                 return (
                   <li key={i}>
                     <details>
                       <summary className={'text-lg text-primary-content'}>
-                        {link?.label || 'Menu'}
+                        {label || 'Menu'}
                       </summary>
                       <ul className="rounded-t-none p-2 dropdown-start">
                         {(subItems || []).map((sub: any, idx: number) => (
@@ -135,7 +136,7 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
               }
               return (
                 <li key={i}>
-          -         <CMSLink
+                   <CMSLink
                     {...link}
                     appearance={'inline'}
                     className={'text-start text-lg text-primary-content'}

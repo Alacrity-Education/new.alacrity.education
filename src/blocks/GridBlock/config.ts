@@ -33,13 +33,11 @@ export const GridBlock: Block = {
         },
         {
           name: 'rows',
-          type: 'select',
+          type: 'number',
           label: 'Grid Layout',
-          options: [
-            { label: 'Single row (4 cells)', value: '1' },
-            { label: 'Two rows (8 cells)', value: '2' },
-          ],
-          defaultValue: '1',
+
+          defaultValue: 1,
+          max:3,
           admin: {
             width: '50%',
             description: 'Add 4 cells for a single row, or 8 cells for two rows at full width',
