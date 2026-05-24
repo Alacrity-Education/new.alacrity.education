@@ -34,6 +34,7 @@ export const GridBlock: Block = {
         {
           name: 'rows',
           type: 'select',
+          label: 'Grid Layout',
           options: [
             { label: 'Single row (4 cells)', value: '1' },
             { label: 'Two rows (8 cells)', value: '2' },
