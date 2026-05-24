@@ -1009,20 +1009,12 @@ export interface FeaturedCardsBlock {
 export interface GridBlock {
   variant?: ('base' | 'primary') | null;
   /**
-   * Number of columns (desktop)
+   * How many rows of stats to show at desktop width
    */
-  columns?: number | null;
-  /**
-   * Number of rows (1–3)
-   */
-  rows?: number | null;
+  rows?: ('1' | '2') | null;
   cells?:
     | {
         cellType: 'text' | 'textImage' | 'link';
-        colSpan?: number | null;
-        rowSpan?: number | null;
-        colSpanMobile?: number | null;
-        rowSpanMobile?: number | null;
         title?: string | null;
         description?: {
           root: {
@@ -1764,16 +1756,11 @@ export interface FeaturedCardsBlockSelect<T extends boolean = true> {
  */
 export interface GridBlockSelect<T extends boolean = true> {
   variant?: T;
-  columns?: T;
   rows?: T;
   cells?:
     | T
     | {
         cellType?: T;
-        colSpan?: T;
-        rowSpan?: T;
-        colSpanMobile?: T;
-        rowSpanMobile?: T;
         title?: T;
         description?: T;
         media?: T;
@@ -2395,7 +2382,7 @@ export interface Header {
           /**
            * Choose how the link should be rendered.
            */
-          appearance?: ('default' | 'inlinePrimary') | null;
+          appearance?: ('default' | 'primaryOverlap' | 'primary') | null;
         };
         appearance?: ('primary' | 'default' | 'primaryOverlap') | null;
         label?: string | null;
