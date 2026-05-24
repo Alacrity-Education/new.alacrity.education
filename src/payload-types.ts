@@ -1009,9 +1009,9 @@ export interface FeaturedCardsBlock {
 export interface GridBlock {
   variant?: ('base' | 'primary') | null;
   /**
-   * How many rows of stats to show at desktop width
+   * Add 4 cells for a single row, or 8 cells for two rows at full width
    */
-  rows?: ('1' | '2') | null;
+  rows?: number | null;
   cells?:
     | {
         cellType: 'text' | 'textImage' | 'link';
