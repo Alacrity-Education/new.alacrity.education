@@ -26,7 +26,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText, i
 export default function Hero({ children, className }: { children?: React.ReactNode, className?: string }) {
   return (
     <div
-      className={"hero z-0 relative bg-base-100/30 overflow-x-clip min-h-[60vh] sm:min-h-[70vh] md:min-h-[70vh] pt-8 pb-12 sm:pt-12 sm:pb-16 md:-mt-10 md:pb-0"}
+      className={"hero z-0 relative bg-base-100/30 overflow-x-clip min-h-[60vh] sm:min-h-[70lvh] md:min-h-[70lvh] pt-8 pb-12 sm:pt-12 sm:pb-16 md:-mt-10 md:pb-0"}
     >
       <div
         className={cn("container mx-auto px-4 flex flex-col-reverse lg:flex-row-reverse gap-8 sm:gap-10 lg:gap-0 items-center justify-between h-full w-full",className)}
