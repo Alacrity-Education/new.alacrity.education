@@ -42,7 +42,7 @@ export const GridBlock: Block = {
           defaultValue: '1',
           admin: {
             width: '50%',
-            description: 'How many rows of stats to show at desktop width',
+            description: 'Add 4 cells for a single row, or 8 cells for two rows at full width',
           },
         },
       ],

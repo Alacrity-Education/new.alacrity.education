@@ -69,7 +69,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
           // ── Text cell ────────────────────────────────────────────────────
           if (cell.cellType === 'text') {
             return (
-              <div key={i} className="flex flex-col rounded-xl p-4 sm:p-6">
+              <div key={cell.id ?? i} className="flex flex-col rounded-xl p-4 sm:p-6">
                 {cell.title && (
                   <p className={cn('text-4xl sm:text-5xl font-bold mb-2', titleClass[v])}>
                     {cell.title}
@@ -90,7 +90,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
           // ── Text + Image cell ─────────────────────────────────────────────
           if (cell.cellType === 'textImage') {
             return (
-              <div key={i} className="relative rounded-xl overflow-hidden min-h-48 sm:min-h-64">
+              <div key={cell.id ?? i} className="relative rounded-xl overflow-hidden min-h-48 sm:min-h-64">
                 {cell.media && (
                   <Media
                     className="absolute inset-0 w-full h-full"
@@ -127,7 +127,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
 
             return (
               <Link
-                key={i}
+                key={cell.id ?? i}
                 href={href}
                 {...newTabProps}
                 className={cn(
