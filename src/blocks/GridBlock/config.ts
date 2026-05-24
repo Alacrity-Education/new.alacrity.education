@@ -1,19 +1,15 @@
 import type { Block, GroupField } from 'payload'
 
 import {
-  FixedToolbarFeature,
-  HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
 import { link } from '@/fields/link'
 
-const cellRichTextEditor = lexicalEditor({
+const descriptionEditor = lexicalEditor({
   features: ({ rootFeatures }) => [
     ...rootFeatures,
-    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-    FixedToolbarFeature(),
     InlineToolbarFeature(),
   ],
 })
@@ -117,10 +113,15 @@ export const GridBlock: Block = {
           ],
         },
         {
-          name: 'richText',
+          name: 'title',
+          type: 'text',
+          label: 'Stat Title',
+        },
+        {
+          name: 'description',
           type: 'richText',
-          label: false,
-          editor: cellRichTextEditor,
+          label: 'Description',
+          editor: descriptionEditor,
         },
         {
           name: 'media',
