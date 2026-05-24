@@ -50,6 +50,7 @@ export const FeaturedCardsBlock: Block = {
           fields: [
             {
               name: 'image',
+              label: 'Image',
               type: 'upload',
               relationTo: 'media',
               required: true,
