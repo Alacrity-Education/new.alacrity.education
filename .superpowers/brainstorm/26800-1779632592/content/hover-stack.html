@@ -1,0 +1,123 @@
+<h2>Hover stack effect — live preview</h2>
+<p class="subtitle">Hover each card to see the stack animation. Does this feel right?</p>
+
+<div style="display:flex;gap:40px;flex-wrap:wrap;justify-content:center;padding:32px 0;">
+
+  <!-- Card 1: has 3+ images (full stack) -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+    <div class="label">3+ images — full stack effect</div>
+    <div style="background:#1a1a2e;border-radius:16px;border:2px solid #3a3a5c;padding:24px;width:280px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <!-- Text side -->
+        <div style="flex:1;">
+          <div style="background:#2a2a4a;height:14px;border-radius:4px;margin-bottom:8px;width:80%;"></div>
+          <div style="background:#2a2a4a;height:10px;border-radius:4px;margin-bottom:6px;"></div>
+          <div style="background:#2a2a4a;height:10px;border-radius:4px;margin-bottom:6px;width:70%;"></div>
+          <div style="background:#2a2a4a;height:10px;border-radius:4px;margin-bottom:6px;"></div>
+          <div style="margin-top:16px;">
+            <div style="background:#6c63ff;height:28px;border-radius:6px;width:80px;display:inline-block;"></div>
+          </div>
+        </div>
+        <!-- Image stack -->
+        <div class="image-stack" style="position:relative;width:110px;height:110px;flex-shrink:0;cursor:pointer;">
+          <!-- Back image 2: rotates to -4deg on hover -->
+          <div class="stack-back-neg" style="
+            position:absolute;inset:0;
+            background:linear-gradient(135deg,#4a6fa5,#2d3561);
+            border-radius:10px;
+            transition:transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
+            transform-origin:center bottom;
+            box-shadow:0 2px 8px #0006;
+          "></div>
+          <!-- Back image 3: rotates to +4deg on hover -->
+          <div class="stack-back-pos" style="
+            position:absolute;inset:0;
+            background:linear-gradient(135deg,#a56b4a,#613521);
+            border-radius:10px;
+            transition:transform 0.35s cubic-bezier(.34,1.56,.64,1) 0.04s, box-shadow 0.35s ease;
+            transform-origin:center bottom;
+            box-shadow:0 2px 8px #0006;
+          "></div>
+          <!-- Front image (photo 1) -->
+          <div style="
+            position:absolute;inset:0;
+            background:linear-gradient(135deg,#48bb78,#2c7a4b);
+            border-radius:10px;
+            box-shadow:0 4px 16px #0008;
+            display:flex;align-items:center;justify-content:center;
+            color:#fff8;font-size:10px;letter-spacing:0.05em;
+          ">PHOTO 1</div>
+          <!-- Camera icon hint -->
+          <div class="stack-hint" style="
+            position:absolute;bottom:6px;right:6px;
+            background:#0006;border-radius:4px;padding:2px 5px;
+            color:#ffffffbb;font-size:9px;
+            transition:opacity 0.2s;
+          ">📷 3</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#888;">← hover the card above</div>
+  </div>
+
+  <!-- Card 2: has 1 image (no stack effect) -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+    <div class="label">1 image — no stack effect</div>
+    <div style="background:#1a1a2e;border-radius:16px;border:2px solid #3a3a5c;padding:24px;width:280px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="flex:1;">
+          <div style="background:#2a2a4a;height:14px;border-radius:4px;margin-bottom:8px;width:80%;"></div>
+          <div style="background:#2a2a4a;height:10px;border-radius:4px;margin-bottom:6px;"></div>
+          <div style="background:#2a2a4a;height:10px;border-radius:4px;margin-bottom:6px;width:70%;"></div>
+          <div style="background:#2a2a4a;height:10px;border-radius:4px;margin-bottom:6px;"></div>
+          <div style="margin-top:16px;">
+            <div style="background:#6c63ff;height:28px;border-radius:6px;width:80px;display:inline-block;"></div>
+          </div>
+        </div>
+        <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
+          <div style="
+            position:absolute;inset:0;
+            background:linear-gradient(135deg,#48bb78,#2c7a4b);
+            border-radius:10px;
+            box-shadow:0 4px 16px #0008;
+            display:flex;align-items:center;justify-content:center;
+            color:#fff8;font-size:10px;
+          ">PHOTO 1</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#888;">No hover effect when only 1 image</div>
+  </div>
+
+</div>
+
+<style>
+.image-stack:hover .stack-back-neg {
+  transform: rotate(-4deg) translateY(-4px);
+  box-shadow: -3px 4px 14px #0008;
+}
+.image-stack:hover .stack-back-pos {
+  transform: rotate(4deg) translateY(-4px);
+  box-shadow: 3px 4px 14px #0008;
+}
+.image-stack:hover .stack-hint {
+  opacity: 0;
+}
+</style>
+
+<div class="options" style="margin-top:8px;">
+  <div class="option" data-choice="looks-good" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Looks good</h3>
+      <p>This is the feel I want — proceed with this</p>
+    </div>
+  </div>
+  <div class="option" data-choice="adjust" onclick="toggleSelect(this)">
+    <div class="letter">↻</div>
+    <div class="content">
+      <h3>Adjust it</h3>
+      <p>I want to tweak the rotation angle, speed, or the translateY lift</p>
+    </div>
+  </div>
+</div>

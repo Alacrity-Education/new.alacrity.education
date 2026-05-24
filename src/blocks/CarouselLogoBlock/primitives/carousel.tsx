@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Media as MediaType } from '@/payload-types'
 import { Media } from '@/components/Media'
@@ -35,12 +35,14 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
   const targetRef = useRef(0)    // destination the spring chases
   const pausedRef = useRef(false)
   const rafRef    = useRef<number | null>(null)
+  const [numCopies, setNumCopies] = useState(10)
 
   const items = React.Children.toArray(children).filter(Boolean)
 
   // Width of one copy: items + internal gap-6 spacings + trailing pr-6 padding
   // (the trailing padding makes the inter-copy visual gap match the inter-item gap)
   const getW = () => copy1Ref.current?.offsetWidth ?? 0
+  const computeCopies = (W: number) => Math.max(3, Math.ceil(window.innerWidth / W) + 2)
 
   // Map any raw position into the middle-copy zone (-2W, -W] via modulo (O(1)).
   // Because all three copies are identical, the wrap is undetectable.
@@ -64,6 +66,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
     posRef.current    = -W
     targetRef.current = -W
     applyTransform(-W)
+    setNumCopies(computeCopies(W))
   }, [items.length])
 
   // Continuous spring loop — always running so arrow clicks are immediately responsive
@@ -135,9 +138,20 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
         targetRef.current += n - posRef.current
         posRef.current = n
       }
+      setNumCopies(computeCopies(W))
     })
     ro.observe(el)
     return () => ro.disconnect()
+  }, [])
+
+  // Update copy count when viewport width changes (card sizes don't change, only coverage does)
+  useEffect(() => {
+    const handleResize = () => {
+      const W = getW()
+      if (W > 0) setNumCopies(computeCopies(W))
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const scroll = (dir: 'left' | 'right') => {
@@ -174,13 +188,14 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
 
         {/* overflow-hidden clips the wide track; px-12 keeps items clear of the arrows */}
         <div className="overflow-hidden px-12 pb-4">
-          {/* Three identical copies of the items side by side.
+          {/* numCopies identical copies — dynamically sized to always cover the viewport.
               pr-6 on each copy adds a trailing gap equal to the inter-item gap,
               so the loop point is visually seamless. */}
           <div ref={trackRef} className="flex will-change-transform">
             <div ref={copy1Ref} className="flex gap-6 shrink-0 pr-6">{items}</div>
-            <div className="flex gap-6 shrink-0 pr-6">{items}</div>
-            <div className="flex gap-6 shrink-0 pr-6">{items}</div>
+            {Array.from({ length: numCopies - 1 }, (_, i) => (
+              <div key={i} className="flex gap-6 shrink-0 pr-6">{items}</div>
+            ))}
           </div>
         </div>
 

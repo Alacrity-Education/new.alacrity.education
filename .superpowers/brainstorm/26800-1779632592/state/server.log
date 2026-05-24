@@ -1,0 +1,7 @@
+{"type":"server-started","port":49347,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:49347","screen_dir":"/home/ark/Luca/Code/new.alacrity.education/.superpowers/brainstorm/26800-1779632592/content","state_dir":"/home/ark/Luca/Code/new.alacrity.education/.superpowers/brainstorm/26800-1779632592/state"}
+{"type":"screen-added","file":"/home/ark/Luca/Code/new.alacrity.education/.superpowers/brainstorm/26800-1779632592/content/lightbox-style.html"}
+{"type":"screen-added","file":"/home/ark/Luca/Code/new.alacrity.education/.superpowers/brainstorm/26800-1779632592/content/waiting.html"}
+{"type":"screen-added","file":"/home/ark/Luca/Code/new.alacrity.education/.superpowers/brainstorm/26800-1779632592/content/hover-stack.html"}
+{"source":"user-event","type":"click","text":"✓\n    \n      Looks good\n      This is the feel I want — proceed with this","choice":"looks-good","id":null,"timestamp":1779632818387}
+{"type":"screen-added","file":"/home/ark/Luca/Code/new.alacrity.education/.superpowers/brainstorm/26800-1779632592/content/waiting-2.html"}
+{"type":"server-stopped","reason":"idle timeout"}
