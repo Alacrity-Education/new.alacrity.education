@@ -7,8 +7,8 @@ import type { FeaturedCardsBlock as FeaturedCardsBlockProps } from '@/payload-ty
 
 import RichText from '@/components/RichText'
 import { CMSLink } from '@/components/Link'
-import { Media } from '@/components/Media'
 import { SectionTitle } from '@/components/SectionTitle'
+import { ImageStack } from './ImageStack'
 
 export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, cards }) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -188,13 +188,9 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
                   )}
                 </div>
 
-                {card.media && (
-                  <div className="w-full sm:w-2/5 aspect-square shrink-0 rounded-xl overflow-hidden">
-                    <Media
-                      className="w-full h-full"
-                      imgClassName="w-full h-full object-cover"
-                      resource={card.media}
-                    />
+                {card.gallery && card.gallery.length > 0 && (
+                  <div className="w-full sm:w-2/5 shrink-0">
+                    <ImageStack images={card.gallery} />
                   </div>
                 )}
               </div>
