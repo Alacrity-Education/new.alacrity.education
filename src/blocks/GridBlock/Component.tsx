@@ -135,9 +135,10 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                 )}
                 {cell.description && (
                   <RichText
-                    className={cn('mb-0 w-full mx-0!', descriptionProseClass[v], noProseMargins)}
+                    className={cn('mb-0 w-full mx-0', descriptionProseClass[v], noProseMargins)}
                     data={cell.description}
                     enableGutter={false}
+                    enableProse={false}
                   />
                 )}
               </div>
@@ -168,9 +169,10 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                   )}
                   {cell.description && (
                     <RichText
-                      className={cn('mb-0 mx-0 prose-p:text-primary-content', noProseMargins)}
+                      className={cn('mb-0 w-full mx-0 prose-sm sm:prose-base prose-p:text-primary-content', noProseMargins)}
                       data={cell.description}
                       enableGutter={false}
+                      enableProse={false}
                     />
                   )}
                 </div>
@@ -214,6 +216,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                     className={cn('mb-0 w-full mx-0', linkCellProseClass[v], noProseMargins)}
                     data={cell.description}
                     enableGutter={false}
+                    enableProse={false}
                   />
                 )}
               </Link>
