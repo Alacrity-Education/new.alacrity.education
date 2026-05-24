@@ -50,8 +50,8 @@ const titleClass: Record<string, string> = {
   primary: 'text-primary-content',
 }
 const descriptionProseClass: Record<string, string> = {
-  base: 'prose-sm sm:prose-base',
-  primary: 'prose-sm sm:prose-base [&_p]:text-primary-content',
+  base: 'text-sm sm:text-base',
+  primary: 'text-sm sm:text-base [&_p]:text-primary-content',
 }
 const linkCellBg: Record<string, string> = {
   base: 'bg-primary hover:bg-primary/90',
@@ -169,7 +169,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                   )}
                   {cell.description && (
                     <RichText
-                      className={cn('mb-0 w-full mx-0 prose-sm sm:prose-base [&_p]:text-primary-content', noProseMargins)}
+                      className={cn('mb-0 w-full mx-0 text-sm sm:text-base [&_p]:text-primary-content', noProseMargins)}
                       data={cell.description}
                       enableGutter={false}
                       enableProse={false}
