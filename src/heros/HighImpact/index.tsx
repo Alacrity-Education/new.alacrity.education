@@ -59,7 +59,7 @@ export const HeroText = ({
                       lg:items-start lg:text-left"
       >
         <RichText
-          className="max-w-md w-full sm:!mx-0 sm:!px-0 relative z-20!"
+          className="max-w-md w-full sm:!mx-0 sm:!px-0 prose-p:text-base relative z-20!"
           data={richText}
           converter={customConverters}
         />
@@ -114,13 +114,15 @@ export const HeroImage = ({
         pictureClassName={cn(
           'overflow-visible hover:-translate-y-1 transition-transform z-10',
           isCircle
-            ? 'w-2/3 lg:w-full aspect-square rounded-full'
-            : 'w-full lg:h-full aspect-video rounded-lg',
+            ? 'w-3/5 lg:w-full aspect-square rounded-full'
+            : 'w-full lg:h-full lg:w-max aspect-video rounded-lg',
         )}
-        className="h-max w-full"
+        className="h-max w-full lg:h-full lg:w-max"
         imgClassName={cn(
-          'z-20 object-contain w-full shadow-2xl',
-          isCircle ? 'aspect-cover rounded-full object-center' : 'aspect-video rounded-lg object-bottom',
+          'z-20 object-contain w-full shadow-2xl lg:h-full lg:w-max',
+          isCircle
+            ? 'aspect-cover rounded-full object-center'
+            : 'aspect-video rounded-lg object-bottom',
         )}
         priority
         resource={media}

@@ -37,7 +37,7 @@ export function TimelineCard({ time, text, link }: { time: string; text: Default
           year: 'numeric',
         })}
       </div>
-      <div className="pt-4 max-h-full overflow-clip">
+      <div className="pt-4 h-full max-h-max overflow-clip">
         {text && <RichText className={'pl-0! ml-0! prose-sm pb-4 prose-p:text-base'} data={text} />}
         {link&&<CMSLink {...link} className={"has-external-arrow  btn-sm!"} />}
       </div>
@@ -70,7 +70,7 @@ export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, title })
   return (
     <div className="w-full container">
       <SectionTitle title={title} className="mb-6" />
-      <div className="relative min-h-[60vh] sm:min-h-[45vh] h-max w-full bg-base-100 flex flex-col items-start p-10 border-4 border-primary dark:border-primary/30 rounded-lg shadow-xl">
+      <div className="relative min-h-[60vh] sm:min-h-[50vh] h-max w-full bg-base-100 flex flex-col items-start p-10 border-4 border-primary dark:border-primary/30 rounded-lg shadow-xl">
         {/* Left arrow → older elements */}
         <button
           onClick={scrollLeft}
