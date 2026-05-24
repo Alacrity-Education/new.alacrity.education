@@ -53,7 +53,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
   return (
     <>
       <div
-        className={cn('relative aspect-square group', hasStack && 'cursor-pointer', className)}
+        className={cn('relative aspect-square group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2', hasStack && 'cursor-pointer', className)}
         onClick={hasStack ? () => setOpen(true) : undefined}
         role={hasStack ? 'button' : undefined}
         aria-label={hasStack ? `View all ${populated.length} photos` : undefined}
@@ -120,7 +120,11 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
               if (!s.resource) return undefined
               return (
                 <div className="relative flex items-center justify-center w-full h-full">
-                  <Media resource={s.resource} imgClassName="object-contain max-h-full" />
+                  <Media
+                    resource={s.resource}
+                    className="max-w-full max-h-full"
+                    imgClassName="object-contain max-h-full max-w-full"
+                  />
                 </div>
               )
             },
