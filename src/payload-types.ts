@@ -1023,7 +1023,8 @@ export interface GridBlock {
         rowSpan?: number | null;
         colSpanMobile?: number | null;
         rowSpanMobile?: number | null;
-        richText?: {
+        title?: string | null;
+        description?: {
           root: {
             type: string;
             children: {
@@ -1773,7 +1774,8 @@ export interface GridBlockSelect<T extends boolean = true> {
         rowSpan?: T;
         colSpanMobile?: T;
         rowSpanMobile?: T;
-        richText?: T;
+        title?: T;
+        description?: T;
         media?: T;
         link?:
           | T
