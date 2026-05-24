@@ -970,7 +970,15 @@ export interface FeaturedCardsBlock {
           };
           [k: string]: unknown;
         } | null;
-        media?: (number | null) | Media;
+        /**
+         * First image is shown on the card. Up to 7 total — hovering the card fans out a photo stack; clicking opens the full gallery.
+         */
+        gallery?:
+          | {
+              image: number | Media;
+              id?: string | null;
+            }[]
+          | null;
         links?:
           | {
               link: {
@@ -1729,7 +1737,12 @@ export interface FeaturedCardsBlockSelect<T extends boolean = true> {
     | T
     | {
         richText?: T;
-        media?: T;
+        gallery?:
+          | T
+          | {
+              image?: T;
+              id?: T;
+            };
         links?:
           | T
           | {

@@ -39,10 +39,22 @@ export const FeaturedCardsBlock: Block = {
           editor: cardRichTextEditor,
         },
         {
-          name: 'media',
-          label: 'Image',
-          type: 'upload',
-          relationTo: 'media',
+          name: 'gallery',
+          type: 'array',
+          label: 'Gallery Images',
+          maxRows: 7,
+          admin: {
+            description:
+              'First image is shown on the card. Up to 7 total — hovering the card fans out a photo stack; clicking opens the full gallery.',
+          },
+          fields: [
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+            },
+          ],
         },
         linkGroup({
           appearances: ['primary', 'baseOverlap', 'default', 'primaryOverlap'],
