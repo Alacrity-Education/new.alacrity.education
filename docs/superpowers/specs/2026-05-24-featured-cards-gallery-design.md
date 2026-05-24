@@ -95,6 +95,8 @@ interface ImageStackProps {
 }
 ```
 
+**Image rendering:** All images are rendered using the project's `<Media>` component (`@/components/Media`), not Next.js `<Image>` directly. This applies to the front image, both backing layers, and the YARL slides (YARL accepts a custom render function via its `render.slide` prop).
+
 ---
 
 ## 5. Implementation Steps
