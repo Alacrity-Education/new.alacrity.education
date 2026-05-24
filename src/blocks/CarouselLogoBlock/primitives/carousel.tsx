@@ -11,7 +11,7 @@ interface CarouselProps {
 
 export const CarouselCard = ({ media, link }: { media: MediaType | number; link: string }) => (
   <Link href={link} target="_blank" rel="noopener noreferrer">
-    <div className="flex items-center justify-center h-30 sm:h-40 aspect-square bg-white border border-primary/40 rounded-lg overflow-hidden hover:shadow-lg transition-shadow shrink-0">
+    <div className="flex items-center justify-center p-2 h-30 sm:h-40 aspect-square bg-white border border-primary/40 rounded-lg overflow-hidden hover:shadow-lg transition-shadow shrink-0">
       <Media
         imgClassName="h-full w-full object-contain"
         pictureClassName="h-full w-full object-contain"
