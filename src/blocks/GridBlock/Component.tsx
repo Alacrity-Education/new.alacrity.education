@@ -69,7 +69,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
           // ── Text cell ────────────────────────────────────────────────────
           if (cell.cellType === 'text') {
             return (
-              <div key={cell.id ?? i} className="flex flex-col rounded-xl aspect-square p-10 sm:p-4  md:p-6 lg:p-4 xl:p-6 border-b rounded-b-none border-base-100/20 sm:border-none">
+              <div key={cell.id ?? i} className="flex flex-col rounded-xl aspect-2/1 sm:aspect-square p-10 sm:p-4  md:p-6 lg:p-4 xl:p-6 border-b rounded-b-none border-base-100/20 sm:border-none">
                 {cell.title && (
                   <p className={cn('text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2', titleClass[v])}>
                     {cell.title}
@@ -92,7 +92,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
             return (
               <div
                 key={cell.id ?? i}
-                className="relative rounded-xl overflow-hidden aspect-square min-h-48 sm:min-h-64"
+                className="relative rounded-xl overflow-hidden aspect-2/1 sm:aspect-square min-h-48 sm:min-h-64"
               >
                 {cell.media && (
                   <Media
@@ -137,7 +137,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                 href={href}
                 {...newTabProps}
                 className={cn(
-                  'group flex flex-col rounded-xl p-4 sm:p-6 transition-colors aspect-square',
+                  'group flex flex-col rounded-xl p-4 sm:p-6 transition-colors aspect-2/1 sm:aspect-square',
                   linkCellBg[v],
                 )}
               >
