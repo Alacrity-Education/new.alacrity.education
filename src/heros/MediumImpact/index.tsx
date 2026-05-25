@@ -12,7 +12,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, richText 
   const hasMedia = media && typeof media === 'object'
 
   return (
-    <section className="relative bg-base-200/20 overflow-hidden md:-mt-10">
+    <section className="relative pt-10 sm:pt-0 bg-base-200/20 overflow-hidden md:-mt-10">
       {/* Ambient glow blobs */}
       <div className="absolute inset-0 pointer-events-none select-none" aria-hidden>
         <div className="absolute -top-32 right-0 w-[480px] h-[480px] bg-primary/8 rounded-full blur-[96px]" />

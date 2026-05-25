@@ -9,7 +9,7 @@ import { customConverters } from '@/components/RichText/CustomConverter'
 
 export const LowImpactHero: React.FC<Page['hero']> = ({ cta, richText }) => {
   return (
-    <section className="bg-base-100 border-b border-base-300">
+    <section className="bg-base-100 pt-10 sm:pt-0  border-b border-base-300">
       <div className="container mx-auto px-4 py-8 sm:py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-8">
 
         <div className="flex items-stretch gap-4 min-w-0">

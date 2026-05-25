@@ -22,6 +22,12 @@ export const Member: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'bgless_image',
+      type: 'upload',
+      relationTo: 'media',
+      required:false
+    },
+    {
       name: 'linkedinUrl',
       type: 'text',
       required: true,

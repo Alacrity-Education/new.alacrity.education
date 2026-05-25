@@ -71,7 +71,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
             return (
               <div key={cell.id ?? i} className="flex flex-col rounded-xl aspect-square p-10 sm:p-4  md:p-6 lg:p-4 xl:p-6 border-b rounded-b-none border-base-100/20 sm:border-none">
                 {cell.title && (
-                  <p className={cn('text-6xl sm:text-5xl lg:text-4xl xl:text-5xl font-bold mb-2', titleClass[v])}>
+                  <p className={cn('text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2', titleClass[v])}>
                     {cell.title}
                   </p>
                 )}
@@ -104,7 +104,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                 <div className="absolute inset-0 bg-linear-to-t from-black/20 via-black/50 to-black/20" />
                 <div className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-6">
                   {cell.title && (
-                    <p className="text-4xl sm:text-5xl font-bold mb-2 text-primary-content">
+                    <p className="ttext-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 text-primary-content">
                       {cell.title}
                     </p>
                   )}
