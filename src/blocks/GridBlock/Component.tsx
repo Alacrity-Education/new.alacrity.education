@@ -111,7 +111,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                   {cell.description && (
                     <RichText
                       className={cn(
-                        'mb-0 w-full mx-0 text-base lg:text-lg xl:text-xl [&_p]:text-primary-content',
+                        'mb-0 w-full mx-0 text-lg lg:text-xl xl:text-xl [&_p]:text-primary-content',
                         noProseMargins,
                       )}
                       data={cell.description}
