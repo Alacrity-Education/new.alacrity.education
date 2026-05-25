@@ -18,7 +18,8 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
   const bglessImageUrl =
     member.bgless_image && typeof member.bgless_image === 'object' && member.bgless_image.url
       ? member.bgless_image.url
-      : '/Falcon.svg'
+      : //@ts-expect-error
+        member?.bgless_image?.url
 
   const imageAlt =
     member.image && typeof member.image === 'object' && member.image.alt
@@ -56,8 +57,8 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
         {/* Bottom half gradient fading into the text area below */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-primary via-transparent to-transparent">
           <div className="h-3/5" />
-          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-base lg:text-base xl:text-base 2xl:text-lg">
-            <p className="text-primary-content font-bold leading-snug  md:text-xl lg:text-lg xl:text-base 2xl:text-lg">
+          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-base lg:text-base xl:text-base 2xl:text-base">
+            <p className="text-primary-content font-bold leading-snug ">
               {member.name}
             </p>
             {member.role && <p className="text-primary-content/80 leading-snug">{member.role}</p>}
