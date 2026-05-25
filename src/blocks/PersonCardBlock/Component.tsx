@@ -15,6 +15,11 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
       ? member.image.url
       : '/Falcon.svg'
 
+  const bglessImageUrl =
+    member.bgless_image && typeof member.bgless_image === 'object' && member.bgless_image.url
+      ? member.bgless_image.url
+      : '/Falcon.svg'
+
   const imageAlt =
     member.image && typeof member.image === 'object' && member.image.alt
       ? member.image.alt
@@ -42,7 +47,7 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
         <div className="absolute inset-0 bg-primary mix-blend-screen" />
 
         <Image
-          src={imageUrl}
+          src={bglessImageUrl}
           alt={imageAlt}
           fill
           className="object-cover object-top"
@@ -51,8 +56,8 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
         {/* Bottom half gradient fading into the text area below */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-primary via-transparent to-transparent">
           <div className="h-3/5" />
-          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-base lg:text-base xl:text-base 2xl:text-xl">
-            <p className="text-primary-content font-bold leading-snug  md:text-xl lg:text-xl xl:text-base 2xl:text-xl">
+          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-base lg:text-base xl:text-base 2xl:text-lg">
+            <p className="text-primary-content font-bold leading-snug  md:text-xl lg:text-lg xl:text-base 2xl:text-lg">
               {member.name}
             </p>
             {member.role && <p className="text-primary-content/80 leading-snug">{member.role}</p>}
