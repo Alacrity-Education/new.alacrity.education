@@ -40,14 +40,22 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
         />
         {/* Primary color overlay with mix-blend-mode screen */}
         <div className="absolute inset-0 bg-primary mix-blend-screen" />
+
+        <Image
+          src={imageUrl}
+          alt={imageAlt}
+          fill
+          className="object-cover object-top"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        />
         {/* Bottom half gradient fading into the text area below */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-primary via-transparent to-transparent">
           <div className="h-3/5" />
-          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-lg lg:text-lg xl:text-base 2xl:text-xl">
-            <p className="text-primary-content font-bold leading-snug">{member.name}</p>
-            {member.role && (
-              <p className="text-primary-content/80 leading-snug">{member.role}</p>
-            )}
+          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-base lg:text-base xl:text-base 2xl:text-xl">
+            <p className="text-primary-content font-bold leading-snug  md:text-xl lg:text-xl xl:text-base 2xl:text-xl">
+              {member.name}
+            </p>
+            {member.role && <p className="text-primary-content/80 leading-snug">{member.role}</p>}
           </div>
         </div>
       </div>
@@ -145,7 +153,7 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({ title, m
         textClassName={titleTextClass[overflowBreak]}
       />
 
-      <div className="flex flex-row gap-4 sm:gap-10 md:gap-16 py-2 px-2 lg:gap-20 overflow-x-auto snap-x snap-mandatory pb-2">
+      <div className="flex flex-row gap-4 sm:gap-10 md:gap-16 py-6 px-2 lg:gap-20 overflow-x-auto snap-x snap-mandatory pb-2">
         {resolvedMembers.map((member) => (
           <div key={member.id} className={cardWrapperClass}>
             <PersonCard member={member} />
