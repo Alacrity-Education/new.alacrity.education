@@ -61,7 +61,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
     <div className="container">
       <div
         className={cn(
-          'grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-3 sm:gap-8 rounded-2xl p-3 sm:p-8',
+          'grid grid-cols-1 sm:grid-cols-2 shadow-2xl  lg:grid-cols-4 gap-3 sm:gap-8 rounded-2xl p-3 sm:p-8',
           containerBg[v],
         )}
       >

@@ -30,17 +30,15 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
         const lastCard = cardsElements[cardsElements.length - 1]
 
         // Pin the title for the same scroll distance as the last card's pin.
-        // The last card pins at: top+=15vh + 100 + (n-1)*CARD_STAGGER
-        // and releases when the section bottom passes that line + card height.
         if (lastWrapper && lastCard) {
           const lastIndex = cardsElements.length - 1
           ScrollTrigger.create({
             trigger: sectionEl,
-            start: 'top top',
+            start: () => `top top+=${window.innerHeight * 0.1}`,
             endTrigger: sectionEl,
             end: () =>
               `bottom top+=${
-                window.innerHeight * 0.15 + 100 + lastIndex * CARD_STAGGER + lastCard.offsetHeight
+                window.innerHeight * 0.1 + 100 + lastIndex * CARD_STAGGER + lastCard.offsetHeight
               }`,
             pin: titleEl,
             pinSpacing: false,
@@ -58,7 +56,6 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
             rotation = -10
           }
           if (card) {
-            console.log('card')
             gsap.to(card, {
               scale: scale,
               rotationX: rotation,
@@ -66,11 +63,11 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
               ease: 'none',
               scrollTrigger: {
                 trigger: wrapper,
-                start: () => `top top+=${window.innerHeight * 0.10 + 100 + i * CARD_STAGGER}`,
+                start: () => `top top+=${window.innerHeight * 0.1 + 100 + i * CARD_STAGGER}`,
                 endTrigger: sectionEl,
                 end: () =>
                   `bottom top+=${
-                    window.innerHeight * 0.10 + 100 + i * CARD_STAGGER + wrapper.offsetHeight
+                    window.innerHeight * 0.1 + 100 + i * CARD_STAGGER + wrapper.offsetHeight
                   }`,
                 scrub: true,
                 pin: wrapper,
@@ -88,24 +85,22 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
         const wrappers = gsap.utils.toArray<HTMLElement>('.gsap-card-wrapper')
         const cardsElements = gsap.utils.toArray<HTMLElement>('.gsap-card')
         const sectionEl = containerRef.current
-
+        const titleEl = titleRef.current
         const lastWrapper = wrappers[wrappers.length - 1]
         const lastCard = cardsElements[cardsElements.length - 1]
 
         // Pin the title for the same scroll distance as the last card's pin.
-        // The last card pins at: top+=15vh + 100 + (n-1)*CARD_STAGGER
-        // and releases when the section bottom passes that line + card height.
         if (lastWrapper && lastCard) {
           const lastIndex = cardsElements.length - 1
           ScrollTrigger.create({
             trigger: sectionEl,
-            start: 'top top',
+            start: () => `top top+=${window.innerHeight * 0.02}`,
             endTrigger: sectionEl,
             end: () =>
               `bottom top+=${
-                window.innerHeight * 0.15 + 100 + lastIndex * CARD_STAGGER + lastCard.offsetHeight
+                window.innerHeight * 0.02 + 100 + lastIndex * CARD_STAGGER + lastCard.offsetHeight
               }`,
-
+            pin: titleEl,
             pinSpacing: false,
             invalidateOnRefresh: true,
           })
@@ -121,7 +116,6 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
             rotation = -10
           }
           if (card) {
-            console.log('card')
             gsap.to(card, {
               scale: scale,
               rotationX: rotation,
@@ -158,7 +152,7 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
           ref={titleRef}
           title={title}
           arrow
-          className="container sticky top-[0lvh] sm:top-[8lvh] lg:top-[10lvh] z-0 py-4 h-fit bg-transparent"
+          className="container relative z-10 py-4 h-fit bg-transparent"
         />
 
         <div className="flex flex-col gap-0 mt-8 items-center">
