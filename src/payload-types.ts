@@ -331,6 +331,10 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Camera distance from the 3D model. Lower = closer. Only applies to .glb/.gltf files.
+   */
+  defaultZoom?: number | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -731,6 +735,7 @@ export interface ContentBlock {
           };
           [k: string]: unknown;
         } | null;
+        xlText?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -1592,6 +1597,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
     | {
         size?: T;
         richText?: T;
+        xlText?: T;
         id?: T;
       };
   id?: T;
@@ -1912,6 +1918,7 @@ export interface PostsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  defaultZoom?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;

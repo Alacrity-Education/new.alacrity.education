@@ -22,7 +22,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
-            const { richText, size } = col
+            const { richText, size, xlText } = col
 
             return (
               <div
@@ -31,7 +31,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
                 }, colsSpanClasses[size!])}
                 key={index}
               >
-                {richText && <RichText data={richText} className={"text-wrap! w-full"} enableGutter={false} />}
+                {richText && <RichText data={richText} className={cn("text-wrap! w-full", xlText && "!prose-xl")} enableGutter={false} />}
 
 
               </div>

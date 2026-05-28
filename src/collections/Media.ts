@@ -38,6 +38,18 @@ export const Media: CollectionConfig = {
         },
       }),
     },
+    {
+      name: 'defaultZoom',
+      type: 'number',
+      label: 'Default Camera Distance (3D)',
+      defaultValue: 5,
+      admin: {
+        description: 'Camera distance from the 3D model. Lower = closer. Only applies to .glb/.gltf files.',
+        condition: (data) =>
+          ['model/gltf-binary', 'model/gltf+json'].includes(data?.mimeType ?? '') ||
+          /\.(glb|gltf)$/i.test(data?.filename ?? ''),
+      },
+    },
   ],
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
