@@ -20,6 +20,7 @@ const columnFields: Field[] = [
     type: 'select',
     defaultValue: 'oneThird',
     options: [
+
       {
         label: 'One Third',
         value: 'oneThird',
@@ -56,8 +57,12 @@ const columnFields: Field[] = [
     }),
     label: false,
   },
-
-
+  {
+    name: 'xlText',
+    type: 'checkbox',
+    label: 'XL Text',
+    defaultValue: false,
+  },
 ]
 
 export const Content: Block = {
