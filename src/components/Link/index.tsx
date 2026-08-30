@@ -6,7 +6,7 @@ import React from 'react'
 import type { Page, Post } from '@/payload-types'
 import { LinkAppearanceVariants } from '@/fields/link'
 
-type CMSLinkType = {
+export type CMSLinkType = {
   appearance?: 'inline' | "inlinePrimary" | ButtonProps['variant']
   children?: React.ReactNode
   className?: string
@@ -21,6 +21,20 @@ type CMSLinkType = {
   url?: string | null
 }
 
+/**
+ * Resolves a Payload link group (reference or custom URL) to an href.
+ * Exported so nav primitives that need a bare <a> (e.g. Radix NavigationMenuLink
+ * with `asChild`) can build their own anchor instead of rendering a CMSLink.
+ */
+export const resolveLinkHref = ({
+  type,
+  reference,
+  url,
+}: Pick<CMSLinkType, 'type' | 'reference' | 'url'>): string | null | undefined =>
+  type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
+    ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${reference.value.slug}`
+    : url
+
 export const CMSLink: React.FC<CMSLinkType> = (props) => {
   const {
     type,
@@ -34,12 +48,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     url,
   } = props
 
-  const href =
-    type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
-          reference.value.slug
-        }`
-      : url
+  const href = resolveLinkHref({ type, reference, url })
 
   if (!href) return null
 

@@ -3,44 +3,140 @@
 
 @plugin "@tailwindcss/typography";
 
+/* ============================================================
+   daisyUI theme
+   Controls daisyUI COMPONENTS only (btn, card, input, modal...).
+   It has no effect on raw Tailwind utilities written in JSX —
+   a div with `rounded-2xl shadow-lg` ignores every token below.
+   ============================================================ */
+
 @plugin "daisyui/theme" {
   name: "alacrity";
   default: true;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(100% 0 0);
-  --color-base-200: oklch(98% 0 0);
-  --color-base-300: oklch(95% 0 0);
-  --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: #6550a3;
-  --color-primary-content: #ffffff;
-  --color-secondary: var(--color-pink-800);
-  --color-secondary-content: var(--color-white);
-  --color-accent: #5863ff;
-  --color-accent-content: #ffffff;
-  --color-neutral: oklch(100% 0 0);
-  --color-neutral-content: oklch(21% 0.006 285.885);
-  --color-info: var(--color-blue-500);
-  --color-info-content: var(--color-white);
-  --color-success: var(--color-green-500);
-  --color-success-content: var(--color-white);
-  --color-warning: var(--color-orange-500);
-  --color-warning-content: var(--color-white);
-  --color-error: var(--color-red-500);
-  --color-error-content: var(--color-white);
-  --radius-selector: 1rem;
-  --radius-field: 1rem;
-  --radius-box: 0.25rem;
-  --size-selector: 0.28125rem;
-  --size-field: 0.21875rem;
+
+  /* Surfaces — cool paper, not cream, not pure white */
+  --color-base-100: #FBFBFD;
+  --color-base-200: #F2F2F6;
+  --color-base-300: #E4E4EC;      /* hairline rules and card borders */
+  --color-base-content: #16141F;  /* near-black with a violet cast */
+
+  /* Brand */
+  --color-primary: #3F3170;
+  --color-primary-content: #FFFFFF;
+
+  /* Secondary is a quiet neutral, not a second bright hue */
+  --color-secondary: #E4E4EC;
+  --color-secondary-content: #16141F;
+
+  /* Accent is the light emphasis step of the same hue, not a new colour */
+  --color-accent: #6550A3;
+  --color-accent-content: #FFFFFF;
+
+  --color-neutral: #16141F;
+  --color-neutral-content: #FBFBFD;
+
+  /* Semantic states. These are allowed their own hues because the
+     colour carries meaning — but info folds back into the brand. */
+  --color-info: #3F3170;
+  --color-info-content: #FFFFFF;
+  --color-success: #1F7A4D;
+  --color-success-content: #FFFFFF;
+  --color-warning: #A85A00;
+  --color-warning-content: #FFFFFF;
+  --color-error: #B3261E;
+  --color-error-content: #FFFFFF;
+
+  /* Geometry — near-square across the board */
+  --radius-selector: 0.125rem;
+  --radius-field: 0.125rem;
+  --radius-box: 1rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
   --border: 1px;
-  --depth: 1;
-  --noise:  0;
+  --depth: 0;    /* 1 adds a glossy pseudo-3D sheen to buttons */
+  --noise: 0;
 }
 
 @plugin "daisyui" {
   themes: alacrity --default, alacrity --prefersdark;
 }
+
+/* ============================================================
+   Design tokens
+   ============================================================ */
+
+@theme {
+  --color-ink: #16141F;
+  --color-ink-muted: #55525F;
+  --color-rule: #E4E4EC;
+
+  /* One hue, five steps. A single hex cannot be both an authoritative
+     button fill and a text emphasis colour — opposite jobs. */
+  --color-brand-900: #241C42;   /* rare, full-headline treatment */
+  --color-brand-700: #3F3170;   /* buttons, links, active nav */
+  --color-brand-500: #6550A3;   /* emphasis, 24px and above only */
+  --color-brand-200: #D8D2EA;   /* highlighter wash, chart fills */
+  --color-brand-100: #EEEBF6;   /* section tints */
+
+  /* Lexend throughout. Deca is the tightest cut in the family, which
+     is what lets headings read serious; plain Lexend keeps its own
+     default spacing for body, where the legibility design operates. */
+  --font-display: var(--font-lexend-deca), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-lexend), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root {
+  --grid-line: rgb(22 20 31 / 0.045);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+@layer base {
+  body {
+    @apply min-h-[100vh] flex flex-col;
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background-color: var(--color-base-100);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  /* Lexend ships loose by design. Tracking tightens as size grows —
+     at display sizes that default looseness is what reads juvenile. */
+  h1 { letter-spacing: -0.045em; line-height: 0.95; font-weight: 500; }
+  h2 { letter-spacing: -0.035em; line-height: 1.05; font-weight: 600; }
+  h3 { letter-spacing: -0.02em;  line-height: 1.25; font-weight: 600; }
+  h4 { letter-spacing: -0.01em;  line-height: 1.3;  font-weight: 600; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-700);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
 
 @layer utilities {
   .container {
@@ -49,37 +145,59 @@
     padding-inline: 1rem;
   }
 
-  @variant sm {
-    .container {
-      max-width: var(--breakpoint-sm);
-    }
+  @variant sm { .container { max-width: var(--breakpoint-sm); } }
+  @variant md { .container { max-width: var(--breakpoint-md); padding-inline: 2rem; } }
+  @variant lg { .container { max-width: var(--breakpoint-lg); } }
+  @variant xl { .container { max-width: var(--breakpoint-xl); } }
+  @variant 2xl { .container { max-width: var(--breakpoint-2xl); } }
+
+  /* Reading measure. Put this on text columns, not on the container. */
+  .measure { max-width: 68ch; }
+
+  /* Small caps label. Replaces the monospace utility face —
+     uppercase Lexend with wide tracking reads technical enough. */
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    color: var(--color-ink-muted);
   }
 
-  @variant md {
-    .container {
-      max-width: var(--breakpoint-md);
-      padding-inline: 2rem;
-    }
+  /* Stat and project-record figures. */
+  .stat {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4vw, 3.75rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
   }
 
-  @variant lg {
-    .container {
-      max-width: var(--breakpoint-lg);
-    }
+  /* Highlighter wash. One per page, maximum. */
+  .mark {
+    background-image: linear-gradient(var(--color-brand-200), var(--color-brand-200));
+    background-size: 100% 0.42em;
+    background-position: 0 88%;
+    background-repeat: no-repeat;
+    color: var(--color-ink);
   }
 
-  @variant xl {
-    .container {
-      max-width: var(--breakpoint-xl);
-    }
-  }
-
-  @variant 2xl {
-    .container {
-      max-width: var(--breakpoint-2xl);
-    }
+  /* Optional drafting grid. Hero only — it is the one accessory. */
+  .grid-field {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
   }
 }
+
+/* ============================================================
+   Components
+   ============================================================ */
 
 @layer components {
   .has-external-arrow {
@@ -92,24 +210,286 @@
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cline x1='7' y1='17' x2='17' y2='7'%3E%3C/line%3E%3Cpolyline points='7 7 17 7 17 17'%3E%3C/polyline%3E%3C/svg%3E");
     mask-size: contain;
     mask-repeat: no-repeat;
-    /* Support for older browsers */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cline x1='7' y1='17' x2='17' y2='7'%3E%3C/line%3E%3Cpolyline points='7 7 17 7 17 17'%3E%3C/polyline%3E%3C/svg%3E");
     -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
   }
 }
 
-@layer base {
-  body {
-    @apply min-h-[100vh] flex flex-col;
+/* ============================================================
+   Rich text — .prose-alacrity
+
+   NOTE THE LEADING DOT. The previous version of this file had
+   `prose-alacrity {` with no dot, which is a type selector for a
+   non-existent <prose-alacrity> element — the whole block was inert.
+
+   Kept UNLAYERED on purpose: unlayered CSS outranks everything
+   Tailwind emits, so these beat the typography plugin's
+   :where()-wrapped rules without a single !important.
+   ============================================================ */
+
+.prose-alacrity {
+  /* Colour. These variables are the ONLY thing the typography plugin
+     exposes — there is no --tw-prose-* for weight, size or family. */
+  --tw-prose-body: var(--color-ink);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-lead: var(--color-ink-muted);
+  --tw-prose-links: var(--color-brand-700);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-counters: var(--color-ink-muted);
+  --tw-prose-bullets: var(--color-brand-500);
+  --tw-prose-hr: var(--color-rule);
+  --tw-prose-quotes: var(--color-ink-muted);
+  --tw-prose-quote-borders: var(--color-brand-500);
+  --tw-prose-captions: var(--color-ink-muted);
+  --tw-prose-code: var(--color-brand-700);
+  --tw-prose-pre-code: var(--color-base-100);
+  --tw-prose-pre-bg: var(--color-ink);
+  --tw-prose-th-borders: var(--color-ink);
+  --tw-prose-td-borders: var(--color-rule);
+
+  /* Body sits at Lexend's own defaults, deliberately. */
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.prose-alacrity :is(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+.prose-alacrity h1 {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  font-weight: 500;          /* not 700 — large + bold is where Lexend goes bubbly */
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+}
+
+.prose-alacrity h2 {
+  font-size: clamp(1.875rem, 3vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  margin-top: 4rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-alacrity h3 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-alacrity h4 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-alacrity :is(h1, h2, h3, h4):first-child {
+  margin-top: 0;
+}
+
+/* Emphasis. Weight contrast rather than italics — against a 500
+   heading an <em> at 800 is a real departure. Delete if your editors
+   expect italics to render as italics. */
+.prose-alacrity em {
+  font-style: normal;
+  font-weight: 800;
+  color: var(--color-ink);
+}
+
+.prose-alacrity strong {
+  font-weight: 600;
+}
+
+.prose-alacrity p {
+  margin-block: 1.25rem;
+}
+
+.prose-alacrity .lead {
+  font-size: 1.1875rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--color-ink-muted);
+}
+
+.prose-alacrity a {
+  font-weight: 500;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--color-brand-200);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease-out;
+}
+
+.prose-alacrity a:hover {
+  text-decoration-color: var(--color-brand-700);
+}
+
+.prose-alacrity :is(ul, ol) {
+  margin-block: 1.25rem;
+  padding-inline-start: 1.25rem;
+}
+
+.prose-alacrity li {
+  margin-block: 0.375rem;
+  padding-inline-start: 0.375rem;
+}
+
+.prose-alacrity blockquote {
+  margin-block: 2rem;
+  border-inline-start-width: 2px;
+  padding-inline-start: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+}
+
+/* The plugin injects curly quotes into blockquotes. Remove them. */
+.prose-alacrity blockquote p::before,
+.prose-alacrity blockquote p::after {
+  content: none;
+}
+
+.prose-alacrity hr {
+  margin-block: 4rem;
+}
+
+.prose-alacrity img {
+  margin-block: 5rem;
+  border-radius: var(--radius-box);
+}
+
+.prose-alacrity figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Code keeps a real monospace — alignment carries meaning there. */
+.prose-alacrity :is(code, pre) {
+  font-family: var(--font-mono);
+}
+
+.prose-alacrity code {
+  font-weight: 500;
+  font-size: 0.875em;
+  background-color: var(--color-brand-100);
+  padding: 0.125rem 0.375rem;
+  border-radius: 2px;
+}
+
+/* The plugin wraps inline code in literal backticks. Remove them. */
+.prose-alacrity code::before,
+.prose-alacrity code::after {
+  content: none;
+}
+
+.prose-alacrity pre {
+  margin-block: 2rem;
+  padding: 1.25rem;
+  border-radius: 2px;
+}
+
+.prose-alacrity pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.prose-alacrity table {
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose-alacrity th {
+  padding-block: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-muted);
+}
+
+.prose-alacrity td {
+  padding-block: 0.75rem;
+}
+
+/* .mark-burn — heat travelling through the letterforms */
+
+.mark-burn {
+  --burn-speed: 5s;
+
+  /* 100deg rather than 90deg — the slight diagonal makes the pass
+     read as heat moving through, not a bar sliding across. */
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-900) 0%,
+    var(--color-brand-900) 34%,
+    var(--color-brand-700) 42%,
+    var(--color-brand-500) 50%,
+    var(--color-brand-700) 58%,
+    var(--color-brand-900) 66%,
+    var(--color-brand-900) 100%
+  );
+
+  /* Both ends are brand-900, so the loop wraps invisibly. */
+  background-size: 320% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  /* Faint bloom following the glyph shapes. Uses the element's own
+     alpha, so no duplicated text for a screen reader to read twice. */
+  filter: drop-shadow(0 0 0.14em rgb(101 80 163 / 0.28));
+
+  padding-inline: 0.04em;
+}
+
+@keyframes burn-sweep {
+  from { background-position: 0% 0; }
+  to   { background-position: 100% 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mark-burn {
+    animation: burn-sweep var(--burn-speed) linear infinite;
   }
 }
 
-html {
-  opacity: 0;
+/* Transparent fill kills the selection highlight. Restore it. */
+.mark-burn::selection {
+  -webkit-text-fill-color: var(--color-brand-900);
+  color: var(--color-brand-900);
+  background: var(--color-brand-200);
 }
 
-html[data-theme='dark'],
-html[data-theme='light'] {
-  opacity: initial;
+/* Without background-clip:text the text renders invisible.
+   Never let the fallback be nothing. */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .mark-burn {
+    color: var(--color-brand-700);
+    -webkit-text-fill-color: var(--color-brand-700);
+    background-image: none;
+    filter: none;
+  }
+}
+
+/* Slower in body copy than in a headline. */
+.prose-alacrity .mark-burn {
+  --burn-speed: 7.5s;
 }

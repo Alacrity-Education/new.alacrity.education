@@ -10,7 +10,7 @@ import { cn } from '@/utilities/ui'
 
 const containerBg: Record<string, string> = {
   base: 'bg-base-100 border-2 border-base-300',
-  primary: 'bg-primary',
+  primary: 'bg-linear-to-b from-primary to-neutral via-primary',
 }
 const titleClass: Record<string, string> = {
   base: 'text-base-content',
@@ -61,7 +61,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
     <div className="container">
       <div
         className={cn(
-          'grid grid-cols-1 sm:grid-cols-2 shadow-2xl  lg:grid-cols-4 gap-3 sm:gap-8 rounded-2xl p-3 sm:p-8',
+          'grid grid-cols-1 sm:grid-cols-2 shadow-2xl  lg:grid-cols-4 gap-3 sm:gap-8 rounded-box p-3 sm:p-8',
           containerBg[v],
         )}
       >
@@ -69,9 +69,9 @@ export const GridBlock: React.FC<GridBlockProps> = ({
           // ── Text cell ────────────────────────────────────────────────────
           if (cell.cellType === 'text') {
             return (
-              <div key={cell.id ?? i} className="flex flex-col rounded-xl aspect-2/1 sm:aspect-square p-10 sm:p-4  md:p-6 lg:p-4 xl:p-6 border-b rounded-b-none border-base-100/20 sm:border-none">
+              <div key={cell.id ?? i} className="flex flex-col rounded-box aspect-2/1 sm:aspect-square p-10 sm:p-4  md:p-6 lg:p-4 xl:p-6 border-b rounded-b-none border-base-100/20 sm:border-none">
                 {cell.title && (
-                  <p className={cn('text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2', titleClass[v])}>
+                  <p className={cn('text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-2', titleClass[v])}>
                     {cell.title}
                   </p>
                 )}
@@ -92,7 +92,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
             return (
               <div
                 key={cell.id ?? i}
-                className="relative rounded-xl overflow-hidden aspect-2/1 sm:aspect-square min-h-48 sm:min-h-64"
+                className="relative rounded-box overflow-hidden aspect-2/1 sm:aspect-square min-h-48 sm:min-h-64"
               >
                 {cell.media && (
                   <Media
@@ -104,7 +104,7 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                 <div className="absolute inset-0 bg-linear-to-t from-black/20 via-black/50 to-black/20" />
                 <div className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-6">
                   {cell.title && (
-                    <p className="ttext-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 text-primary-content">
+                    <p className="ttext-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-2 text-primary-content">
                       {cell.title}
                     </p>
                   )}
@@ -137,18 +137,18 @@ export const GridBlock: React.FC<GridBlockProps> = ({
                 href={href}
                 {...newTabProps}
                 className={cn(
-                  'group flex flex-col rounded-xl p-4 sm:p-6 transition-colors aspect-2/1 sm:aspect-square',
+                  'group flex flex-col rounded-box p-4 sm:p-6 transition-colors aspect-2/1 sm:aspect-square',
                   linkCellBg[v],
                 )}
               >
                 <div className="flex justify-end">
-                  <span className="text-5xl font-bold leading-none transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                  <span className="text-5xl font-semibold leading-none transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                     ↗
                   </span>
                 </div>
                 <div className="flex-1" />
                 {cell.title && (
-                  <p className={cn('text-2xl font-bold mb-2', linkCellTitleClass[v])}>
+                  <p className={cn('text-2xl font-semibold mb-2', linkCellTitleClass[v])}>
                     {cell.title}
                   </p>
                 )}
