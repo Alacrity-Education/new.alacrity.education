@@ -12,7 +12,7 @@ export interface SectionTitleProps {
 }
 
 const BASE_TEXT =
-  'text-2xl md:text-3xl lg:text-4xl font-extrabold text-primary mt-0 mb-2 sm:mb-4 md:mb-6 lg:mb-8'
+  'text-2xl md:text-3xl lg:text-4xl font-semibold text-primary mt-0 mb-2 sm:mb-4 md:mb-6 lg:mb-8'
 
 export const SectionTitle = forwardRef<HTMLDivElement, SectionTitleProps>(
   ({ title, arrow = false, className, textClassName }, ref) => {

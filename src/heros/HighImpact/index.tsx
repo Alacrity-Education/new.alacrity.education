@@ -10,20 +10,21 @@ import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 import { customConverters } from '@/components/RichText/CustomConverter'
 import { cn } from '@/utilities/ui'
+import { Link } from '@payloadcms/ui'
 
 const Media3D = dynamic(
   () => import('@/components/Media3D').then((m) => ({ default: m.Media3D })),
   { ssr: false },
 )
 
-type CTAsType = Page['hero']['cta']
+type LinksType = Page['hero']['links']
 type RichTextType = Page['hero']['richText']
 
 const is3DMedia = (media: MediaType): boolean =>
   ['model/gltf-binary', 'model/gltf+json'].includes(media.mimeType ?? '') ||
   /\.(glb|gltf)$/i.test(media.filename ?? '')
 
-export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText, imageVariant }) => {
+export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText, imageVariant }) => {
   const mediaObj = typeof media === 'object' && media !== null ? (media as MediaType) : null
   const is3D = mediaObj ? is3DMedia(mediaObj) : false
 
@@ -48,7 +49,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText, i
         <div className="w-full lg:w-1/2 h-[56vw] sm:h-[45vw] lg:h-[70lvh]">
           <Media3D url={mediaObj.url} defaultZoom={mediaObj.defaultZoom} />
         </div>
-        <HeroText cta={cta} richText={richText} />
+        <HeroText links={links} richText={richText} />
       </Hero>
     )
   }
@@ -57,7 +58,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ cta, media, richText, i
   return (
     <Hero className={className}>
       {media && <HeroImage media={media} imageVariant={imageVariant} />}
-      <HeroText cta={cta} richText={richText} />
+      <HeroText links={links} richText={richText} />
     </Hero>
   )
 }
@@ -70,10 +71,10 @@ export default function Hero({
   className?: string
 }) {
   return (
-    <div className="hero z-0 relative bg-base-100/30 overflow-x-clip min-h-[60vh] sm:min-h-[70lvh] md:min-h-[70lvh] pt-20 pb-12 sm:pt-12 sm:pb-16 md:-mt-10 md:pb-0">
+    <div className="hero z-0 relative bg-base-100/30 overflow-x-clip min-h-[60vh] sm:min-h-[70lvh] md:min-h-[70lvh] pt-20 pb-12 sm:pt-20 sm:pb-16 md:-mt-10 md:pb-0">
       <div
         className={cn(
-          'container mx-auto px-4 flex flex-col-reverse lg:flex-row-reverse gap-8 sm:gap-10 lg:gap-0 items-center justify-between h-full w-full',
+          'container mx-auto px-4 flex flex-col-reverse lg:flex-row-reverse gap-8  lg:gap-0 items-center justify-between h-full w-full',
           className,
         )}
       >
@@ -85,11 +86,11 @@ export default function Hero({
 
 export const HeroText = ({
   richText,
-  cta,
+  links,
   className,
 }: {
   richText?: RichTextType | null
-  cta?: CTAsType | null
+  links?: LinksType | null
   className?: string
 }) => {
   if (!richText) return null
@@ -97,29 +98,25 @@ export const HeroText = ({
   return (
     <div
       className={cn(
-        'w-full lg:w-1/2 flex items-center justify-center px-2 sm:px-4 lg:px-16 xl:px-32',
+        'w-full lg:w-1/2 flex items-center justify-center',
         className,
       )}
     >
-      <div className="relative flex flex-col w-full items-center text-center lg:items-start lg:text-left">
+      <div className="relative flex flex-col w-full sm:pl-20 items-center text-centeru lg:items-center lg:text-left">
         <RichText
-          className="max-w-md w-full sm:!mx-0 sm:!px-0 prose-p:text-base relative z-20!"
+          className="max-w-md w-full sm:mx-0! sm:px-0! prose-p:text-base relative z-20!"
           data={richText}
           converter={customConverters}
         />
-        <HeroCTA {...cta} />
+        <Links links={links} />
       </div>
     </div>
   )
 }
 
-export const HeroCTA = (props?: CTAsType) => {
-  if (!props) return null
-  const { selectCTA, links } = props
+export const Links = ({ links } : {links:LinksType | null}) => {
+  if (!links) return null
 
-  if (selectCTA === 'None') return null
-
-  if (selectCTA === 'Button')
     return (
       <>
         {links && (
@@ -145,20 +142,20 @@ export const HeroImage = ({
   const isCircle = imageVariant === 'circle'
 
   return (
-    <div className="w-full lg:w-1/2 flex items-center justify-center px-0 sm:px-8 lg:px-12 xl:px-20 pt-2 sm:pt-0">
+    <div className="w-full lg:w-1/2 flex items-center justify-center px-0 sm:px-8 lg:px-20 xl:px-26 pt-2 sm:pt-0 sm:pb-26">
       <Media
         pictureClassName={cn(
-          'overflow-visible hover:-translate-y-1 transition-transform z-10',
+          'overflow-visible transition-transform z-0',
           isCircle
-            ? 'w-2/5 lg:w-full aspect-square rounded-full'
-            : 'w-full lg:h-full lg:w-max aspect-video rounded-lg',
+            ? 'w-2/5 lg:w-full  aspect-square'
+            : 'w-full lg:h-full lg:w-max aspect-video rounded-lg ',
         )}
-        className="h-max w-full lg:h-full lg:w-max"
+        className="h-max w-full lg:h-full z-0 lg:w-max"
         imgClassName={cn(
-          'z-20 object-contain w-full shadow-2xl lg:h-full lg:w-max',
+          'z-0 object-contain w-full  lg:h-full lg:w-full',
           isCircle
-            ? 'aspect-cover rounded-full object-center'
-            : 'aspect-video rounded-lg object-bottom',
+            ? 'aspect-square scale-150 object-center'
+            : 'aspect-video rounded-lg object-bottom ',
         )}
         priority
         resource={media}

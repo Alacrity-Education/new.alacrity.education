@@ -114,13 +114,13 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
   // Determine at which breakpoint overflow first disappears (monotone: if fits on mobile it fits everywhere)
   type OverflowBreak = 'never' | 'sm' | 'lg' | 'xl' | 'always'
   const overflowBreak: OverflowBreak =
-    count <= 1 ? 'never' : count === 2 ? 'sm' : count === 3 ? 'lg' : count === 4 ? 'xl' : 'always'
+    count <= 1 ? 'always' : count === 2 ? 'sm' : count === 3 ? 'lg' : count === 4 ? 'xl' : 'always'
 
   const titleWrapperClass: Record<OverflowBreak, string> = {
-    never: 'flex justify-center mb-8',
-    sm: 'flex items-end justify-between mb-8 sm:justify-center',
-    lg: 'flex items-end justify-between mb-8 lg:justify-center',
-    xl: 'flex items-end justify-between mb-8 xl:justify-center',
+    never: 'flex justify-start mb-8',
+    sm: 'flex items-end justify-between mb-8 sm:justify-start',
+    lg: 'flex items-end justify-between mb-8 lg:justify-start',
+    xl: 'flex items-end justify-between mb-8 xl:justify-start',
     always: 'flex items-end justify-between mb-8',
   }
 
@@ -133,11 +133,11 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
   }
 
   const arrowClass: Record<OverflowBreak, string> = {
-    never: 'hidden',
-    sm: 'text-xl shrink-0 sm:hidden',
-    lg: 'text-xl shrink-0 lg:hidden',
-    xl: 'text-xl shrink-0 xl:hidden',
-    always: 'text-xl shrink-0',
+    never: 'text-xl shrink-0 ',
+    sm: 'text-xl shrink-0 ',
+    lg: 'text-xl shrink-0 ',
+    xl: 'text-xl shrink-0 ',
+    always: 'text-xl shrink-0 ',
   }
 
   const cardWrapperClass =
@@ -147,7 +147,7 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
     <section className="container">
       <SectionTitle
         title={title}
-        arrow={arrowClass[overflowBreak]}
+        arrow
         className={cn(titleWrapperClass[overflowBreak], 'lg:py-4')}
         textClassName={titleTextClass[overflowBreak]}
       />

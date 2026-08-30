@@ -18,7 +18,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
 
   return (
     <div className="container my-4">
-      <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 gap-x-16 max-w-full text-wrap!">
+      <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 gap-x-16 max-w-full text-wrap! place-items-center">
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
@@ -31,7 +31,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
                 }, colsSpanClasses[size!])}
                 key={index}
               >
-                {richText && <RichText data={richText} className={cn("text-wrap! w-full", xlText && "!prose-xl")} enableGutter={false} />}
+                {richText && <RichText data={richText} className={cn("text-wrap! w-full h-max", xlText && "prose-xl!")} enableGutter={false} />}
 
 
               </div>

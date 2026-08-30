@@ -34,26 +34,26 @@ const ArrowUnderline = () => (
     />
   </svg>
 )
-
+const stateClasses: Record<string, string> = {
+  primary: 'mark-burn',
+}
 const colorState = {
   color: {
     ...defaultColors.text,
     primary: {
-      label: 'Primary',
-      css: {
-        color: 'var(--color-primary)',
-      },
-    },
-    secondary: {
-      label: 'Secondary',
-      css: {
-        color: 'var(--color-secondary)',
-      },
+      label: 'Highlight',
+        css: {
+          backgroundImage: 'linear-gradient(var(--color-brand-200), var(--color-brand-200))',
+          backgroundSize: '100% 0.42em',
+          backgroundPosition: '0 88%',
+          backgroundRepeat: 'no-repeat',
+          color: 'var(--color-brand-500)',
+        },
     },
     arrowHighlighted: {
       label: 'ArrowHighlighted',
       css: {
-        color: 'var(--color-primary)',
+        color: 'var(--purple-500)',
         position: 'relative',
         display: 'inline-block',
       },
@@ -72,7 +72,7 @@ export const customConverters: JSXConvertersFunction<DefaultNodeTypes> = ({ defa
     const text = node.text
     const styles: React.CSSProperties = {}
     let hasArrow = false
-
+    const classes: string[] = []
     if (node.$) {
       Object.entries(colorState).forEach(([stateKey, stateValues]) => {
         // @ts-expect-error
@@ -81,11 +81,13 @@ export const customConverters: JSXConvertersFunction<DefaultNodeTypes> = ({ defa
           // @ts-expect-error
           Object.assign(styles, stateValues[stateValue].css)
           if (stateValue === 'arrowHighlighted') hasArrow = true
+          if (stateClasses[stateValue]) classes.push(stateClasses[stateValue])
+
         }
       })
 
       return (
-        <span style={styles}>
+        <span className={classes.join(' ') || undefined} style={classes.length ? undefined : styles}>
           {text}
           {hasArrow && <ArrowUnderline />}
         </span>

@@ -49,12 +49,6 @@ export const hero: Field = {
                       color: 'purple',
                     },
                   },
-                  secondary: {
-                    label: 'Secondary',
-                    css: {
-                      color: 'pink',
-                    },
-                  },
                   arrowHighlighted: {
                     label: 'Arrow Highlighted',
                     css: {
@@ -69,31 +63,11 @@ export const hero: Field = {
       }),
       label: false,
     },
-    {
-      type: 'group',
-      label: 'Call To Action',
-      name: 'cta',
-      fields: [
-        {
-          type: 'select',
-          name: 'selectCTA',
-          label: 'Select Call To Action',
-          options: ['None', 'Button'],
-          defaultValue: 'None',
-        },
-        linkGroup({
-          overrides: {
-            maxRows: 2,
-            admin: {
-              condition: (_, { selectCTA } = {}) => {
-
-                return ['Button'].includes(selectCTA)
-              },
-            },
-          },
-        }),
-      ],
-    },
+    linkGroup({
+      overrides: {
+        maxRows: 2,
+      },
+    }),
     {
       name: 'media',
       type: 'upload',

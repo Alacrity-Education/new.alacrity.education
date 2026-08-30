@@ -15,6 +15,6 @@ export const Logo = (props: Props) => {
 
   return (
     /* eslint-disable @next/next/no-img-element */
-    <div className={"md:text-xl font-bold "}>Alacrity Education</div>
+    <div className={"md:text-xl font-bold text-primary"}>Alacrity Education</div>
   )
 }

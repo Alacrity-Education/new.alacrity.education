@@ -177,44 +177,41 @@ export interface Page {
       };
       [k: string]: unknown;
     } | null;
-    cta?: {
-      selectCTA?: ('None' | 'Button') | null;
-      links?:
-        | {
-            link: {
-              type?: ('reference' | 'custom') | null;
-              newTab?: boolean | null;
-              reference?:
-                | ({
-                    relationTo: 'pages';
-                    value: number | Page;
-                  } | null)
-                | ({
-                    relationTo: 'posts';
-                    value: number | Post;
-                  } | null);
-              url?: string | null;
-              label: string;
-              /**
-               * Choose how the link should be rendered.
-               */
-              appearance?:
-                | (
-                    | 'default'
-                    | 'primary'
-                    | 'secondary'
-                    | 'ghost'
-                    | 'inlinePrimary'
-                    | 'inline'
-                    | 'primaryOverlap'
-                    | 'baseOverlap'
-                  )
-                | null;
-            };
-            id?: string | null;
-          }[]
-        | null;
-    };
+    links?:
+      | {
+          link: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: number | Post;
+                } | null);
+            url?: string | null;
+            label: string;
+            /**
+             * Choose how the link should be rendered.
+             */
+            appearance?:
+              | (
+                  | 'default'
+                  | 'primary'
+                  | 'secondary'
+                  | 'ghost'
+                  | 'inlinePrimary'
+                  | 'inline'
+                  | 'primaryOverlap'
+                  | 'baseOverlap'
+                )
+              | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
     media?: (number | null) | Media;
     imageVariant?: ('rectangle' | 'circle') | null;
   };
@@ -1492,25 +1489,20 @@ export interface PagesSelect<T extends boolean = true> {
     | {
         type?: T;
         richText?: T;
-        cta?:
+        links?:
           | T
           | {
-              selectCTA?: T;
-              links?:
+              link?:
                 | T
                 | {
-                    link?:
-                      | T
-                      | {
-                          type?: T;
-                          newTab?: T;
-                          reference?: T;
-                          url?: T;
-                          label?: T;
-                          appearance?: T;
-                        };
-                    id?: T;
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                    appearance?: T;
                   };
+              id?: T;
             };
         media?: T;
         imageVariant?: T;
@@ -2381,7 +2373,7 @@ export interface Header {
       /**
        * Choose how the link should be rendered.
        */
-      appearance?: ('secondary' | 'default' | 'primaryOverlap') | null;
+      appearance?: ('primary' | 'default' | 'baseOverlap') | null;
     };
   };
   navItems?:
@@ -2404,27 +2396,56 @@ export interface Header {
           /**
            * Choose how the link should be rendered.
            */
-          appearance?: ('default' | 'primaryOverlap' | 'primary') | null;
+          appearance?: ('default' | 'baseOverlap' | 'primary') | null;
         };
-        appearance?: ('primary' | 'default' | 'primaryOverlap') | null;
         label?: string | null;
-        subItems?:
+        appearance?: ('primary' | 'default' | 'baseOverlap') | null;
+        /**
+         * One or two columns. The dropdown panel is a fixed-width, screen-centred panel — a single column spans it, two columns split it evenly.
+         */
+        columns?:
           | {
-              link: {
-                type?: ('reference' | 'custom') | null;
-                newTab?: boolean | null;
-                reference?:
-                  | ({
-                      relationTo: 'pages';
-                      value: number | Page;
-                    } | null)
-                  | ({
-                      relationTo: 'posts';
-                      value: number | Post;
-                    } | null);
-                url?: string | null;
-                label: string;
-              };
+              /**
+               * Optional column heading. Leave empty for an unlabelled column.
+               */
+              heading?: string | null;
+              links?:
+                | {
+                    /**
+                     * Heading (h2/h3/h4) for the item title, plus an optional paragraph beneath it. The paragraph is clamped to two lines in the dropdown.
+                     */
+                    content: {
+                      root: {
+                        type: string;
+                        children: {
+                          type: any;
+                          version: number;
+                          [k: string]: unknown;
+                        }[];
+                        direction: ('ltr' | 'rtl') | null;
+                        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                        indent: number;
+                        version: number;
+                      };
+                      [k: string]: unknown;
+                    };
+                    link?: {
+                      type?: ('reference' | 'custom') | null;
+                      newTab?: boolean | null;
+                      reference?:
+                        | ({
+                            relationTo: 'pages';
+                            value: number | Page;
+                          } | null)
+                        | ({
+                            relationTo: 'posts';
+                            value: number | Post;
+                          } | null);
+                      url?: string | null;
+                    };
+                    id?: string | null;
+                  }[]
+                | null;
               id?: string | null;
             }[]
           | null;
@@ -2506,19 +2527,25 @@ export interface HeaderSelect<T extends boolean = true> {
               label?: T;
               appearance?: T;
             };
-        appearance?: T;
         label?: T;
-        subItems?:
+        appearance?: T;
+        columns?:
           | T
           | {
-              link?:
+              heading?: T;
+              links?:
                 | T
                 | {
-                    type?: T;
-                    newTab?: T;
-                    reference?: T;
-                    url?: T;
-                    label?: T;
+                    content?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          newTab?: T;
+                          reference?: T;
+                          url?: T;
+                        };
+                    id?: T;
                   };
               id?: T;
             };
