@@ -172,6 +172,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
           })}
         </NavigationMenuList>
       </NavigationMenu>
+
     </div>
   )
 }
@@ -300,7 +301,7 @@ export const HighlightButton = ({ highlightButton }: { highlightButton: Highligh
   }
   return (
     <div className={'navbar-end'}>
-      <CMSLink className={'lg:ml-10 overflow-visible font-bold '} {...highlightButton.link} />
+      <CMSLink className={'lg:ml-10 overflow-visible  '} {...highlightButton.link} />
     </div>
   )
 }

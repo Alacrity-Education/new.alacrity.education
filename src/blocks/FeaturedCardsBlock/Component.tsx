@@ -166,7 +166,7 @@ export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, c
                   <div className="flex flex-col flex-1 min-w-0">
                     {card.richText && (
                       <RichText
-                        className="mb-0 prose-h2:text-primary prose-h3:text-primary prose-sm! lg:prose-base! w-full"
+                        className="mb-0 prose-h2:text-primary prose-h3:text-primary w-full"
                         data={card.richText}
                         enableGutter={false}
                       />

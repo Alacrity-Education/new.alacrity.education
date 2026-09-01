@@ -1112,7 +1112,6 @@ export interface Member {
   name: string;
   role: string;
   image?: (number | null) | Media;
-  bgless_image?: (number | null) | Media;
   linkedinUrl: string;
   order?: number | null;
   updatedAt: string;
@@ -2049,7 +2048,6 @@ export interface MembersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
   image?: T;
-  bgless_image?: T;
   linkedinUrl?: T;
   order?: T;
   updatedAt?: T;

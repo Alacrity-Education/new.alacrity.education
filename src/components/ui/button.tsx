@@ -8,11 +8,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'btn bg-base-100 border-none hover:bg-base-300 text-primary ',
-        primary: 'btn btn-primary shadow-lg',
-        secondary: 'btn btn-secondary border border-base-100 shadow-lg',
-        ghost: 'btn btn-ghost ',
-        link: 'text-primary underline-offset-4 hover:underline',
+        default: 'btn bg-base-100 text-lg border-none hover:bg-base-300 text-primary ',
+        primary: 'btn btn-primary  text-lg shadow-lg',
+        secondary: 'btn btn-secondary text-lg border border-base-100 shadow-lg',
+        ghost: 'btn btn-ghost text-lg ',
+        link: 'text-primary  underline-offset-4 hover:underline',
 
         // Primary overlap: primary-colored bg + white text, sitting on a primary-colored outline shadow
         primaryOverlap:

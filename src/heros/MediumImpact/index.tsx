@@ -37,7 +37,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, richText 
             <RichText
               className="w-full [&_h1]:text-3xl [&_h1]:sm:text-4xl [&_h1]:md:text-5xl
                          [&_h1]:font-bold [&_h1]:mb-4
-                         [&_p]:text-base-content/70 [&_p]:text-lg [&_p]:leading-relaxed"
+                         [&_p]:text-base-content/70"
               data={richText}
               converter={customConverters}
             />
