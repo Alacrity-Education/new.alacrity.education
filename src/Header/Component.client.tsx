@@ -37,13 +37,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   }, [])
 
   return (
-    <nav ref={navRef} className=" bg-base-100 backdrop-blur-sm fixed top-0 z-50 flex flex-col">
+    <nav ref={navRef} className="fixed top-0 z-50 flex flex-col">
       {/*<HighlightBanner highlightBanner={data.highlightBanner} />*/}
-      <div className="navbar flex flex-row items-center lg:px-8 w-screen ">
+      <div className="navbar z-10 absolute top-0 inset-x-0 flex flex-row h-max items-center lg:px-8 w-screen ">
 
         <MobileHeaderNav data={data} />
-        <div className="navbar-start">
-          <Link href="/" className="btn btn-ghost text-primary-content hover:text-primary md:text-xl">
+        <div className="navbar-start h-max">
+          <Link href="/" className=" h-max text-primary md:text-xl">
             <Logo loading="eager" priority="high"  />
           </Link>
         </div>
@@ -52,6 +52,19 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
         <HighlightButton highlightButton={data.highlightButton} />
 
+      </div>
+      <div className='flex flex-col h-22 relative z-0'>
+        <div className='bg-base-100 grow'></div>
+      <div className="progressive-blur-container h-8 w-screen relative z-0   rotate-180 ">
+        <div className="blur-filter opacity-80"></div>
+        <div className="blur-filter opacity-80"></div>
+        <div className="blur-filter opacity-80"></div>
+        <div className="blur-filter opacity-80"></div>
+        <div className="blur-filter opacity-80"></div>
+        <div className="blur-filter opacity-80"></div>
+        <div className="blur-filter opacity-80"></div>
+        <div className='absolute inset-0 bg-linear-to-t from-base-100 to-transparent/50 z-10'></div>
+        </div>
       </div>
     </nav>
   )

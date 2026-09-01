@@ -104,7 +104,7 @@ export const HeroText = ({
     >
       <div className="relative flex flex-col w-full sm:pl-20 items-center text-centeru lg:items-center lg:text-left">
         <RichText
-          className="max-w-md w-full sm:mx-0! sm:px-0! prose-p:text-base relative z-20!"
+          className="max-w-md w-full sm:mx-0! sm:px-0! relative z-20!"
           data={richText}
           converter={customConverters}
         />

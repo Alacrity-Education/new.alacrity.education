@@ -21,12 +21,12 @@ export const Member: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
     },
-    {
-      name: 'bgless_image',
-      type: 'upload',
-      relationTo: 'media',
-      required:false
-    },
+    // {
+    //   name: 'bgless_image',
+    //   type: 'upload',
+    //   relationTo: 'media',
+    //   required:false
+    // },
     {
       name: 'linkedinUrl',
       type: 'text',

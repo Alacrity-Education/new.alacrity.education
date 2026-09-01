@@ -31,7 +31,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
                 }, colsSpanClasses[size!])}
                 key={index}
               >
-                {richText && <RichText data={richText} className={cn("text-wrap! w-full h-max", xlText && "prose-xl!")} enableGutter={false} />}
+                {richText && <RichText data={richText} className={cn("text-wrap! w-full h-max", xlText && "prose-xl! leading-8!")} enableGutter={false} />}
 
 
               </div>

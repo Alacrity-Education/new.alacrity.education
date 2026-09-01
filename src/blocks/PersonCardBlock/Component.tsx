@@ -15,11 +15,11 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
       ? member.image.url
       : '/Falcon.svg'
 
-  const bglessImageUrl =
-    member.bgless_image && typeof member.bgless_image === 'object' && member.bgless_image.url
-      ? member.bgless_image.url
-      : //@ts-expect-error
-        member?.bgless_image?.url
+  // const bglessImageUrl =
+  //   member.bgless_image && typeof member.bgless_image === 'object' && member.bgless_image.url
+  //     ? member.bgless_image.url
+  //     : //@ts-expect-error
+  //       member?.bgless_image?.url
 
   const imageAlt =
     member.image && typeof member.image === 'object' && member.image.alt
@@ -41,11 +41,11 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
           src={imageUrl}
           alt={imageAlt}
           fill
-          className="object-cover object-top grayscale"
+          className="object-cover object-top"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
         {/* Primary color overlay with mix-blend-mode screen */}
-        <div className="absolute inset-0 bg-primary mix-blend-screen" />
+        {/*<div className="absolute inset-0 bg-primary mix-blend-screen" />
 
         <Image
           src={bglessImageUrl}
@@ -53,7 +53,7 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
           fill
           className="object-cover object-top"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
+        />*/}
         {/* Bottom half gradient fading into the text area below */}
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-primary via-transparent to-transparent">
           <div className="h-3/5" />
