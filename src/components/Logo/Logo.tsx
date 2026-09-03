@@ -18,7 +18,7 @@ export const Logo = (props: Props) => {
 <div className='flex flex-row justify-center gap-1'>
       <img src="/logo.png" className='h-12' />
       <div className='divider divider-horizontal divider-primary px-0 mx-0'></div>
-      <div className="flex justify-center text-base font-semibold flex-col">
+      <div className="flex justify-center text-base text-primary font-semibold flex-col">
         <p className='-mb-1'>Alacrity</p>
         <p>Education</p>
       </div>

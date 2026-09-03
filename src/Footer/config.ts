@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { link } from '@/fields/link'
 import { revalidateFooter } from './hooks/revalidateFooter'
 
 export const Footer: GlobalConfig = {
@@ -10,9 +11,13 @@ export const Footer: GlobalConfig = {
     {
       name: 'navColumns',
       type: 'array',
-      maxRows: 4,
+      // The footer grid is 4 columns wide at xl, so 8 is the most that still
+      // fits in the two rows the layout allows for. See src/Footer/Component.tsx.
+      maxRows: 8,
       admin: {
         initCollapsed: true,
+        description:
+          'Laid out 2 across until lg, then 3 at lg and 4 at xl, filling from the right — so up to 8 columns wrap into at most two rows.',
         components: {
           RowLabel: '@/Footer/RowLabel#RowLabel',
         },
@@ -29,19 +34,19 @@ export const Footer: GlobalConfig = {
           maxRows: 8,
           admin: { initCollapsed: true },
           fields: [
-            { name: 'label', type: 'text', required: true },
-            { name: 'href', type: 'text', required: true },
-            {
-              name: 'newTab',
-              type: 'checkbox',
-              defaultValue: false,
-              label: 'Open in new tab',
-            },
+            // The shared link field, as the blocks use it — internal reference
+            // or custom URL, with the label and newTab handled for us.
+            // Appearances are off: footer links are always plain text links.
+            link({ appearances: false }),
             {
               name: 'download',
               type: 'checkbox',
               defaultValue: false,
               label: 'Download file',
+              admin: {
+                description:
+                  'Adds a download attribute. Only has an effect on same-origin URLs, e.g. an uploaded PDF.',
+              },
             },
           ],
         },

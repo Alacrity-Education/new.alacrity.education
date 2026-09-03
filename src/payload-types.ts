@@ -2459,14 +2459,32 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  /**
+   * Laid out 2 across until lg, then 3 at lg and 4 at xl, filling from the right — so up to 8 columns wrap into at most two rows.
+   */
   navColumns?:
     | {
         title: string;
         links?:
           | {
-              label: string;
-              href: string;
-              newTab?: boolean | null;
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              /**
+               * Adds a download attribute. Only has an effect on same-origin URLs, e.g. an uploaded PDF.
+               */
               download?: boolean | null;
               id?: string | null;
             }[]
@@ -2565,9 +2583,15 @@ export interface FooterSelect<T extends boolean = true> {
         links?:
           | T
           | {
-              label?: T;
-              href?: T;
-              newTab?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
               download?: T;
               id?: T;
             };

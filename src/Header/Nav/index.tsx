@@ -28,8 +28,8 @@ type NavColumnLink = NonNullable<NavColumn['links']>[number]
 
 /**
  * The dropdown panel is one fixed size for every parent item — ~42rem wide,
- * pinned to the horizontal centre of the viewport just under the header —
- * so switching between menus never shifts the panel sideways.
+ * centred on the trigger row just beneath it — so switching between menus
+ * never shifts the panel sideways.
  */
 const PANEL_WIDTH = 'w-[42rem] max-w-[calc(100vw-2rem)]'
 
@@ -135,10 +135,17 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
   return (
     <div className="navbar-center hidden lg:flex">
       <NavigationMenu
-        // Every panel renders at the same size, centred on the viewport rather
-        // than anchored to its trigger.
+        // Anchored to the trigger row, not to the header: the wrapper's default
+        // `absolute top-full` measures from the bottom of the menu root, which
+        // hugs the button list. A `fixed` panel would have to be told where the
+        // buttons are, and the only number available was the whole nav's height
+        // — which includes the blur strip below the bar, so the panel hung well
+        // clear of the buttons.
+        //
+        // Centred on the list rather than each trigger, so switching between
+        // menus never shifts the panel sideways.
         viewportClassName={cn('mt-3', PANEL_WIDTH)}
-        viewportWrapperClassName="fixed top-[var(--header-h,4rem)] left-1/2 -translate-x-1/2"
+        viewportWrapperClassName="absolute top-full left-1/2 -translate-x-1/2"
       >
         <NavigationMenuList className="gap-3">
           {navItems.map((item, i) => {
