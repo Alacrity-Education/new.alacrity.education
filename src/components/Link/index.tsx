@@ -10,6 +10,8 @@ export type CMSLinkType = {
   appearance?: 'inline' | "inlinePrimary" | ButtonProps['variant']
   children?: React.ReactNode
   className?: string
+  /** Same-origin only — the browser ignores it cross-origin. */
+  download?: boolean | null
   label?: string | null
   newTab?: boolean | null
   reference?: {
@@ -41,6 +43,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     appearance = 'inline',
     children,
     className,
+    download,
     label,
     newTab,
     reference,
@@ -54,6 +57,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   const size = appearance === 'link' ? 'clear' : sizeFromProps
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
+  const downloadProps = download ? { download: true } : {}
 
   /* Ensure we don't break any styles set by richText */
   if (appearance === 'inline' || appearance === 'inlinePrimary' ) {
@@ -62,6 +66,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
         className={cn(LinkAppearanceVariants[appearance], className)}
         href={href || url || ''}
         {...newTabProps}
+        {...downloadProps}
       >
         {label && label}
         {children && children}
@@ -71,7 +76,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   return (
     <Button asChild className={className} size={size} variant={appearance}>
-      <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
+      <Link className={cn(className)} href={href || url || ''} {...newTabProps} {...downloadProps}>
         {label && label}
         {children && children}
       </Link>

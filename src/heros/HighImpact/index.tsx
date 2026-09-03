@@ -142,20 +142,20 @@ export const HeroImage = ({
   const isCircle = imageVariant === 'circle'
 
   return (
-    <div className="w-full lg:w-1/2 flex items-center justify-center px-0 sm:px-8 lg:px-20 xl:px-26 pt-2 sm:pt-0 sm:pb-26">
+    <div className="w-full lg:w-1/2 flex items-center justify-center px-0 sm:px-8 lg:px-20 xl:px-20 pt-2 sm:pt-0 sm:pb-26">
       <Media
         pictureClassName={cn(
           'overflow-visible transition-transform z-0',
           isCircle
             ? 'w-2/5 lg:w-full  aspect-square'
-            : 'w-full lg:h-full lg:w-max aspect-video rounded-lg ',
+            : 'w-full lg:h-full lg:w-max aspect-video rounded-box ',
         )}
         className="h-max w-full lg:h-full z-0 lg:w-max"
         imgClassName={cn(
           'z-0 object-contain w-full  lg:h-full lg:w-full',
           isCircle
             ? 'aspect-square scale-150 object-center'
-            : 'aspect-video rounded-lg object-bottom ',
+            : 'aspect-[1.5] rounded-box object-cover ',
         )}
         priority
         resource={media}
