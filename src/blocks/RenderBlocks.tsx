@@ -12,7 +12,7 @@ import { GalleryBlock } from '@/blocks/GalleryBlock/Component'
 import { CardBlock } from './CardBlock/Component'
 import { Timeline } from '@/blocks/Timeline/Component'
 import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/Component'
-import { GridBlock } from '@/blocks/GridBlock/Component'
+import { StatsBlock } from '@/blocks/StatsBlock/Component'
 import { PersonCardBlock } from '@/blocks/PersonCardBlock/Component'
 import ContactMap from '@/blocks/Form/Map'
 import { MapBlockComponent } from '@/blocks/Map/Component'
@@ -29,7 +29,7 @@ const blockComponents = {
   cardBlock: CardBlock,
   timeline: Timeline,
   fcardsBlock: FeaturedCardsBlock,
-  gridBlock: GridBlock,
+  statsBlock: StatsBlock,
   personCardBlock: PersonCardBlock,
   mapBlock: MapBlockComponent,
   contactBlock: ContactBlockComponent,

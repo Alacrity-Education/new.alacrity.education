@@ -25,12 +25,23 @@ export const MediaBlock: React.FC<Props> = (props) => {
     enableGutter = true,
     imgClassName,
     media,
+    scale,
     staticImage,
     disableInnerContainer,
   } = props
 
   let caption
   if (media && typeof media === 'object') caption = media.caption
+
+  /**
+   * Constrain the wrapper's width rather than using `transform: scale()`: a
+   * transform doesn't reflow, so it would leave the original footprint behind
+   * as whitespace and resample the already-rendered bitmap. Narrowing the box
+   * lets next/image pick a smaller source too. Clamped here as well as in the
+   * config, since existing rows predate the field's min/max.
+   */
+  const scalePercent =
+    typeof scale === 'number' && scale > 0 && scale < 100 ? Math.max(1, scale) : null
 
   return (
     <div
@@ -42,15 +53,27 @@ export const MediaBlock: React.FC<Props> = (props) => {
         className,
       )}
     >
-      {(media || staticImage) && (
-        <Media
-          imgClassName={cn('rounded-box h-max', imgClassName)}
-          pictureClassName="rounded-box h-max"
-          className="rounded-box h-max"
-          resource={media}
-          src={staticImage}
-        />
-      )}
+      {(media || staticImage) &&
+        (() => {
+          const image = (
+            <Media
+              imgClassName={cn('rounded-box h-max', imgClassName)}
+              pictureClassName="rounded-box h-max"
+              className="rounded-box h-max"
+              resource={media}
+              src={staticImage}
+            />
+          )
+
+          // No wrapper at full size, so the unscaled path renders exactly as before.
+          if (scalePercent === null) return image
+
+          return (
+            <div className="mx-auto max-w-full" style={{ width: `${scalePercent}%` }}>
+              {image}
+            </div>
+          )
+        })()}
       {caption && (
         <div
           className={cn(

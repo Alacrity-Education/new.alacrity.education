@@ -22,7 +22,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
-            const { richText, size, xlText } = col
+            const { richText, size, centerContent } = col
 
             return (
               <div
@@ -31,9 +31,18 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
                 }, colsSpanClasses[size!])}
                 key={index}
               >
-                {richText && <RichText data={richText} className={cn("text-wrap! w-full h-max", xlText && "prose-xl! leading-8!")} enableGutter={false} />}
-
-
+                {richText && (
+                  <RichText
+                    data={richText}
+                    className={cn(
+                      'text-wrap! w-full h-max',
+                      // The grid's place-items-center already centres the box in
+                      // its track, so this only has to handle the text itself.
+                      centerContent && 'text-center',
+                    )}
+                    enableGutter={false}
+                  />
+                )}
               </div>
             )
           })}

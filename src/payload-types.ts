@@ -226,7 +226,7 @@ export interface Page {
     | CardBlock
     | Timeline
     | FeaturedCardsBlock
-    | GridBlock
+    | StatsBlock
     | PersonCardBlock
     | MapBlock
     | ContactBlock
@@ -732,7 +732,10 @@ export interface ContentBlock {
           };
           [k: string]: unknown;
         } | null;
-        xlText?: boolean | null;
+        /**
+         * Centres this column's text. The column box is already centred in its grid track.
+         */
+        centerContent?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -746,6 +749,10 @@ export interface ContentBlock {
  */
 export interface MediaBlock {
   media: number | Media;
+  /**
+   * Shrinks the image as a percentage of its container. 100 fills the width; the scaled image stays centred.
+   */
+  scale?: number | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -1014,9 +1021,9 @@ export interface FeaturedCardsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "GridBlock".
+ * via the `definition` "StatsBlock".
  */
-export interface GridBlock {
+export interface StatsBlock {
   variant?: ('base' | 'primary') | null;
   /**
    * Add 4 cells for a single row, or 8 cells for two rows at full width
@@ -1068,7 +1075,7 @@ export interface GridBlock {
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'gridBlock';
+  blockType: 'statsBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1526,7 +1533,7 @@ export interface PagesSelect<T extends boolean = true> {
         cardBlock?: T | CardBlockSelect<T>;
         timeline?: T | TimelineSelect<T>;
         fcardsBlock?: T | FeaturedCardsBlockSelect<T>;
-        gridBlock?: T | GridBlockSelect<T>;
+        statsBlock?: T | StatsBlockSelect<T>;
         personCardBlock?: T | PersonCardBlockSelect<T>;
         mapBlock?: T | MapBlockSelect<T>;
         contactBlock?: T | ContactBlockSelect<T>;
@@ -1595,7 +1602,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
     | {
         size?: T;
         richText?: T;
-        xlText?: T;
+        centerContent?: T;
         id?: T;
       };
   id?: T;
@@ -1607,6 +1614,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
  */
 export interface MediaBlockSelect<T extends boolean = true> {
   media?: T;
+  scale?: T;
   id?: T;
   blockName?: T;
 }
@@ -1770,9 +1778,9 @@ export interface FeaturedCardsBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "GridBlock_select".
+ * via the `definition` "StatsBlock_select".
  */
-export interface GridBlockSelect<T extends boolean = true> {
+export interface StatsBlockSelect<T extends boolean = true> {
   variant?: T;
   rows?: T;
   cells?:
@@ -2468,7 +2476,7 @@ export interface Header {
 export interface Footer {
   id: number;
   /**
-   * Laid out 2 across until lg, then 3 at lg and 4 at xl, filling from the right — so up to 8 columns wrap into at most two rows.
+   * Laid out 2 across on mobile, then 3 at md, 4 at lg and 5 at xl — so up to 8 columns wrap into at most two rows.
    */
   navColumns?:
     | {

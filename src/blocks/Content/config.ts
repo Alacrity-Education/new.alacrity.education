@@ -58,10 +58,13 @@ const columnFields: Field[] = [
     label: false,
   },
   {
-    name: 'xlText',
+    name: 'centerContent',
     type: 'checkbox',
-    label: 'XL Text',
+    label: 'Center content',
     defaultValue: false,
+    admin: {
+      description: "Centres this column's text. The column box is already centred in its grid track.",
+    },
   },
 ]
 

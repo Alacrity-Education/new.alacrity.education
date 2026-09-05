@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-import type { GridBlock as GridBlockProps } from '@/payload-types'
+import type { StatsBlock as StatsBlockProps } from '@/payload-types'
 import type { Page, Post } from '@/payload-types'
 
 import RichText from '@/components/RichText'
@@ -60,7 +60,7 @@ const cellOverlay: Record<string, string> = {
 const mediaTitleClass = 'text-primary-content'
 const mediaProseClass = 'text-base lg:text-lg xl:text-xl [&_p]:text-primary-content'
 
-type CellMedia = NonNullable<GridBlockProps['cells']>[number]['media']
+type CellMedia = NonNullable<StatsBlockProps['cells']>[number]['media']
 
 /**
  * Image plus tint, filling the cell behind its content. Absolutely positioned,
@@ -80,7 +80,7 @@ const CellBackground: React.FC<{ media: CellMedia; overlay?: string | null }> = 
   </>
 )
 
-type LinkField = NonNullable<NonNullable<GridBlockProps['cells']>[0]['link']>
+type LinkField = NonNullable<NonNullable<StatsBlockProps['cells']>[0]['link']>
 
 function resolveLinkHref(link: LinkField | null | undefined): string {
   if (!link) return '#'
@@ -96,7 +96,7 @@ function resolveLinkHref(link: LinkField | null | undefined): string {
   return link.url ?? '#'
 }
 
-export const GridBlock: React.FC<GridBlockProps> = ({
+export const StatsBlock: React.FC<StatsBlockProps> = ({
   variant = 'primary',
   cells,
 }) => {

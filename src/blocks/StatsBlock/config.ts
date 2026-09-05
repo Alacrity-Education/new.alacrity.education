@@ -14,9 +14,9 @@ const descriptionEditor = lexicalEditor({
   ],
 })
 
-export const GridBlock: Block = {
-  slug: 'gridBlock',
-  interfaceName: 'GridBlock',
+export const StatsBlock: Block = {
+  slug: 'statsBlock',
+  interfaceName: 'StatsBlock',
   fields: [
     {
       type: 'row',
@@ -108,7 +108,7 @@ export const GridBlock: Block = {
     },
   ],
   labels: {
-    plural: 'Grid Blocks',
-    singular: 'Grid Block',
+    plural: 'Stats Blocks',
+    singular: 'Stats Block',
   },
 }

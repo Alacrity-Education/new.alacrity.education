@@ -10,5 +10,18 @@ export const MediaBlock: Block = {
       relationTo: 'media',
       required: true,
     },
+    {
+      name: 'scale',
+      type: 'number',
+      label: 'Scale (%)',
+      defaultValue: 100,
+      min: 1,
+      max: 100,
+      admin: {
+        step: 5,
+        description:
+          'Shrinks the image as a percentage of its container. 100 fills the width; the scaled image stays centred.',
+      },
+    },
   ],
 }
