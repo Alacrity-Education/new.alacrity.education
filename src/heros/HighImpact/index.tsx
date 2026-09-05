@@ -71,10 +71,10 @@ export default function Hero({
   className?: string
 }) {
   return (
-    <div className="hero z-0 relative bg-base-100/30 overflow-x-clip min-h-[60vh] sm:min-h-[70lvh] md:min-h-[70lvh] pt-20 pb-12 sm:pt-20 sm:pb-16 md:-mt-10 md:pb-0">
+    <div className="hero z-0 relative bg-base-100/30 overflow-x-clip min-h-[60vh] sm:min-h-[70lvh] md:min-h-[70lvh] pt-5 pb-12 sm:pt-20 sm:pb-16 md:-mt-10 md:pb-0">
       <div
         className={cn(
-          'container mx-auto px-4 flex flex-col-reverse lg:flex-row-reverse gap-8  lg:gap-0 items-center justify-between h-full w-full',
+          'container mx-auto px-4 flex flex-col lg:flex-row-reverse gap-8  lg:gap-0 items-center justify-between h-full w-full',
           className,
         )}
       >
@@ -154,7 +154,7 @@ export const HeroImage = ({
         imgClassName={cn(
           'z-0 object-contain w-full  lg:h-full lg:w-full',
           isCircle
-            ? 'aspect-square scale-150 object-center'
+            ? 'aspect-square md:scale-150 object-center'
             : 'aspect-[1.5] rounded-box object-cover ',
         )}
         priority

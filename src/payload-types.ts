@@ -1024,7 +1024,7 @@ export interface GridBlock {
   rows?: number | null;
   cells?:
     | {
-        cellType: 'text' | 'textImage' | 'link';
+        cellType: 'text' | 'link';
         title?: string | null;
         description?: {
           root: {
@@ -1041,7 +1041,14 @@ export interface GridBlock {
           };
           [k: string]: unknown;
         } | null;
+        /**
+         * Optional, and available on both cell types. The cell text is drawn over the image on an overlay and switches to white.
+         */
         media?: (number | null) | Media;
+        /**
+         * Tints the image so the white text stays legible.
+         */
+        overlay?: ('dark' | 'primary') | null;
         link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -1775,6 +1782,7 @@ export interface GridBlockSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         media?: T;
+        overlay?: T;
         link?:
           | T
           | {
