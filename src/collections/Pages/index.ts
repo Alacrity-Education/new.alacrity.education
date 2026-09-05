@@ -12,7 +12,7 @@ import { GalleryBlock } from '../../blocks/GalleryBlock/config'
 import { CardBlock } from '@/blocks/CardBlock/config'
 import { Timeline } from '@/blocks/Timeline/config'
 import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/config'
-import { GridBlock } from '@/blocks/GridBlock/config'
+import { StatsBlock } from '@/blocks/StatsBlock/config'
 import { PersonCardBlock } from '@/blocks/PersonCardBlock/config'
 import { MapBlock } from '@/blocks/Map/config'
 import { ContactBlock } from '@/blocks/Contact/config'
@@ -92,7 +92,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 CardBlock,
                 Timeline,
                 FeaturedCardsBlock,
-                GridBlock,
+                StatsBlock,
                 PersonCardBlock,
                 MapBlock,
                 ContactBlock,

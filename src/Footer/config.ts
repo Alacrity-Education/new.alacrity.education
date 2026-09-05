@@ -11,13 +11,13 @@ export const Footer: GlobalConfig = {
     {
       name: 'navColumns',
       type: 'array',
-      // The footer grid is 4 columns wide at xl, so 8 is the most that still
-      // fits in the two rows the layout allows for. See src/Footer/Component.tsx.
+      // The footer grid is 5 columns wide at xl, so two rows hold 10; 8 keeps a
+      // little headroom under that. See src/Footer/Component.tsx.
       maxRows: 8,
       admin: {
         initCollapsed: true,
         description:
-          'Laid out 2 across until lg, then 3 at lg and 4 at xl, filling from the right — so up to 8 columns wrap into at most two rows.',
+          'Laid out 2 across on mobile, then 3 at md, 4 at lg and 5 at xl — so up to 8 columns wrap into at most two rows.',
         components: {
           RowLabel: '@/Footer/RowLabel#RowLabel',
         },
