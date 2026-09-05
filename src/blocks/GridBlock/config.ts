@@ -55,7 +55,6 @@ export const GridBlock: Block = {
           type: 'select',
           options: [
             { label: 'Text', value: 'text' },
-            { label: 'Text + Image', value: 'textImage' },
             { label: 'Link', value: 'link' },
           ],
           required: true,
@@ -73,11 +72,27 @@ export const GridBlock: Block = {
         },
         {
           name: 'media',
-          label: 'Image',
+          label: 'Background image',
           type: 'upload',
           relationTo: 'media',
           admin: {
-            condition: (_, siblingData) => siblingData?.cellType === 'textImage',
+            description:
+              'Optional, and available on both cell types. The cell text is drawn over the image on an overlay and switches to white.',
+          },
+        },
+        {
+          name: 'overlay',
+          type: 'select',
+          label: 'Image overlay',
+          defaultValue: 'dark',
+          options: [
+            { label: 'Dark', value: 'dark' },
+            { label: 'Primary', value: 'primary' },
+          ],
+          admin: {
+            // Only meaningful with an image behind it.
+            condition: (_, siblingData) => Boolean(siblingData?.media),
+            description: 'Tints the image so the white text stays legible.',
           },
         },
         link({
