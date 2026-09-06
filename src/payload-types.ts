@@ -237,6 +237,10 @@ export interface Page {
      */
     image?: (number | null) | Media;
     description?: string | null;
+    /**
+     * Comma separated, e.g. "robotics, student lab, Bucharest". Search engines largely ignore this tag, so treat it as a hint rather than a ranking lever.
+     */
+    keywords?: string | null;
   };
   background?: {
     image?: (number | null) | Media;
@@ -287,6 +291,10 @@ export interface Post {
      */
     image?: (number | null) | Media;
     description?: string | null;
+    /**
+     * Comma separated, e.g. "robotics, student lab, Bucharest". Search engines largely ignore this tag, so treat it as a hint rather than a ranking lever.
+     */
+    keywords?: string | null;
   };
   publishedAt?: string | null;
   authors?: (number | User)[] | null;
@@ -1017,8 +1025,14 @@ export interface CardBlock {
  */
 export interface Timeline {
   title?: string | null;
+  /**
+   * Entries run top to bottom. The number in each badge is the position in this list, so reordering renumbers them automatically.
+   */
   timelineElements?:
     | {
+        /**
+         * Optional. Shown as the small uppercase eyebrow above the heading.
+         */
         date?: string | null;
         description?: {
           root: {
@@ -1035,6 +1049,14 @@ export interface Timeline {
           };
           [k: string]: unknown;
         } | null;
+        /**
+         * Shown from md up only. Hidden on phones, where the entry is text alone.
+         */
+        image?: (number | null) | Media;
+        /**
+         * Sets the entry on a filled primary panel with white text.
+         */
+        highlight?: boolean | null;
         enableLink?: boolean | null;
         link?: {
           type?: ('reference' | 'custom') | null;
@@ -1587,6 +1609,7 @@ export interface PagesSelect<T extends boolean = true> {
         title?: T;
         image?: T;
         description?: T;
+        keywords?: T;
       };
   background?:
     | T
@@ -1813,6 +1836,8 @@ export interface TimelineSelect<T extends boolean = true> {
     | {
         date?: T;
         description?: T;
+        image?: T;
+        highlight?: T;
         enableLink?: T;
         link?:
           | T
@@ -1956,6 +1981,7 @@ export interface PostsSelect<T extends boolean = true> {
         title?: T;
         image?: T;
         description?: T;
+        keywords?: T;
       };
   publishedAt?: T;
   authors?: T;

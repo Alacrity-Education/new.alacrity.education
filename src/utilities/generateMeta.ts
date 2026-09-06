@@ -30,8 +30,16 @@ export const generateMeta = async (args: {
     ? doc?.meta?.title + ' | Payload Website Template'
     : 'Payload Website Template'
 
+  // Next expects an array; the field is a comma-separated string. Trimmed and
+  // de-blanked so "a, b, , c" does not emit an empty keyword.
+  const keywords = doc?.meta?.keywords
+    ?.split(',')
+    .map((k) => k.trim())
+    .filter(Boolean)
+
   return {
     description: doc?.meta?.description,
+    keywords: keywords?.length ? keywords : undefined,
     openGraph: mergeOpenGraph({
       description: doc?.meta?.description || '',
       images: ogImage

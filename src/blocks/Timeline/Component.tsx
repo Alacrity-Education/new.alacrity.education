@@ -1,148 +1,222 @@
-"use client";
+'use client'
 
-import React from 'react'
-import {useRef} from 'react'
+import React, { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
 import type { Timeline as TimelineProps } from '@/payload-types'
-import RichText from '@/components/RichText'
-import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
-import { cn } from '@/utilities/ui'
+
 import { CMSLink } from '@/components/Link'
+import { Media } from '@/components/Media'
+import RichText from '@/components/RichText'
 import { SectionTitle } from '@/components/SectionTitle'
-import { link } from 'node:fs'
 import { hasRichTextContent } from '@/utilities/richText'
+import { cn } from '@/utilities/ui'
 
-const Tbr = ({ className }: { className?: string }) => (
-  <svg className={cn('h-10 text-gray-300 ', className)} width="2" xmlns="http://www.w3.org/2000/svg">
-    <line
-      x1="1"
-      y1="0"
-      x2="1"
-      y2="100%"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeDasharray="4 4"
-    />
-  </svg>
-)
+type Entry = NonNullable<TimelineProps['timelineElements']>[number]
 
-type TimelineElementsType = TimelineProps['timelineElements'];
-type LinkType = NonNullable<TimelineProps['timelineElements']>[number]['link']
+/**
+ * Tailwind's `md`, in rem so it tracks the theme rather than drifting from the
+ * `md:` classes if the root font size changes. Images only exist from md up, so
+ * the parallax has nothing to do below it. Reduced-motion users opt out
+ * entirely — matchMedia reverts the tweens when either clause stops matching.
+ */
+const PARALLAX_QUERY = '(min-width: 48rem) and (prefers-reduced-motion: no-preference)'
 
-export function TimelineCard({ time, text, link }: { time: string; text: DefaultTypedEditorState | undefined | null, link: LinkType }) {
-  return (
-    <div className="relative flex flex-col w-[80vw] sm:w-xs">
-      <Tbr />
-      <div className="relative badge badge-primary badge-md text-base-300 shadow-lg rounded-md">
-        {new Date(time).toLocaleString('en-US', {
-          month: 'long',
-          year: 'numeric',
-        })}
-      </div>
-      <div className="pt-4 h-full max-h-max overflow-clip">
-        {hasRichTextContent(text) && <RichText className={'pl-0! ml-0! prose-sm pb-4 prose-p:text-base'} data={text} />}
-        {link&&<CMSLink {...link} className={"has-external-arrow  btn-sm!"} />}
-      </div>
-    </div>
-  )
+/**
+ * The rail and the badge that straddles it. Every horizontal offset below is
+ * derived from these two, so the geometry stays consistent:
+ *   rail 2.5rem wide, centre at 1.25rem
+ *   badge 3rem, so its left edge sits at 1.25rem - 1.5rem = -0.25rem
+ */
+/**
+ * Horizontal geometry only — each use states its own vertical span. twMerge does
+ * not treat `inset-y-*` as conflicting with `top-*`/`bottom-*`, so baking a
+ * default in here would leave the winner to Tailwind's stylesheet order rather
+ * than to the caller.
+ */
+const RAIL = 'absolute left-0 w-10 rounded-full'
+const RAIL_FILL = 'bg-brand-900'
+
+/**
+ * Month + year, e.g. "March 2024". Timezone-agnostic on purpose: Payload stores
+ * a UTC instant, and formatting that in the viewer's zone can roll a date on
+ * the 1st back into the previous month.
+ */
+const formatEyebrow = (value?: string | null): string | null => {
+  if (!value) return null
+  const d = new Date(value)
+  if (Number.isNaN(d.getTime())) return null
+  return d.toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
 }
+const BADGE = 'absolute -left-2 -top-2 z-20 grid size-14 place-items-center rounded-full'
 
-export const Timeline :  React.FC<TimelineProps> = ({ timelineElements, title }) => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const scrollAmount = 400
+/** Clears the rail and the connector stub. */
+const ENTRY_INSET = 'pl-16 md:pl-28'
 
-  // Oldest elements go to the left, newest to the right.
-  // Payload prepends new array items (index 0 = newest), so reverse to get chronological order.
-  const elements = [...(timelineElements || [])]
-
-  // On mount, jump to the right end so the newest element is immediately visible.
-  React.useEffect(() => {
-    const el = scrollContainerRef.current
-    if (el) el.scrollLeft = el.scrollWidth - el.clientWidth
-  }, [])
-
-  const scrollLeft = () => {
-    scrollContainerRef.current?.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
-  }
-
-  const scrollRight = () => {
-    scrollContainerRef.current?.scrollBy({ left: scrollAmount, behavior: 'smooth' })
-  }
+const TimelineEntry: React.FC<{ entry: Entry; index: number }> = ({ entry, index }) => {
+  const highlighted = Boolean(entry.highlight)
+  const eyebrow = formatEyebrow(entry.date)
 
   return (
-    <div className="w-full container">
-      <SectionTitle title={title} className="mb-6" />
-      <div className="relative min-h-[60vh] sm:min-h-[50vh] h-max w-full bg-base-100 flex flex-col items-start p-10 border-4 border-primary dark:border-primary/30 rounded-lg shadow-xl">
-        {/* Left arrow → older elements */}
-        <button
-          onClick={scrollLeft}
-          className="block btn btn-xl z-10 absolute left-10 bottom-10 btn-circle btn-primary hover:-translate-y-1 transition-all"
-        >
-          <LeftArrow className="h-full w-full invert" />
-        </button>
+    <article
+      className={cn(
+        'relative',
+        ENTRY_INSET,
+        "overflow-visible",
+        "min-h-64"
+        // z-20 lifts the whole entry above the shared rail (z-10) so the filled
+        // panel covers it, and the white segment below stands in for it.
+        // highlighted && 'z-20 rounded-3xl bg-primary py-8 pr-6 md:py-10 md:pr-10',
+      )}
+    >
+      {highlighted && <div className='bg-primary absolute inset-y-[-30px] inset-x-[-100%] rounded-box  z-0 '></div>}
+      {/* The rail turns white as it crosses a highlighted entry. Same geometry
+          as the shared rail, painted over the panel that just hid it. */}
+      {highlighted && (
+        <div aria-hidden="true" className={cn(RAIL, 'inset-y-[-100px] rounded-full z-20 bg-linear-to-b from-brand-900 to-brand-900 via-base-100  ')} />
+      )}
+      <div className={cn(BADGE, 'bg-brand-500 text-primary-content ',highlighted && "bg-base-300 text-primary")} aria-hidden="true">
+        <span className="text-lg font-semibold leading-none">{index + 1}</span>
+      </div>
 
-        <div
-          ref={scrollContainerRef}
-          style={{ scrollbarGutter: 'stable' }}
-          className="h-full w-full max-w-full overflow-x-scroll absolute top-0 left-0 scrollbar-visible"
-        >
-          <div className="relative w-max min-w-full h-max py-10 sm:py-10 pl-10 flex flex-col">
-            {/* horizontal timeline line; elements hang below it left→right oldest→newest */}
-            <div className={'absolute h-1.5 w-full bg-primary z-10 -left-[70vw] md:-left-[50vw] lg:-left-[20vw]'}></div>
-            <div className="flex flex-row gap-4 border-t-6 border-dashed border-primary/60">
-              {elements.map((timelineElement, index) => (
-                <TimelineCard
-                  key={index}
-                  time={timelineElement.date || ''}
-                  text={timelineElement.description}
-                  link={timelineElement.link}
-                />
-              ))}
-              <div className="w-0 sm:w-20 md:w-xs"></div>
+      <div
+        aria-hidden="true"
+        className={cn("hidden absolute left-10 top-0 h-10 w-10 sm:w-20 z-10  bg-linear-to-r from-brand-900 to-transparent md:w-20 lg:block"
+          ,
+          highlighted && "bg-linear-to-r from-base-100/50 to-transparent"
+
+        )}
+      />
+
+      <div className="flex flex-col relative z-20 gap-14 lg:flex-row lg:items-start justify-between w-full lg:gap-24">
+        <div className="min-w-0  lg:max-w-sm lg:basis-md xl:max-w-md xl:basis- shrink-0">
+          {eyebrow && (
+            <p
+              className={cn(
+                'eyebrow mb-3',
+                highlighted ? 'text-primary-content/70' : 'text-ink-muted',
+              )}
+            >
+              {eyebrow}
+            </p>
+          )}
+
+          {hasRichTextContent(entry.description) && (
+            // Sizes come from .prose-alacrity via prose-md, same as every other
+            // rich text field. prose-on-primary only repoints the palette.
+            <RichText
+              data={entry.description}
+              enableGutter={false}
+              className={cn('prose-md mx-0', highlighted && 'prose-on-primary')}
+            />
+          )}
+
+          {entry.enableLink && entry.link && (
+            <div className="mt-6">
+              <CMSLink
+                {...entry.link}
+                // On the filled panel the CMS appearance would sit primary on
+                // primary, so it is overridden at render rather than adding
+                // panel-only options to the field.
+                appearance={highlighted ? 'baseOverlap' : (entry.link.appearance ?? 'primary')}
+              />
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Right arrow → newer elements */}
-        <button
-          onClick={scrollRight}
-          className="block btn btn-xl z-10 absolute right-10 bottom-10 btn-circle btn-primary hover:-translate-y-1 transition-all"
-        >
-          <RightArrow className="h-full w-full invert" />
-        </button>
+
+        {entry.image && (
+          // The figure absorbs the space the copy column leaves; justify-end
+          // then pins the (narrower) image to the far right of it.
+          //
+          // It has to be justify-* on this container, not place-self on the
+          // child: `justify-self` is ignored in flex layout, so `place-self-end`
+          // only ever moved the image down, never right.
+          <figure className="timeline-figure hidden min-w-0 w-full justify-end lg:flex">
+            <div className="relative aspect-4/3 w-4/5 overflow-hidden rounded-box">
+              {/* Oversized by 12% a side so the ±8% drift never exposes an edge. */}
+              <div className="timeline-figure__inner absolute -inset-[12%]">
+                <Media
+                  className="h-full w-full"
+                  imgClassName="h-full w-full object-cover"
+                  resource={entry.image}
+                />
+              </div>
+            </div>
+          </figure>
+        )}
+      </div>
+    </article>
+  )
+}
+
+export const Timeline: React.FC<TimelineProps> = ({ timelineElements, title }) => {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const entries = timelineElements ?? []
+
+  useEffect(() => {
+    if (!entries.length) return
+
+    gsap.registerPlugin(ScrollTrigger)
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia()
+
+      mm.add(PARALLAX_QUERY, () => {
+        gsap.utils.toArray<HTMLElement>('.timeline-figure').forEach((figure) => {
+          const inner = figure.querySelector<HTMLElement>('.timeline-figure__inner')
+          if (!inner) return
+
+          // Entrance: the "loads in" half.
+          gsap.from(figure, {
+            autoAlpha: 0,
+            y: 32,
+            duration: 0.7,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: figure, start: 'top 85%' },
+          })
+
+          // Drift: the image runs slower than the page across its own frame.
+          gsap.fromTo(
+            inner,
+            { yPercent: -8 },
+            {
+              yPercent: 8,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: figure,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
+            },
+          )
+        })
+      })
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [entries.length])
+
+  if (!entries.length) return null
+
+  return (
+    <div className="container" ref={containerRef}>
+      <SectionTitle title={title} className="lg:py-4" />
+
+      <div className="relative overflow-visible py-20">
+        <div aria-hidden="true" className={cn(RAIL, RAIL_FILL, 'top-6  bottom-6 z-10')} />
+
+        <ol className="space-y-20 md:space-y-28 flex flex-col gap-10">
+          {entries.map((entry, i) => (
+            <li key={entry.id ?? i}>
+              <TimelineEntry entry={entry} index={i} />
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   )
-}
-
-const ArrowSymbol = ({ className }: { className: string }) => {
-  return (
-    <svg
-      width="800px"
-      height="800px"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      <path
-        d="M6 12H18M18 12L13 7M18 12L13 17"
-        stroke="#000000"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-const RightArrow = ({ className }: { className: string }) => {
-  return <ArrowSymbol className={className} />
-}
-
-export const DownArrow = ({ className }: { className: string }) => {
-  return <ArrowSymbol className={className + ' rotate-90'} />
-}
-
-const LeftArrow = ({ className }: { className: string }) => {
-  return <ArrowSymbol className={className + ' rotate-180'} />
 }

@@ -20,6 +20,7 @@ import { slugField } from 'payload'
 import { populatePublishedAt } from '@/hooks/populatePublishedAt'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
+import { metaKeywords } from '@/fields/metaKeywords'
 
 import {
   MetaDescriptionField,
@@ -120,6 +121,7 @@ export const Pages: CollectionConfig<'pages'> = {
             }),
 
             MetaDescriptionField({}),
+            metaKeywords,
             PreviewField({
               // if the `generateUrl` function is configured
               hasGenerateFn: true,
