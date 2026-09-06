@@ -322,6 +322,21 @@
   margin-block: 1.25rem;
 }
 
+/* Lexical keeps a trailing empty paragraph whenever an editor presses Enter
+   after a block — inserting an image and hitting return leaves one behind. It
+   converts to `<p><br></p>`, which is NOT :empty (the <br> is a child), so it
+   still claims a line box plus the 1.25rem margins above and below.
+   Most visible in the content block's image column, where it was adding dead
+   space under the picture.
+
+   Two selectors because CSS cannot ask "has no text": :empty covers a <p> with
+   no children at all, and the :has() covers the <br>-only case. A paragraph
+   holding real text has no element children, so it can never match either. */
+.prose-alacrity p:empty,
+.prose-alacrity p:has(> br:only-child) {
+  display: none;
+}
+
 .prose-alacrity .lead {
   font-size: 1.2em;
   font-weight: 400;
@@ -654,4 +669,9 @@
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+.prose-alacrity p:empty,
+.prose-alacrity p:has(> br:only-child) {
+  display: none;
 }
