@@ -5,6 +5,7 @@ import RichText from '@/components/RichText'
 import type { ContentBlock as ContentBlockProps } from '@/payload-types'
 
 import { CMSLink } from '../../components/Link'
+import { hasRichTextContent } from '@/utilities/richText'
 
 export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   const { columns } = props
@@ -31,7 +32,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
                 }, colsSpanClasses[size!])}
                 key={index}
               >
-                {richText && (
+                {hasRichTextContent(richText) && (
                   <RichText
                     data={richText}
                     className={cn(

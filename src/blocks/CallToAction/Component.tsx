@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/utilities/ui'
 import { Media } from '@/components/Media'
 import { FormBlock } from '@/blocks/Form/Component'
+import { hasRichTextContent } from '@/utilities/richText'
 
 export const CallToActionBlock: React.FC<CTABlockProps> = ({ id, variant, links, richText, media }) => {
   const bgCls = {
@@ -40,7 +41,7 @@ export const CallToActionBlock: React.FC<CTABlockProps> = ({ id, variant, links,
 
         <div className={'relative rounded-lg p-10 h-full w-full flex flex-col gap-8 z-20'}>
           <div className="max-w-[48rem]">
-            {richText && (
+            {hasRichTextContent(richText) && (
               <RichText
                 className={cn('mb-0', textCls[variant || 'base'])}
                 data={richText}

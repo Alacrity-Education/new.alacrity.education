@@ -7,6 +7,7 @@ import type { Page, Post } from '@/payload-types'
 import RichText from '@/components/RichText'
 import { Media } from '@/components/Media'
 import { cn } from '@/utilities/ui'
+import { hasRichTextContent } from '@/utilities/richText'
 
 const containerBg: Record<string, string> = {
   base: 'bg-base-100 border-2 border-base-300',
@@ -117,7 +118,7 @@ export const StatsBlock: React.FC<StatsBlockProps> = ({
               <div
                 key={cell.id ?? i}
                 className={cn(
-                  'relative flex flex-col rounded-box aspect-2/1 sm:aspect-square p-10 sm:p-4  md:p-6 lg:p-4 xl:p-6',
+                  'relative flex flex-col rounded-box aspect-square p-8 sm:p-4  md:p-6 lg:p-4 xl:p-6',
                   // Plain cells keep the mobile hairline divider between stacked
                   // rows; an image cell is a self-contained tile instead, fully
                   // rounded like the link cells, so neither applies to it.
@@ -131,14 +132,14 @@ export const StatsBlock: React.FC<StatsBlockProps> = ({
                   {cell.title && (
                     <p
                       className={cn(
-                        'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-2',
+                        'text-3xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-2',
                         cell.media ? mediaTitleClass : titleClass[v],
                       )}
                     >
                       {cell.title}
                     </p>
                   )}
-                  {cell.description && (
+                  {hasRichTextContent(cell.description) && (
                     <RichText
                       className={cn(
                         'mb-0 w-full max-w-full mx-0',
@@ -168,7 +169,7 @@ export const StatsBlock: React.FC<StatsBlockProps> = ({
                 href={href}
                 {...newTabProps}
                 className={cn(
-                  'group relative flex flex-col rounded-box p-4 sm:p-6 transition-colors aspect-2/1 sm:aspect-square',
+                  'group relative flex flex-col rounded-box p-4 sm:p-6 transition-colors aspect-square',
                   // The colour on the wrapper also carries the ↗ glyph, which
                   // inherits currentColor rather than a class of its own.
                   cell.media ? 'overflow-hidden text-primary-content' : linkCellBg[v],
@@ -185,14 +186,14 @@ export const StatsBlock: React.FC<StatsBlockProps> = ({
                   {cell.title && (
                     <p
                       className={cn(
-                        'text-2xl font-semibold mb-2',
+                        'text-3xl font-semibold mb-2',
                         cell.media ? mediaTitleClass : linkCellTitleClass[v],
                       )}
                     >
                       {cell.title}
                     </p>
                   )}
-                  {cell.description && (
+                  {hasRichTextContent(cell.description) && (
                     <RichText
                       className={cn(
                         'mb-0 w-full mx-0',

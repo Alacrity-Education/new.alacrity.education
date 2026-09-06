@@ -5,6 +5,7 @@ import RichText from '@/components/RichText'
 import { Map } from '@/components/Map'
 import { ContactInfoCard } from '@/components/ContactInfoCard'
 import { ContactForm } from './ContactForm'
+import { hasRichTextContent } from '@/utilities/richText'
 
 export const ContactBlockComponent: React.FC<ContactBlock> = ({
   heading,
@@ -18,7 +19,7 @@ export const ContactBlockComponent: React.FC<ContactBlock> = ({
 
   return (
     <section className="container my-16">
-      {enableIntro && introContent && (
+      {enableIntro && hasRichTextContent(introContent) && (
         <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
       )}
 

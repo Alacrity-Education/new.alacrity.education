@@ -12,6 +12,7 @@ import { FaPhone, FaEnvelope } from 'react-icons/fa6'
 import { fields } from './fields'
 import { getClientSideURL } from '@/utilities/getURL'
 import FormMap from './Map'
+import { hasRichTextContent } from '@/utilities/richText'
 
 export type FormBlockType = {
   blockName?: string
@@ -163,7 +164,7 @@ export const FormBlock: React.FC<{ id?: string } & FormBlockType> = (props) => {
   if (!enableMap) {
     return (
       <div className="container lg:max-w-[48rem]">
-        {enableIntro && introContent && !hasSubmitted && (
+        {enableIntro && hasRichTextContent(introContent) && !hasSubmitted && (
           <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
         )}
         {formContent}
@@ -173,7 +174,7 @@ export const FormBlock: React.FC<{ id?: string } & FormBlockType> = (props) => {
 
   return (
     <div className="container">
-      {enableIntro && introContent && !hasSubmitted && (
+      {enableIntro && hasRichTextContent(introContent) && !hasSubmitted && (
         <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
       )}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

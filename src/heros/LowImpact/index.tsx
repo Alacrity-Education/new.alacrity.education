@@ -6,6 +6,7 @@ import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import RichText from '@/components/RichText'
 import { customConverters } from '@/components/RichText/CustomConverter'
+import { hasRichTextContent } from '@/utilities/richText'
 
 export const LowImpactHero: React.FC<Page['hero']> = ({ cta, richText }) => {
   return (
@@ -16,7 +17,7 @@ export const LowImpactHero: React.FC<Page['hero']> = ({ cta, richText }) => {
           {/* Primary accent bar */}
           <div className="w-1 shrink-0 rounded-full bg-primary self-stretch" aria-hidden />
 
-          {richText && (
+          {hasRichTextContent(richText) && (
             <RichText
               className="min-w-0 [&_h1]:text-2xl [&_h1]:sm:text-3xl [&_h1]:font-semibold
                          [&_h1]:leading-tight [&_h1]:mb-0 [&_p]:text-base-content/65
