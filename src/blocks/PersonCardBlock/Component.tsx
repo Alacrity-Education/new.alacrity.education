@@ -138,7 +138,7 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
       />
 
       <div className="-my-8">
-        <div className="flex flex-row gap-4 sm:gap-10 md:gap-16 lg:gap-20 px-2 py-4 overflow-x-auto snap-x snap-mandatory">
+        <div className="flex flex-row gap-2 sm:gap-10 md:gap-16 lg:gap-20 px-2 py-4 overflow-x-auto snap-x snap-mandatory">
           {resolvedMembers.map((member) => (
             <div key={member.id} className={cardWrapperClass}>
               <PersonCard member={member} />
