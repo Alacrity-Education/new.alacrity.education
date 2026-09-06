@@ -7,6 +7,7 @@ import { SectionTitle } from '@/components/SectionTitle'
 import { cn } from '@/utilities/ui'
 
 import type { CardBlock as CardBlockProps } from '@/payload-types'
+import { hasRichTextContent } from '@/utilities/richText'
 
 type BigCards = NonNullable<CardBlockProps['bigCards']>
 type BigCard = BigCards[number]
@@ -26,7 +27,7 @@ const CARD_SHELL =
 const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
   // z-20 keeps the copy above the tint (z-10) and the image (absolute, z-auto).
   <div className="relative z-20 flex min-h-0 flex-1 flex-col p-8 sm:p-10 lg:p-12">
-    {card.richText && (
+    {hasRichTextContent(card.richText) && (
       // Sizes come from .prose-alacrity, same as every other rich text field in
       // the app. `prose-on-primary` repoints only the colour palette.
       <RichText
@@ -77,7 +78,7 @@ const FullCard: React.FC<{ card: BigCard }> = ({ card }) => (
 const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
   <article className={CARD_SHELL}>
     <div className={cn('relative z-20 flex shrink-0 flex-col', "px-6 sm:px-10 lg:px-12 pt-8 sm:pt-10 lg:pt-12")}>
-      {card.richText && (
+      {hasRichTextContent(card.richText) && (
         <RichText
           data={card.richText}
           enableGutter={false}

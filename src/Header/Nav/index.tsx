@@ -189,8 +189,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
 // ---------------------------------------------------------------------------
 
 const MOBILE_DIALOG_ID = 'header-mobile-nav'
-
-export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
+export const MobileHeaderNav: React.FC<{ data: HeaderType, highlightButton?: HighlightButtonType }> = ({ data, highlightButton }) => {
   const navItems = data?.navItems
 
   if (!navItems?.length) {
@@ -198,9 +197,9 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
   }
 
   return (
-    <div className={'flex-none lg:hidden'}>
+    <div className={'navbar-end lg:hidden'}>
       <button
-        className="btn"
+        className="btn btn-primary rounded-md"
         aria-label="Open navigation"
         onClick={() => {
           const dialog = document.getElementById(MOBILE_DIALOG_ID) as HTMLDialogElement | null
@@ -222,22 +221,31 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
           />
         </svg>
       </button>
-      <dialog id={MOBILE_DIALOG_ID} className="modal transition-none">
+      {/* modal-start makes this a left-edge drawer: daisyUI parks the box at
+          translate:-100% and its own [open] rule animates it to 0 over 300ms,
+          which replaces the default scale-and-fade. `transition-none` is gone
+          on purpose — it sat on .modal and killed the `visibility .3s
+          allow-discrete` transition, so the drawer slid IN but vanished
+          instantly on close instead of sliding back out. */}
+      <dialog id={MOBILE_DIALOG_ID} className="modal modal-start">
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>
-        <div className="modal-box p-2 bg-primary absolute top-0 left-0 h-max max-h-screen min-h-screen overflow-y-auto overflow-x-clip w-screen sm:w-80 max-w-screen">
+        <div className="modal-box rounded-none p-2 bg-base-200/80 backdrop-blur-sm h-max max-h-screen min-h-screen overflow-y-auto overflow-x-clip w-screen sm:w-80 max-w-screen">
           <div className="fixed top-5 right-0 w-full px-5">
             <form method="dialog" className={'flex flex-row w-full items-center'}>
-              <div className={'text-primary-content text-2xl'}>Navigation</div>
+              <div className={'text-primary text-2xl'}>Navigation</div>
               <div className={'grow'}></div>
-              <button className="text-3xl text-primary-content" aria-label="Close navigation">
+              <button className="text-3xl text-primary" aria-label="Close navigation">
                 <IoClose />
               </button>
             </form>
           </div>
 
           <ul className="menu w-full h-full pt-14">
+            <li>
+                   <CMSLink {...highlightButton?.link} className='w-full' />
+            </li>
             {navItems.map((item, i) => {
               if (item.itemType === 'parent') {
                 const columns = columnsOf(item)
@@ -247,14 +255,14 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
                 return (
                   <li key={i}>
                     <details>
-                      <summary className={'text-lg text-primary-content'}>
+                      <summary className={'text-lg '}>
                         {item.label || 'Menu'}
                       </summary>
                       <ul className="rounded-t-none p-2 dropdown-start">
                         {columns.map((column, columnIdx) => (
                           <React.Fragment key={columnIdx}>
                             {column.heading && (
-                              <li className="menu-title px-2 pt-2 pb-1 text-xs tracking-[0.08em] text-primary-content/60 uppercase">
+                              <li className="menu-title px-2 pt-2 pb-1 text-xs tracking-[0.08em]  uppercase">
                                 {column.heading}
                               </li>
                             )}
@@ -269,7 +277,7 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
                                     data={subItem.content}
                                     enableGutter={false}
                                     enableProse={false}
-                                    className={cn('max-w-none', itemTypography('sidebar'))}
+                                    className={cn('max-w-none invert', itemTypography('sidebar'))}
                                   />
                                 </CMSLink>
                               </li>
@@ -293,6 +301,7 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
               )
             })}
           </ul>
+
         </div>
       </dialog>
     </div>
@@ -307,7 +316,7 @@ export const HighlightButton = ({ highlightButton }: { highlightButton: Highligh
     return null
   }
   return (
-    <div className={'navbar-end'}>
+    <div className={'hidden md:flex md:navbar-end '}>
       <CMSLink className={'lg:ml-10 overflow-visible  '} {...highlightButton.link} />
     </div>
   )

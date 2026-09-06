@@ -15,15 +15,15 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   return (
     <nav className="fixed top-0 z-50 flex flex-col">
       {/*<HighlightBanner highlightBanner={data.highlightBanner} />*/}
-      <div className="navbar z-10 absolute top-0 inset-x-0 flex flex-row h-max items-center py-2 lg:px-8 w-screen ">
+      <div className="navbar z-10 absolute top-0 inset-x-0 flex flex-row h-max items-center py-2 px-4 lg:px-8 w-screen ">
 
-        <MobileHeaderNav data={data} />
+
         <div className="navbar-start h-max">
           <Link href="/" className=" h-max text-primary md:text-xl">
             <Logo loading="eager" priority="high"  />
           </Link>
         </div>
-
+        <MobileHeaderNav data={data} highlightButton={data.highlightButton} />
         <HeaderNav data={data} />
 
         <HighlightButton highlightButton={data.highlightButton} />

@@ -7,6 +7,7 @@ import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 import { customConverters } from '@/components/RichText/CustomConverter'
+import { hasRichTextContent } from '@/utilities/richText'
 
 export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, richText }) => {
   const hasMedia = media && typeof media === 'object'
@@ -33,7 +34,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, richText 
             </div>
           )}
 
-          {richText && (
+          {hasRichTextContent(richText) && (
             <RichText
               className="w-full [&_h1]:text-3xl [&_h1]:sm:text-4xl [&_h1]:md:text-5xl
                          [&_h1]:font-bold [&_h1]:mb-4

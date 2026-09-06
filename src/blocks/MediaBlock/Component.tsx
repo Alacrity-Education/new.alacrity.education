@@ -7,6 +7,7 @@ import RichText from '@/components/RichText'
 import type { MediaBlock as MediaBlockProps } from '@/payload-types'
 
 import { Media } from '../../components/Media'
+import { hasRichTextContent } from '@/utilities/richText'
 
 type Props = MediaBlockProps & {
   breakout?: boolean
@@ -33,8 +34,14 @@ export const MediaBlock: React.FC<Props> = (props) => {
 
   // The caption is a property of the media document, not of this block, so it
   // would otherwise show up everywhere that image is used.
+  //
+  // hasRichTextContent, not a truthiness check: clearing a caption in the admin
+  // leaves a populated-but-empty Lexical object behind, which would still render
+  // the wrapper below as an empty padded box.
   let caption
-  if (!disableCaption && media && typeof media === 'object') caption = media.caption
+  if (!disableCaption && media && typeof media === 'object' && hasRichTextContent(media.caption)) {
+    caption = media.caption
+  }
 
   /**
    * Constrain the wrapper's width rather than using `transform: scale()`: a

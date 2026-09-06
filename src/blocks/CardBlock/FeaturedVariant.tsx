@@ -9,6 +9,7 @@ import RichText from '@/components/RichText'
 import { CMSLink } from '@/components/Link'
 import { SectionTitle } from '@/components/SectionTitle'
 import { ImageStack } from './ImageStack'
+import { hasRichTextContent } from '@/utilities/richText'
 
 type FeaturedCards = NonNullable<CardBlockProps['featuredCards']>
 
@@ -138,7 +139,7 @@ export const FeaturedVariant: React.FC<{
                     keeping the text first in the DOM and reading order. */}
                 <div className="flex flex-col-reverse md:flex-row h-max p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 gap-8 md:gap-6">
                   <div className="flex flex-col flex-1 min-w-0 ">
-                    {card.richText && (
+                    {hasRichTextContent(card.richText) && (
                       <RichText
                         className="mb-0 prose-h2:text-primary prose-h3:text-primary w-full lg:pr-16"
                         data={card.richText}

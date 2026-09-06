@@ -9,6 +9,7 @@ import { cn } from '@/utilities/ui'
 import { CMSLink } from '@/components/Link'
 import { SectionTitle } from '@/components/SectionTitle'
 import { link } from 'node:fs'
+import { hasRichTextContent } from '@/utilities/richText'
 
 const Tbr = ({ className }: { className?: string }) => (
   <svg className={cn('h-10 text-gray-300 ', className)} width="2" xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +39,7 @@ export function TimelineCard({ time, text, link }: { time: string; text: Default
         })}
       </div>
       <div className="pt-4 h-full max-h-max overflow-clip">
-        {text && <RichText className={'pl-0! ml-0! prose-sm pb-4 prose-p:text-base'} data={text} />}
+        {hasRichTextContent(text) && <RichText className={'pl-0! ml-0! prose-sm pb-4 prose-p:text-base'} data={text} />}
         {link&&<CMSLink {...link} className={"has-external-arrow  btn-sm!"} />}
       </div>
     </div>
