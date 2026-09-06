@@ -197,7 +197,7 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType, highlightButton?: Hig
   }
 
   return (
-    <div className={'navbar-end lg:hidden pt-6'}>
+    <div className={'navbar-end lg:hidden '}>
       <button
         className="btn btn-primary rounded-md"
         aria-label="Open navigation"
@@ -243,7 +243,7 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType, highlightButton?: Hig
           </div>
 
           <ul className="menu w-full h-full pt-14">
-            <li>
+            <li className='pb-4'>
                    <CMSLink {...highlightButton?.link} className='w-full' />
             </li>
             {navItems.map((item, i) => {
