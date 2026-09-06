@@ -225,7 +225,6 @@ export interface Page {
     | GalleryBlock
     | CardBlock
     | Timeline
-    | FeaturedCardsBlock
     | StatsBlock
     | PersonCardBlock
     | MapBlock
@@ -750,6 +749,10 @@ export interface ContentBlock {
 export interface MediaBlock {
   media: number | Media;
   /**
+   * Captions come from the media item itself, so they appear everywhere it is used. Tick this to suppress it for this block only.
+   */
+  disableCaption?: boolean | null;
+  /**
    * Shrinks the image as a percentage of its container. 100 fills the width; the scaled image stays centred.
    */
   scale?: number | null;
@@ -872,6 +875,10 @@ export interface GalleryBlock {
  * via the `definition` "CardBlock".
  */
 export interface CardBlock {
+  /**
+   * Carousel: horizontally scrolling cards. Featured: full-width cards that pin and scale on scroll (md and up). Big: see BigVariant.tsx.
+   */
+  variant?: ('carousel' | 'featured' | 'big') | null;
   title?: string | null;
   cards?:
     | {
@@ -897,6 +904,105 @@ export interface CardBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'primary' | 'baseOverlap' | 'primaryOverlap') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  featuredCards?:
+    | {
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        /**
+         * First image is shown on the card. Up to 7 total — hovering the card fans out a photo stack; clicking opens the full gallery.
+         */
+        gallery?:
+          | {
+              image: number | Media;
+              id?: string | null;
+            }[]
+          | null;
+        links?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+                /**
+                 * Choose how the link should be rendered.
+                 */
+                appearance?: ('primary' | 'baseOverlap' | 'default' | 'primaryOverlap') | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Tall violet panels, two across. The h2 in the rich text is the card heading — there is no separate title field.
+   */
+  bigCards?:
+    | {
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        /**
+         * Optional. Sits behind the card under a primary tint that keeps the white text legible.
+         */
+        image?: (number | null) | Media;
+        /**
+         * Full bleeds the image behind the whole card with the text over it. Partial puts the image in the lower 3/5 with the text above it.
+         */
+        backgroundType?: ('full' | 'partial') | null;
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
         };
         id?: string | null;
       }[]
@@ -955,69 +1061,6 @@ export interface Timeline {
   id?: string | null;
   blockName?: string | null;
   blockType: 'timeline';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FeaturedCardsBlock".
- */
-export interface FeaturedCardsBlock {
-  title?: string | null;
-  cards?:
-    | {
-        richText?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        /**
-         * First image is shown on the card. Up to 7 total — hovering the card fans out a photo stack; clicking opens the full gallery.
-         */
-        gallery?:
-          | {
-              image: number | Media;
-              id?: string | null;
-            }[]
-          | null;
-        links?:
-          | {
-              link: {
-                type?: ('reference' | 'custom') | null;
-                newTab?: boolean | null;
-                reference?:
-                  | ({
-                      relationTo: 'pages';
-                      value: number | Page;
-                    } | null)
-                  | ({
-                      relationTo: 'posts';
-                      value: number | Post;
-                    } | null);
-                url?: string | null;
-                label: string;
-                /**
-                 * Choose how the link should be rendered.
-                 */
-                appearance?: ('primary' | 'baseOverlap' | 'default' | 'primaryOverlap') | null;
-              };
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'fcardsBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1124,6 +1167,7 @@ export interface PersonCardBlock {
 export interface Member {
   id: number;
   name: string;
+  title?: string | null;
   role: string;
   image?: (number | null) | Media;
   linkedinUrl: string;
@@ -1532,7 +1576,6 @@ export interface PagesSelect<T extends boolean = true> {
         galleryBlock?: T | GalleryBlockSelect<T>;
         cardBlock?: T | CardBlockSelect<T>;
         timeline?: T | TimelineSelect<T>;
-        fcardsBlock?: T | FeaturedCardsBlockSelect<T>;
         statsBlock?: T | StatsBlockSelect<T>;
         personCardBlock?: T | PersonCardBlockSelect<T>;
         mapBlock?: T | MapBlockSelect<T>;
@@ -1614,6 +1657,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
  */
 export interface MediaBlockSelect<T extends boolean = true> {
   media?: T;
+  disableCaption?: T;
   scale?: T;
   id?: T;
   blockName?: T;
@@ -1690,6 +1734,7 @@ export interface GalleryBlockSelect<T extends boolean = true> {
  * via the `definition` "CardBlock_select".
  */
 export interface CardBlockSelect<T extends boolean = true> {
+  variant?: T;
   title?: T;
   cards?:
     | T
@@ -1707,6 +1752,50 @@ export interface CardBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+            };
+        id?: T;
+      };
+  featuredCards?:
+    | T
+    | {
+        richText?: T;
+        gallery?:
+          | T
+          | {
+              image?: T;
+              id?: T;
+            };
+        links?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                    appearance?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  bigCards?:
+    | T
+    | {
+        richText?: T;
+        image?: T;
+        backgroundType?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
             };
         id?: T;
       };
@@ -1734,42 +1823,6 @@ export interface TimelineSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
-            };
-        id?: T;
-      };
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FeaturedCardsBlock_select".
- */
-export interface FeaturedCardsBlockSelect<T extends boolean = true> {
-  title?: T;
-  cards?:
-    | T
-    | {
-        richText?: T;
-        gallery?:
-          | T
-          | {
-              image?: T;
-              id?: T;
-            };
-        links?:
-          | T
-          | {
-              link?:
-                | T
-                | {
-                    type?: T;
-                    newTab?: T;
-                    reference?: T;
-                    url?: T;
-                    label?: T;
-                    appearance?: T;
-                  };
-              id?: T;
             };
         id?: T;
       };
@@ -2062,6 +2115,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MembersSelect<T extends boolean = true> {
   name?: T;
+  title?: T;
   role?: T;
   image?: T;
   linkedinUrl?: T;

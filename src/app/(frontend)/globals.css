@@ -370,9 +370,35 @@
   margin-block: 4rem;
 }
 
+/* Rich-text uploads render as a bare <img>, or as a <picture> wrapping
+   <source>s plus an <img> once the media doc has generated sizes. <picture> is
+   inline by default, so it has to become a block before it can carry spacing. */
+.prose-alacrity picture {
+  display: block;
+}
+
+.prose-alacrity :is(img, picture) {
+  /* Two values: start then end. Bottom is half the top, so an image sits
+     closer to the text it introduces than to the text it follows. */
+  margin-block: 5rem 2.5rem;
+}
+
+/* The outer <picture> owns the spacing; without this the inner <img> adds its
+   own on top and the gap doubles. */
+.prose-alacrity picture img {
+  margin-block: 0;
+}
+
 .prose-alacrity img {
-  margin-block: 5rem;
   border-radius: var(--radius-box);
+}
+
+/* An image that opens its block has nothing above it to be separated from, so
+   the 5rem lands as dead space. Most visible in the content block, whose
+   columns stack on mobile: a copy column followed by an image column showed a
+   ~130px hole. Mirrors the :first-child rule the headings already use. */
+.prose-alacrity :is(img, picture):first-child {
+  margin-top: 0;
 }
 
 .prose-alacrity figcaption {
@@ -433,6 +459,90 @@
 
 .prose-alacrity td {
   padding-block: 0.75rem;
+}
+
+/* ------------------------------------------------------------------
+   .prose-md — responsive body scale.
+
+   .prose-alacrity is pinned to the xl step (20px) at every width, which
+   is heavy on a phone. This drops it to the plugin's default step below
+   md and restores xl from md up.
+
+   Only the base font-size and leading move. Everything downstream is
+   already expressed in em — h3 1.5em, h4 1em, .lead 1.2em, code and
+   table 0.9em — so it rescales on its own. h1 and h2 are viewport
+   clamps and are deliberately left alone.
+
+   Leading is 1.6 at md+, matching .prose-alacrity, NOT the plugin's xl
+   value of 1.8 — 20px x 1.6 is the 2rem the old `leading-8` toggle set,
+   and that pairing is what the app standardised on.
+
+   Same unlayered placement and doubled-class specificity as
+   .prose-on-primary, for the same reason: a Tailwind utility can never
+   override .prose-alacrity's unlayered declarations.
+   ------------------------------------------------------------------ */
+.prose-alacrity.prose-md {
+  font-size: 1rem;      /* plugin `prose` base */
+  line-height: 1.75;
+}
+
+@variant md {
+  .prose-alacrity.prose-md {
+    font-size: 1.25rem; /* plugin `prose-xl` size, app leading */
+    line-height: 1.6;
+  }
+}
+
+/* ------------------------------------------------------------------
+   .prose-on-primary — rich text sitting on a primary/dark surface.
+
+   COLOUR ONLY. Every size, weight, leading and margin stays with
+   .prose-alacrity so text matches the rest of the app; this just
+   repoints the palette so it is legible on primary.
+
+   Must live here, unlayered, next to .prose-alacrity: those --tw-prose-*
+   declarations are unlayered too, so a Tailwind utility could never
+   override them no matter how specific — the utilities layer always
+   loses to unlayered CSS. Doubling the class gives (0,2,0) > (0,1,0).
+   ------------------------------------------------------------------ */
+.prose-alacrity.prose-on-primary {
+  --tw-prose-body: var(--color-primary-content);
+  --tw-prose-headings: var(--color-primary-content);
+  --tw-prose-lead: var(--color-primary-content);
+  --tw-prose-links: var(--color-primary-content);
+  --tw-prose-bold: var(--color-primary-content);
+  --tw-prose-counters: var(--color-primary-content);
+  --tw-prose-bullets: var(--color-primary-content);
+  --tw-prose-hr: var(--color-primary-content);
+  --tw-prose-quotes: var(--color-primary-content);
+  --tw-prose-quote-borders: var(--color-primary-content);
+  --tw-prose-captions: var(--color-primary-content);
+  --tw-prose-th-borders: var(--color-primary-content);
+  --tw-prose-td-borders: var(--color-primary-content);
+}
+
+/* The few places .prose-alacrity paints a colour directly rather than
+   through a --tw-prose-* variable. */
+.prose-alacrity.prose-on-primary :is(em, strong) {
+  color: var(--color-primary-content);
+}
+
+.prose-alacrity.prose-on-primary .lead {
+  color: var(--color-primary-content);
+}
+
+.prose-alacrity.prose-on-primary a {
+  text-decoration-color: color-mix(in oklab, var(--color-primary-content) 50%, transparent);
+}
+
+.prose-alacrity.prose-on-primary a:hover {
+  text-decoration-color: var(--color-primary-content);
+}
+
+/* brand-100 on primary is invisible; borrow the ink surface instead. */
+.prose-alacrity.prose-on-primary code {
+  background-color: color-mix(in oklab, var(--color-primary-content) 15%, transparent);
+  color: var(--color-primary-content);
 }
 
 /* .mark-burn — heat travelling through the letterforms */

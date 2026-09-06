@@ -15,19 +15,13 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
       ? member.image.url
       : '/Falcon.svg'
 
-  // const bglessImageUrl =
-  //   member.bgless_image && typeof member.bgless_image === 'object' && member.bgless_image.url
-  //     ? member.bgless_image.url
-  //     : //@ts-expect-error
-  //       member?.bgless_image?.url
-
   const imageAlt =
     member.image && typeof member.image === 'object' && member.image.alt
       ? member.image.alt
       : member.name
 
   const card = (
-    <div className="rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full aspect-[4/5] bg-primary relative group/card">
+    <div className="rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full aspect-4/5 bg-primary relative group/card">
       {/* LinkedIn link indicator */}
       {member.linkedinUrl && (
         <div className="absolute top-3 right-3 z-10 bg-base-100 text-primary rounded-full p-2 shadow-md transition-transform duration-200 group-hover/card:scale-110">
@@ -44,21 +38,12 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
           className="object-cover object-top"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
-        {/* Primary color overlay with mix-blend-mode screen */}
-        {/*<div className="absolute inset-0 bg-primary mix-blend-screen" />
 
-        <Image
-          src={bglessImageUrl}
-          alt={imageAlt}
-          fill
-          className="object-cover object-top"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />*/}
-        {/* Bottom half gradient fading into the text area below */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-primary via-transparent to-transparent">
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-primary via-primary/30 to-transparent pb-4 md:pb-8 lg:pb-4">
           <div className="h-3/5" />
-          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-lg md:text-base lg:text-base xl:text-base 2xl:text-base">
-            <p className="text-primary-content font-bold leading-snug ">{member.name}</p>
+          <div className="flex flex-col gap-1.5 px-6 pb-4 pt-4 xl:pt-6 2xl:pt-8 text-sm md:text-base lg:text-base xl:text-lg 2xl:text-lg ">
+            <p className="text-primary-content font-bold leading-snug text-xl">{member.name}</p>
+            {member.title && <p className="text-primary-content/80 font-semibold  leading-snug">{member.title}</p>}
             {member.role && <p className="text-primary-content/80 leading-snug">{member.role}</p>}
           </div>
         </div>
@@ -117,11 +102,11 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
     count <= 1 ? 'always' : count === 2 ? 'sm' : count === 3 ? 'lg' : count === 4 ? 'xl' : 'always'
 
   const titleWrapperClass: Record<OverflowBreak, string> = {
-    never: 'flex justify-start mb-8',
-    sm: 'flex items-end justify-between mb-8 sm:justify-start',
-    lg: 'flex items-end justify-between mb-8 lg:justify-start',
-    xl: 'flex items-end justify-between mb-8 xl:justify-start',
-    always: 'flex items-end justify-between mb-8',
+    never: 'flex justify-start ',
+    sm: 'flex items-end justify-between  sm:justify-start',
+    lg: 'flex items-end justify-between lg:justify-start',
+    xl: 'flex items-end justify-between  xl:justify-start',
+    always: 'flex items-end justify-between ',
   }
 
   const titleTextClass: Record<OverflowBreak, string> = {
@@ -139,24 +124,21 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
     xl: 'text-xl shrink-0 ',
     always: 'text-xl shrink-0 ',
   }
-
+//sm:w-[calc(50%-40px)] lg:w-[calc(33.33%-53px)] xl:w-[calc(25%-60px)]  max-w-xs
   const cardWrapperClass =
-    'shrink-0 snap-center w-[80vw] max-w-xs py-6 overflow-visible sm:w-[calc(50%-40px)] lg:w-[calc(33.33%-53px)] xl:w-[calc(25%-60px)]'
+    'shrink-0 snap-center  py-6 overflow-visible aspect-4/5 min-w-xs md:min-w-sm'
 
   return (
     <section className="container">
       <SectionTitle
         title={title}
         arrow
-        className={cn(titleWrapperClass[overflowBreak], 'lg:py-4')}
+        className={cn(titleWrapperClass[overflowBreak], 'py-4')}
         textClassName={titleTextClass[overflowBreak]}
       />
 
-      {/* Shadow-bleed wrapper: gives the scroll area room above/below for shadows
-          without the scroll container clipping them. py-8 inside, -my-8 here to
-          neutralise the layout impact. */}
       <div className="-my-8">
-        <div className="flex flex-row gap-4 sm:gap-10 md:gap-16 lg:gap-20 px-2 py-8 overflow-x-auto snap-x snap-mandatory">
+        <div className="flex flex-row gap-4 sm:gap-10 md:gap-16 lg:gap-20 px-2 py-4 overflow-x-auto snap-x snap-mandatory">
           {resolvedMembers.map((member) => (
             <div key={member.id} className={cardWrapperClass}>
               <PersonCard member={member} />

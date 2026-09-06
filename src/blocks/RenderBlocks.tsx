@@ -11,7 +11,6 @@ import { CarouselLogoBlock } from '@/blocks/CarouselLogoBlock/Component'
 import { GalleryBlock } from '@/blocks/GalleryBlock/Component'
 import { CardBlock } from './CardBlock/Component'
 import { Timeline } from '@/blocks/Timeline/Component'
-import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/Component'
 import { StatsBlock } from '@/blocks/StatsBlock/Component'
 import { PersonCardBlock } from '@/blocks/PersonCardBlock/Component'
 import ContactMap from '@/blocks/Form/Map'
@@ -28,7 +27,6 @@ const blockComponents = {
   galleryBlock: GalleryBlock,
   cardBlock: CardBlock,
   timeline: Timeline,
-  fcardsBlock: FeaturedCardsBlock,
   statsBlock: StatsBlock,
   personCardBlock: PersonCardBlock,
   mapBlock: MapBlockComponent,

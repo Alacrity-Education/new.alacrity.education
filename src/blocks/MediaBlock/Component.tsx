@@ -24,14 +24,17 @@ export const MediaBlock: React.FC<Props> = (props) => {
     className,
     enableGutter = true,
     imgClassName,
+    disableCaption,
     media,
     scale,
     staticImage,
     disableInnerContainer,
   } = props
 
+  // The caption is a property of the media document, not of this block, so it
+  // would otherwise show up everywhere that image is used.
   let caption
-  if (media && typeof media === 'object') caption = media.caption
+  if (!disableCaption && media && typeof media === 'object') caption = media.caption
 
   /**
    * Constrain the wrapper's width rather than using `transform: scale()`: a
