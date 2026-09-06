@@ -9,6 +9,8 @@ import * as migration_20260905_155357_bigcard_fields from './20260905_155357_big
 import * as migration_20260906_101810_bigcard_background_type from './20260906_101810_bigcard_background_type';
 import * as migration_20260906_111250_mediablock_disable_caption from './20260906_111250_mediablock_disable_caption';
 import * as migration_20260906_120550 from './20260906_120550';
+import * as migration_20260906_203811_timeline_rebuild from './20260906_203811_timeline_rebuild';
+import * as migration_20260906_220917 from './20260906_220917';
 
 export const migrations = [
   {
@@ -64,6 +66,16 @@ export const migrations = [
   {
     up: migration_20260906_120550.up,
     down: migration_20260906_120550.down,
-    name: '20260906_120550'
+    name: '20260906_120550',
+  },
+  {
+    up: migration_20260906_203811_timeline_rebuild.up,
+    down: migration_20260906_203811_timeline_rebuild.down,
+    name: '20260906_203811_timeline_rebuild',
+  },
+  {
+    up: migration_20260906_220917.up,
+    down: migration_20260906_220917.down,
+    name: '20260906_220917'
   },
 ];
