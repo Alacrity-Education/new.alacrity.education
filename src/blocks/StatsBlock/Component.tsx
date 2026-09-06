@@ -132,7 +132,7 @@ export const StatsBlock: React.FC<StatsBlockProps> = ({
                   {cell.title && (
                     <p
                       className={cn(
-                        'text-4xl sm:text-4xl lg:text-4xl xl:text-5xl font-semibold mb-2',
+                        'text-4xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-2',
                         cell.media ? mediaTitleClass : titleClass[v],
                       )}
                     >
