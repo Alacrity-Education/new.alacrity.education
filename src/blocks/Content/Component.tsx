@@ -18,7 +18,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   }
 
   return (
-    <div className="container my-4">
+    <div className="container my-4 px-2 sm:px-0">
       <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 xl:gap-x-8 max-w-full text-wrap! place-items-center">
         {columns &&
           columns.length > 0 &&
