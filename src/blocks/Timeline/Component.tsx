@@ -76,7 +76,7 @@ const TimelineEntry: React.FC<{ entry: Entry; index: number }> = ({ entry, index
       {highlighted && (
         <div aria-hidden="true" className={cn(RAIL, 'inset-y-[-100px] rounded-full z-20 bg-linear-to-b from-brand-900 to-brand-900 via-base-100  ')} />
       )}
-      <div className={cn(BADGE, 'bg-brand-500 text-primary-content ',highlighted && "bg-base-300 text-primary")} aria-hidden="true">
+      <div className={cn(BADGE, 'bg-brand-500 text-primary-content ',highlighted && "bg-base-300 text-primary",  eyebrow && "top-5")} aria-hidden="true">
         <span className="text-lg font-semibold leading-none">{index + 1}</span>
       </div>
 
@@ -84,8 +84,8 @@ const TimelineEntry: React.FC<{ entry: Entry; index: number }> = ({ entry, index
         aria-hidden="true"
         className={cn("hidden absolute left-10 top-0 h-10 w-10 sm:w-20 z-10  bg-linear-to-r from-brand-900 to-transparent md:w-20 lg:block"
           ,
-          highlighted && "bg-linear-to-r from-base-100/50 to-transparent"
-
+          highlighted && "bg-linear-to-r from-base-100/50 to-transparent",
+          eyebrow && "top-7"
         )}
       />
 
@@ -95,7 +95,7 @@ const TimelineEntry: React.FC<{ entry: Entry; index: number }> = ({ entry, index
             <p
               className={cn(
                 'eyebrow mb-3',
-                highlighted ? 'text-primary-content/70' : 'text-ink-muted',
+                highlighted ? 'text-primary-content!' : 'text-ink-muted',
               )}
             >
               {eyebrow}
