@@ -197,7 +197,7 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType, highlightButton?: Hig
   }
 
   return (
-    <div className={'navbar-end lg:hidden'}>
+    <div className={'navbar-end lg:hidden pt-6'}>
       <button
         className="btn btn-primary rounded-md"
         aria-label="Open navigation"
@@ -295,7 +295,7 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType, highlightButton?: Hig
                   <CMSLink
                     {...item.link}
                     appearance={'inline'}
-                    className={'text-start text-lg text-primary-content'}
+                    className={'text-start text-lg text-primary-content invert'}
                   />
                 </li>
               )

@@ -23,6 +23,15 @@ const STACK_OFFSETS = [
 
 const FLIP_DURATION = 0.45
 const SETTLE_DURATION = 0.5
+const SNAP_BACK_DURATION = 0.35
+
+/** Movement before we decide the gesture is a swipe rather than a tap or a scroll. */
+const AXIS_LOCK_SLOP = 6
+/** Past this the card is released; below it, it springs back. */
+const COMMIT_FRACTION = 0.25
+const COMMIT_MAX_PX = 80
+/** A fast flick commits even if it never travelled far. px per ms. */
+const COMMIT_VELOCITY = 0.4
 
 export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -57,9 +66,10 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
     })
   }, [populated.length])
 
-  const flip = useCallback(() => {
+  const flip = useCallback((dir: 1 | -1 = 1) => {
     if (animatingRef.current || !hasStack) return
     animatingRef.current = true
+    throwDirRef.current = dir
 
     const currentOrder = orderRef.current
     const topPosition = 0
@@ -89,10 +99,11 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
     })
 
     // 1. Throw the top card out.
+    // Leaves from wherever it is now, so a drag flows straight into the throw.
     tl.to(topEl, {
-      x: containerWidth * 1.3,
+      x: containerWidth * 1.3 * dir,
       y: 30,
-      rotation:  22,
+      rotation: 22 * dir,
       duration: FLIP_DURATION,
       ease: 'power2.in',
     })
@@ -109,9 +120,9 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
       // ready to slide in).
       const backOffset = STACK_OFFSETS[Math.min(newOrder.length - 1, STACK_OFFSETS.length - 1)]!
       gsap.set(topEl, {
-        x: backOffset.x + 40,
+        x: backOffset.x + 40 * dir,
         y: backOffset.y - 8,
-        rotation: backOffset.rotate + 8,
+        rotation: backOffset.rotate + 8 * dir,
       })
       setOrder(newOrder)
     })
@@ -174,6 +185,125 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
     [hasStack, populated.length],
   )
 
+  /**
+   * Pointer events rather than separate touch/mouse paths: one code path covers
+   * finger, mouse and pen, and pointer capture keeps the gesture alive when the
+   * cursor leaves the card mid-drag.
+   */
+  const dragRef = useRef<{
+    active: boolean
+    locked: boolean
+    startX: number
+    startY: number
+    startTime: number
+    el: HTMLDivElement | null
+    moved: boolean
+  }>({ active: false, locked: false, startX: 0, startY: 0, startTime: 0, el: null, moved: false })
+
+  /** A drag ends with a click event too; this stops that click flipping again. */
+  const suppressClickRef = useRef(false)
+
+  const topElement = useCallback(() => {
+    const idx = orderRef.current[0]
+    return idx === undefined ? null : layerRefs.current[idx]
+  }, [])
+
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      suppressClickRef.current = false
+      if (!hasStack || animatingRef.current) return
+      // Ignore right/middle mouse buttons.
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+
+      const el = topElement()
+      if (!el) return
+
+      // The card may still be settling from the previous flip.
+      gsap.killTweensOf(el)
+
+      dragRef.current = {
+        active: true,
+        locked: false,
+        startX: e.clientX,
+        startY: e.clientY,
+        startTime: e.timeStamp,
+        el,
+        moved: false,
+      }
+    },
+    [hasStack, topElement],
+  )
+
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dragRef.current
+    if (!d.active || !d.el) return
+
+    const dx = e.clientX - d.startX
+    const dy = e.clientY - d.startY
+
+    if (!d.locked) {
+      if (Math.abs(dx) < AXIS_LOCK_SLOP && Math.abs(dy) < AXIS_LOCK_SLOP) return
+      // A mostly-vertical gesture belongs to the page. Bail out and let it
+      // scroll rather than swallowing the touch.
+      if (Math.abs(dy) > Math.abs(dx)) {
+        d.active = false
+        return
+      }
+      d.locked = true
+      e.currentTarget.setPointerCapture(e.pointerId)
+    }
+
+    d.moved = true
+    // Follows the finger, with a little lift and tilt so it reads as picked up.
+    gsap.set(d.el, { x: dx, y: Math.abs(dx) * 0.04, rotation: dx * 0.03 })
+  }, [])
+
+  const handlePointerEnd = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const d = dragRef.current
+      if (!d.active || !d.el) {
+        d.active = false
+        return
+      }
+      d.active = false
+
+      if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId)
+      }
+      if (!d.moved) return
+
+      suppressClickRef.current = true
+
+      const dx = e.clientX - d.startX
+      const dt = Math.max(1, e.timeStamp - d.startTime)
+      const width = containerRef.current?.offsetWidth ?? 200
+      const past = Math.abs(dx) > Math.min(COMMIT_MAX_PX, width * COMMIT_FRACTION)
+      const flicked = Math.abs(dx) / dt > COMMIT_VELOCITY
+
+      if (past || flicked) {
+        // Thrown the way it was dragged; either direction advances the stack.
+        flip(dx < 0 ? -1 : 1)
+      } else {
+        gsap.to(d.el, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          duration: SNAP_BACK_DURATION,
+          ease: 'power3.out',
+        })
+      }
+    },
+    [flip],
+  )
+
+  const handleClick = useCallback(() => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false
+      return
+    }
+    flip(1)
+  }, [flip])
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!hasStack) return
     if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
@@ -200,13 +330,33 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
       ref={containerRef}
       className={cn(
         'relative aspect-square focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl',
-        hasStack && 'cursor-pointer',
+        // touch-pan-y keeps vertical scrolling with the browser while we take
+        // the horizontal axis; select-none stops a desktop drag selecting text.
+        //
+        // The image needs its own treatment: `user-select` does not govern
+        // native image dragging, so without -webkit-user-drag the browser
+        // starts its own drag-and-drop with a ghost preview the moment you pull
+        // on the photo. pointer-events-none also keeps the <img> from ever
+        // becoming the event target, so every pointer event lands on this
+        // container.
+        hasStack &&
+          'cursor-grab touch-pan-y select-none active:cursor-grabbing ' +
+            '[&_img]:[-webkit-user-drag:none] [&_img]:pointer-events-none [&_img]:select-none',
         className,
       )}
-      onClick={hasStack ? flip : undefined}
+      onClick={hasStack ? handleClick : undefined}
+      // Backstop for browsers that ignore -webkit-user-drag (Firefox): cancels
+      // the native drag-and-drop before it can start.
+      onDragStart={hasStack ? (e) => e.preventDefault() : undefined}
+      onPointerDown={hasStack ? handlePointerDown : undefined}
+      onPointerMove={hasStack ? handlePointerMove : undefined}
+      onPointerUp={hasStack ? handlePointerEnd : undefined}
+      onPointerCancel={hasStack ? handlePointerEnd : undefined}
       role={hasStack ? 'button' : undefined}
       aria-label={
-        hasStack ? `Image ${topImageNumber} of ${populated.length}. Click to see next.` : undefined
+        hasStack
+          ? `Image ${topImageNumber} of ${populated.length}. Swipe, drag, or click to see next.`
+          : undefined
       }
       tabIndex={hasStack ? 0 : undefined}
       onKeyDown={hasStack ? handleKeyDown : undefined}
@@ -239,6 +389,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
         <div
           className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-1.5 pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           {populated.map((_, i) => (
             <button
