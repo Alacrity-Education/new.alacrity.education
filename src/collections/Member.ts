@@ -12,6 +12,11 @@ export const Member: CollectionConfig = {
       required: true,
     },
     {
+      name: 'title',
+      type: 'text',
+      required: false,
+    },
+    {
       name: 'role',
       type: 'text',
       required: true,

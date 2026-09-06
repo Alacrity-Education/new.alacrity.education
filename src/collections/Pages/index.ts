@@ -11,7 +11,6 @@ import { CarouselLogoBlock } from '../../blocks/CarouselLogoBlock/config'
 import { GalleryBlock } from '../../blocks/GalleryBlock/config'
 import { CardBlock } from '@/blocks/CardBlock/config'
 import { Timeline } from '@/blocks/Timeline/config'
-import { FeaturedCardsBlock } from '@/blocks/FeaturedCardsBlock/config'
 import { StatsBlock } from '@/blocks/StatsBlock/config'
 import { PersonCardBlock } from '@/blocks/PersonCardBlock/config'
 import { MapBlock } from '@/blocks/Map/config'
@@ -91,7 +90,6 @@ export const Pages: CollectionConfig<'pages'> = {
                 GalleryBlock,
                 CardBlock,
                 Timeline,
-                FeaturedCardsBlock,
                 StatsBlock,
                 PersonCardBlock,
                 MapBlock,

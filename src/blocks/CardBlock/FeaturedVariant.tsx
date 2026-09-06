@@ -3,12 +3,14 @@ import React, { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-import type { FeaturedCardsBlock as FeaturedCardsBlockProps } from '@/payload-types'
+import type { CardBlock as CardBlockProps } from '@/payload-types'
 
 import RichText from '@/components/RichText'
 import { CMSLink } from '@/components/Link'
 import { SectionTitle } from '@/components/SectionTitle'
 import { ImageStack } from './ImageStack'
+
+type FeaturedCards = NonNullable<CardBlockProps['featuredCards']>
 
 /**
  * Tailwind's `md`, verbatim. The GSAP query and every `md:` class below have to
@@ -23,7 +25,10 @@ import { ImageStack } from './ImageStack'
  */
 const PARALLAX_QUERY = '(min-width: 48rem)'
 
-export const FeaturedCardsBlock: React.FC<FeaturedCardsBlockProps> = ({ title, cards }) => {
+export const FeaturedVariant: React.FC<{
+  title?: string | null
+  cards?: FeaturedCards | null
+}> = ({ title, cards }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
   const CARD_STAGGER = 24
