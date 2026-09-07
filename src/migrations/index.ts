@@ -11,6 +11,7 @@ import * as migration_20260906_111250_mediablock_disable_caption from './2026090
 import * as migration_20260906_120550 from './20260906_120550';
 import * as migration_20260906_203811_timeline_rebuild from './20260906_203811_timeline_rebuild';
 import * as migration_20260906_220917 from './20260906_220917';
+import * as migration_20260907_155911 from './20260907_155911';
 
 export const migrations = [
   {
@@ -76,6 +77,11 @@ export const migrations = [
   {
     up: migration_20260906_220917.up,
     down: migration_20260906_220917.down,
-    name: '20260906_220917'
+    name: '20260906_220917',
+  },
+  {
+    up: migration_20260907_155911.up,
+    down: migration_20260907_155911.down,
+    name: '20260907_155911'
   },
 ];
