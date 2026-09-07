@@ -77,6 +77,8 @@ export interface Config {
     forms: Form;
     'form-submissions': FormSubmission;
     search: Search;
+    'pages-T': PagesT;
+    'posts-T': PostsT;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -100,6 +102,8 @@ export interface Config {
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
+    'pages-T': PagesTSelect<false> | PagesTSelect<true>;
+    'posts-T': PostsTSelect<false> | PostsTSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -114,10 +118,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'collection-templates-settings': CollectionTemplatesSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'collection-templates-settings': CollectionTemplatesSettingsSelect<false> | CollectionTemplatesSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -255,6 +261,14 @@ export interface Page {
    */
   generateSlug?: boolean | null;
   slug: string;
+  /**
+   * Save this document as a reusable template. While checked, every save keeps that template up to date.
+   */
+  useAsTemplate?: boolean | null;
+  /**
+   * Template this document was created from. Values are copied once, when the template is first applied; later template edits do not change this document.
+   */
+  inheritsFrom?: (number | null) | PagesT;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -309,6 +323,14 @@ export interface Post {
    */
   generateSlug?: boolean | null;
   slug: string;
+  /**
+   * Save this document as a reusable template. While checked, every save keeps that template up to date.
+   */
+  useAsTemplate?: boolean | null;
+  /**
+   * Template this document was created from. Values are copied once, when the template is first applied; later template edits do not change this document.
+   */
+  inheritsFrom?: (number | null) | PostsT;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -485,6 +507,68 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * Reusable templates for "posts". Templates are not posts documents and are never returned by /api/posts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts-T".
+ */
+export interface PostsT {
+  id: number;
+  /**
+   * How this template is listed when creating a new document.
+   */
+  templateName: string;
+  /**
+   * The document this template was promoted from. While that document has "Use as template" checked, saving it updates this template.
+   */
+  templateSource?: (number | null) | Post;
+  title?: string | null;
+  heroImage?: (number | null) | Media;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+    /**
+     * Comma separated, e.g. "robotics, student lab, Bucharest". Search engines largely ignore this tag, so treat it as a hint rather than a ranking lever.
+     */
+    keywords?: string | null;
+  };
+  publishedAt?: string | null;
+  authors?: (number | User)[] | null;
+  populatedAuthors?:
+    | {
+        name?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1282,6 +1366,121 @@ export interface ContactBlock {
   blockType: 'contactBlock';
 }
 /**
+ * Reusable templates for "pages". Templates are not pages documents and are never returned by /api/pages.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages-T".
+ */
+export interface PagesT {
+  id: number;
+  /**
+   * How this template is listed when creating a new document.
+   */
+  templateName: string;
+  /**
+   * The document this template was promoted from. While that document has "Use as template" checked, saving it updates this template.
+   */
+  templateSource?: (number | null) | Page;
+  title?: string | null;
+  hero?: {
+    type?: ('none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'slide') | null;
+    richText?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    links?:
+      | {
+          link?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'posts';
+                  value: number | Post;
+                } | null);
+            label?: string | null;
+            /**
+             * Choose how the link should be rendered.
+             */
+            appearance?:
+              | (
+                  | 'default'
+                  | 'primary'
+                  | 'secondary'
+                  | 'ghost'
+                  | 'inlinePrimary'
+                  | 'inline'
+                  | 'primaryOverlap'
+                  | 'baseOverlap'
+                )
+              | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+    media?: (number | null) | Media;
+    imageVariant?: ('rectangle' | 'circle') | null;
+  };
+  layout?:
+    | (
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | LogoCarousel
+        | GalleryBlock
+        | CardBlock
+        | Timeline
+        | StatsBlock
+        | PersonCardBlock
+        | MapBlock
+        | ContactBlock
+      )[]
+    | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+    /**
+     * Comma separated, e.g. "robotics, student lab, Bucharest". Search engines largely ignore this tag, so treat it as a hint rather than a ranking lever.
+     */
+    keywords?: string | null;
+  };
+  background?: {
+    image?: (number | null) | Media;
+    /**
+     * How visible the pattern is (0 = invisible, 100 = full strength)
+     */
+    opacity?: number | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -1512,6 +1711,14 @@ export interface PayloadLockedDocument {
         value: number | Search;
       } | null)
     | ({
+        relationTo: 'pages-T';
+        value: number | PagesT;
+      } | null)
+    | ({
+        relationTo: 'posts-T';
+        value: number | PostsT;
+      } | null)
+    | ({
         relationTo: 'payload-folders';
         value: number | FolderInterface;
       } | null);
@@ -1620,6 +1827,8 @@ export interface PagesSelect<T extends boolean = true> {
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
+  useAsTemplate?: T;
+  inheritsFrom?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1993,6 +2202,8 @@ export interface PostsSelect<T extends boolean = true> {
       };
   generateSlug?: T;
   slug?: T;
+  useAsTemplate?: T;
+  inheritsFrom?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -2343,6 +2554,104 @@ export interface SearchSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages-T_select".
+ */
+export interface PagesTSelect<T extends boolean = true> {
+  templateName?: T;
+  templateSource?: T;
+  title?: T;
+  hero?:
+    | T
+    | {
+        type?: T;
+        richText?: T;
+        links?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    label?: T;
+                    appearance?: T;
+                  };
+              id?: T;
+            };
+        media?: T;
+        imageVariant?: T;
+      };
+  layout?:
+    | T
+    | {
+        cta?: T | CallToActionBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+        carouselLogoBlock?: T | LogoCarouselSelect<T>;
+        galleryBlock?: T | GalleryBlockSelect<T>;
+        cardBlock?: T | CardBlockSelect<T>;
+        timeline?: T | TimelineSelect<T>;
+        statsBlock?: T | StatsBlockSelect<T>;
+        personCardBlock?: T | PersonCardBlockSelect<T>;
+        mapBlock?: T | MapBlockSelect<T>;
+        contactBlock?: T | ContactBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        keywords?: T;
+      };
+  background?:
+    | T
+    | {
+        image?: T;
+        opacity?: T;
+      };
+  publishedAt?: T;
+  generateSlug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts-T_select".
+ */
+export interface PostsTSelect<T extends boolean = true> {
+  templateName?: T;
+  templateSource?: T;
+  title?: T;
+  heroImage?: T;
+  content?: T;
+  relatedPosts?: T;
+  categories?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        keywords?: T;
+      };
+  publishedAt?: T;
+  authors?: T;
+  populatedAuthors?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  generateSlug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -2600,6 +2909,21 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Turn collection templates on or off without changing code. Switching off leaves every template and every column untouched.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collection-templates-settings".
+ */
+export interface CollectionTemplatesSetting {
+  id: number;
+  /**
+   * When off: no values are copied from templates, promoted documents stop syncing, and the template controls are hidden. Existing templates remain readable and editable in their own collections.
+   */
+  enabled?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -2701,6 +3025,16 @@ export interface FooterSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collection-templates-settings_select".
+ */
+export interface CollectionTemplatesSettingsSelect<T extends boolean = true> {
+  enabled?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
