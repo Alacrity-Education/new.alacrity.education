@@ -3,6 +3,7 @@ import {
   DefaultNodeTypes,
   SerializedBlockNode,
   SerializedLinkNode,
+  SerializedUploadNode,
   type DefaultTypedEditorState,
 } from '@payloadcms/richtext-lexical'
 import {
@@ -24,6 +25,8 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { MapBlockInline } from '@/blocks/Map/MapBlockInline'
 import { cn } from '@/utilities/ui'
 import { customConverters } from '@/components/RichText/CustomConverter'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
+import type { Media } from '@/payload-types'
 
 type NodeTypes =
   | DefaultNodeTypes
@@ -38,9 +41,64 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
   return relationTo === 'posts' ? `/posts/${slug}` : `/${slug}`
 }
 
+/**
+ * Payload's default upload converter emits `src`/`srcSet` straight from the
+ * API, which are relative to the Payload instance. When that instance is
+ * remote those paths have to be resolved against its origin, so this override
+ * mirrors the default markup with corrected URLs.
+ */
+const uploadConverter = ({ node }: { node: SerializedUploadNode }) => {
+  if (typeof node.value !== 'object' || node.value === null) return null
+
+  const doc = node.value as Media
+  const alt = (node.fields as { alt?: string } | undefined)?.alt || doc.alt || ''
+  const url = getMediaUrl(doc.url, doc.updatedAt)
+
+  if (!doc.mimeType?.startsWith('image')) {
+    return (
+      <a href={url} rel="noopener noreferrer">
+        {doc.filename}
+      </a>
+    )
+  }
+
+  const sources = Object.entries(doc.sizes ?? {}).flatMap(([key, size]) =>
+    size?.width && size?.height && size?.mimeType && size?.filesize && size?.filename && size?.url
+      ? [
+          <source
+            key={key}
+            media={`(max-width: ${size.width}px)`}
+            srcSet={getMediaUrl(size.url, doc.updatedAt)}
+            type={size.mimeType}
+          />,
+        ]
+      : [],
+  )
+
+  const img = (
+    <img
+      key="image"
+      alt={alt}
+      height={doc.height ?? undefined}
+      src={url}
+      width={doc.width ?? undefined}
+    />
+  )
+
+  return sources.length ? (
+    <picture>
+      {sources}
+      {img}
+    </picture>
+  ) : (
+    img
+  )
+}
+
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...LinkJSXConverter({ internalDocToHref }),
+  upload: uploadConverter,
   blocks: {
     banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
     mediaBlock: ({ node }) => (
