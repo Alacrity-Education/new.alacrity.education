@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import type { GalleryBlock, Media } from '@/payload-types'
 import { SectionTitle } from '@/components/SectionTitle'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 interface GalleryContentProps {
   heading?: string | null
@@ -63,7 +64,10 @@ function GalleryImageItem({
   image: Media | number | null | undefined
   aspect: string
 }) {
-  const url = typeof image === 'object' && image?.url ? image.url : '/Falcon.svg'
+  const url =
+    typeof image === 'object' && image?.url
+      ? getMediaUrl(image.url, image.updatedAt)
+      : '/Falcon.svg'
   const alt = typeof image === 'object' && image?.alt ? image.alt : 'Gallery image'
 
   return (

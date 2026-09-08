@@ -7,14 +7,21 @@ const nextConfig = {
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
-      ...[process.env.NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
-        const url = new URL(item)
+      ...[
+        process.env.NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */,
+        // The frontend may read from a remote Payload instance, which serves
+        // media from its own origin.
+        process.env.NEXT_PUBLIC_PAYLOAD_API_URL,
+      ]
+        .filter(Boolean)
+        .map((item) => {
+          const url = new URL(item)
 
-        return {
-          hostname: url.hostname,
-          protocol: url.protocol.replace(':', ''),
-        }
-      }),
+          return {
+            hostname: url.hostname,
+            protocol: url.protocol.replace(':', ''),
+          }
+        }),
       {
         protocol: 'http',
         hostname: 'localhost',
