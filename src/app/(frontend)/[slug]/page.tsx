@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import type { RequiredDataFromCollectionSlug } from 'payload'
-import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
 import { sdk } from '@/utilities/getPayloadSDK'
@@ -12,8 +11,8 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PageBackground } from '@/components/PageBackground'
+
 
 export async function generateStaticParams() {
   const pages = await sdk.find({
@@ -44,7 +43,6 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { isEnabled: draft } = await draftMode()
   const { slug = 'home' } = await paramsPromise
   // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
@@ -77,8 +75,6 @@ export default async function Page({ params: paramsPromise }: Args) {
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
-      {draft && <LivePreviewListener />}
-
       {bgUrl && <PageBackground url={bgUrl} opacity={background?.opacity ?? 10} />}
 
       <RenderHero hero={hero} />
@@ -99,11 +95,9 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 }
 
 const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
-  const { isEnabled: draft } = await draftMode()
-
   const result = await sdk.find({
     collection: 'pages',
-    draft,
+    draft: false,
     limit: 1,
     pagination: false,
     where: {

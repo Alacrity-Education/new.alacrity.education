@@ -1,0 +1,90 @@
+# Builds the frontend as a fully static site and publishes it to Cloudflare Pages.
+#
+# The `static` branch reads all content from the remote Payload REST API, so the
+# build needs no database. Payload's admin UI and the server-only route handlers
+# cannot be statically exported, so they are removed before building — see the
+# "Strip server-only routes" step.
+#
+# Required repository configuration:
+#   secrets.CLOUDFLARE_API_TOKEN     - token with "Cloudflare Pages: Edit"
+#   secrets.CLOUDFLARE_ACCOUNT_ID    - Cloudflare account id
+#   vars.CLOUDFLARE_PAGES_PROJECT    - the Pages project name
+#   vars.NEXT_PUBLIC_PAYLOAD_API_URL - Payload REST API base, incl. /api
+#   vars.NEXT_PUBLIC_SERVER_URL      - public URL of this static site
+name: Static site
+
+on:
+  push:
+    branches: [static]
+  workflow_dispatch:
+
+concurrency:
+  group: static-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Next has no way to exclude app routes via config, so anything that
+      # cannot be prerendered is deleted from the checkout before building:
+      #   (payload)            - admin UI + REST/GraphQL handlers
+      #   (frontend)/next      - preview, exit-preview and seed handlers
+      #   (frontend)/(sitemaps)- dynamic getServerSideSitemap handlers
+      - name: Strip server-only routes
+        run: |
+          rm -rf "src/app/(payload)"
+          rm -rf "src/app/(frontend)/next"
+          rm -rf "src/app/(frontend)/(sitemaps)"
+
+      # `npx next build` rather than `npm run build`: the latter triggers the
+      # postbuild next-sitemap hook, which is configured for the server build.
+      - name: Build static export
+        run: npx next build
+        env:
+          NEXT_PUBLIC_PAYLOAD_API_URL: ${{ vars.NEXT_PUBLIC_PAYLOAD_API_URL }}
+          NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+
+      # A build against an empty or unreachable API would otherwise publish a
+      # near-empty site without failing.
+      - name: Verify export
+        run: |
+          test -f out/index.html || { echo "::error::out/index.html missing"; exit 1; }
+          test -f out/404.html   || { echo "::error::out/404.html missing"; exit 1; }
+          pages=$(find out -name '*.html' | wc -l)
+          echo "exported $pages HTML pages"
+          if [ "$pages" -lt 3 ]; then
+            echo "::error::only $pages pages exported — the API is probably unreachable"
+            exit 1
+          fi
+
+      - name: Upload export as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-export
+          path: out/
+          retention-days: 7
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy out
+            --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+            --branch=${{ github.ref_name }}

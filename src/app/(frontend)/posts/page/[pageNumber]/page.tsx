@@ -8,7 +8,6 @@ import React from 'react'
 import PageClient from './page.client'
 import { notFound } from 'next/navigation'
 
-export const revalidate = 600
 
 type Args = {
   params: Promise<{
@@ -71,7 +70,9 @@ export async function generateStaticParams() {
     collection: 'posts',
   })
 
-  const totalPages = Math.ceil(totalDocs / 10)
+  // `output: export` rejects a dynamic route that generates no paths, so page 1
+  // always exists even when the posts collection is empty.
+  const totalPages = Math.max(1, Math.ceil(totalDocs / 10))
 
   const pages: { pageNumber: string }[] = []
 

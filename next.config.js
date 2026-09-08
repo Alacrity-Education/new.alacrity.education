@@ -1,10 +1,10 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 
-import redirects from './redirects.js'
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
+    unoptimized: true,
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
       ...[
@@ -53,7 +53,6 @@ const nextConfig = {
     return webpackConfig
   },
   reactStrictMode: true,
-  redirects,
   typescript: {
     ignoreBuildErrors: true,
   },
