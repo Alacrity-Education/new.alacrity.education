@@ -1,6 +1,5 @@
 import React from 'react'
-import { getPayload } from 'payload'
-import config from '@payload-config'
+import { sdk } from '@/utilities/getPayloadSDK'
 
 import type { PersonCardBlock as PersonCardBlockProps, Member } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -76,13 +75,12 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
   const resolvedMembers: Member[] = []
 
   if (members && members.length > 0) {
-    const payload = await getPayload({ config })
     const ids = members
       .map((m) => (typeof m.member === 'number' ? m.member : m.member?.id))
       .filter((id): id is number => typeof id === 'number')
 
     if (ids.length > 0) {
-      const { docs } = await payload.find({
+      const { docs } = await sdk.find({
         collection: 'members',
         where: { id: { in: ids } },
         depth: 2,
