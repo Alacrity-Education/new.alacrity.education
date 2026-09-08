@@ -85,7 +85,10 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         .join(', ')
 
   return (
-    <picture className={cn(pictureClassName)}>
+    // `fill` makes NextImage absolutely positioned, so the <picture> it sits in
+    // has to be a positioned, sized block — inline/static is the default and
+    // collapses the image to zero height.
+    <picture className={cn({ 'relative block h-full w-full': fill }, pictureClassName)}>
       <NextImage
         alt={alt || ''}
         className={cn(imgClassName)}
