@@ -1,31 +1,68 @@
-version: '3'
-
+# Deployment stack for Coolify.
+#
+# The app image is built and pushed by .github/workflows/docker.yml. Coolify
+# supplies the variables below; see .env.example for their meaning.
+#
+# Required: PAYLOAD_SECRET, POSTGRES_PASSWORD, NEXT_PUBLIC_SERVER_URL
 services:
-  payload:
-    image: node:18-alpine
+  # Applies Payload migrations, then exits. The app waits for it to finish, so a
+  # fresh database is schema-complete before the server starts. The runtime
+  # image is a traced standalone bundle with no Payload CLI, hence a separate
+  # image built from the `migrator` stage.
+  migrate:
+    image: ${MIGRATOR_IMAGE:-ghcr.io/alacrity-education/new.alacrity.education:main-migrator}
+    restart: 'no'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-payload}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+
+  app:
+    image: ${APP_IMAGE:-ghcr.io/alacrity-education/new.alacrity.education:main}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-payload}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
+      CRON_SECRET: ${CRON_SECRET}
+      PREVIEW_SECRET: ${PREVIEW_SECRET}
+      NEXT_PUBLIC_STADIA_API_KEY: ${NEXT_PUBLIC_STADIA_API_KEY}
     ports:
       - '3000:3000'
     volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
-    depends_on:
-      - mongo
-    env_file:
-      - .env
+      # Payload writes uploads to public/media; without this they are lost on
+      # every redeploy.
+      - media:/app/public/media
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-payload}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-payload}
     volumes:
-      - data:/data/db
-    logging:
-      driver: none
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-payload} -d ${POSTGRES_DB:-payload}']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
 volumes:
-  data:
-  node_modules:
+  pgdata:
+  media:
