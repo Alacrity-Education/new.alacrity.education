@@ -6,6 +6,7 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
 import { sdk } from '@/utilities/getPayloadSDK'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
@@ -65,7 +66,10 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const { hero, layout, background } = page
   const bgMedia = background?.image
-  const bgUrl = typeof bgMedia === 'object' && bgMedia !== null ? bgMedia.url : null
+  const bgUrl =
+    typeof bgMedia === 'object' && bgMedia !== null
+      ? getMediaUrl(bgMedia.url, bgMedia.updatedAt)
+      : null
 
   return (
     <article className="pt-16 pb-24">
