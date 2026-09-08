@@ -11,6 +11,7 @@ import RichText from '@/components/RichText'
 import { customConverters } from '@/components/RichText/CustomConverter'
 import { cn } from '@/utilities/ui'
 import { Link } from '@payloadcms/ui'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 const Media3D = dynamic(
   () => import('@/components/Media3D').then((m) => ({ default: m.Media3D })),
@@ -35,7 +36,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText,
       return (
         <Hero>
           <div className="absolute inset-0 z-0 w-full h-full">
-            <Media3D url={mediaObj.url} defaultZoom={mediaObj.defaultZoom} />
+            <Media3D url={getMediaUrl(mediaObj.url)} defaultZoom={mediaObj.defaultZoom} />
           </div>
         </Hero>
       )
@@ -47,7 +48,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText,
             Mobile: aspect-video equivalent for a full-width element (56vw ≈ 16:9).
             Desktop: matches the hero's min-h so the canvas fills the whole right half. */}
         <div className="w-full lg:w-1/2 h-[56vw] sm:h-[45vw] lg:h-[70lvh]">
-          <Media3D url={mediaObj.url} defaultZoom={mediaObj.defaultZoom} />
+          <Media3D url={getMediaUrl(mediaObj.url)} defaultZoom={mediaObj.defaultZoom} />
         </div>
         <HeroText links={links} richText={richText} />
       </Hero>
