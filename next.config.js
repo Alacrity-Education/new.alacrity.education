@@ -4,6 +4,8 @@ import redirects from './redirects.js'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Emits .next/standalone, which the Dockerfile copies into the runtime image.
+  output: 'standalone',
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
