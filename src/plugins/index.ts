@@ -12,9 +12,10 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { collectionTemplatesPlugin } from '@alacrity-education/payload-plugin-collection-templates'
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
+import { titleFor } from '@/utilities/siteMetadata'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+  return titleFor(doc?.title)
 }
 
 const generateURL: GenerateURL<Post | Page> = ({ doc }) => {

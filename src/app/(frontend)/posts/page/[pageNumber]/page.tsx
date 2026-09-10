@@ -7,6 +7,7 @@ import { sdk } from '@/utilities/getPayloadSDK'
 import React from 'react'
 import PageClient from './page.client'
 import { notFound } from 'next/navigation'
+import { titleFor } from '@/utilities/siteMetadata'
 
 
 type Args = {
@@ -61,7 +62,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { pageNumber } = await paramsPromise
   return {
-    title: `Payload Website Template Posts Page ${pageNumber || ''}`,
+    title: titleFor(`Posts${pageNumber ? ` — page ${pageNumber}` : ''}`),
   }
 }
 

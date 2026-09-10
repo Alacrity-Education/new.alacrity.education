@@ -16,6 +16,7 @@ const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend', display: 
 const lexendDeca = Lexend_Deca({ subsets: ['latin'], variable: '--font-lexend-deca', display: 'swap' })
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { SITE_TAGLINE, SITE_TITLE } from '@/utilities/siteMetadata'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 
@@ -40,8 +41,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
   openGraph: mergeOpenGraph(),
+  title: SITE_TITLE,
+  description: `${SITE_TAGLINE}.`,
   twitter: {
     card: 'summary_large_image',
-    creator: '@payloadcms',
   },
 }

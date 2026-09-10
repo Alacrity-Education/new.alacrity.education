@@ -5,6 +5,7 @@ import React, { Suspense } from 'react'
 import { Search } from '@/search/Component'
 import PageClient from './page.client'
 import { SearchResults } from './SearchResults'
+import { titleFor } from '@/utilities/siteMetadata'
 
 export default function Page() {
   return (
@@ -30,6 +31,6 @@ export default function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Search`,
+    title: titleFor('Search'),
   }
 }
