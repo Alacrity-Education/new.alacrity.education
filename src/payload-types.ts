@@ -262,11 +262,7 @@ export interface Page {
   generateSlug?: boolean | null;
   slug: string;
   /**
-   * Save this document as a reusable template. While checked, every save keeps that template up to date.
-   */
-  useAsTemplate?: boolean | null;
-  /**
-   * Template this document was created from. Values are copied once, when the template is first applied; later template edits do not change this document.
+   * Template this document was created from. Values were copied once, when the template was applied; later template edits do not change this document.
    */
   inheritsFrom?: (number | null) | PagesT;
   updatedAt: string;
@@ -324,11 +320,7 @@ export interface Post {
   generateSlug?: boolean | null;
   slug: string;
   /**
-   * Save this document as a reusable template. While checked, every save keeps that template up to date.
-   */
-  useAsTemplate?: boolean | null;
-  /**
-   * Template this document was created from. Values are copied once, when the template is first applied; later template edits do not change this document.
+   * Template this document was created from. Values were copied once, when the template was applied; later template edits do not change this document.
    */
   inheritsFrom?: (number | null) | PostsT;
   updatedAt: string;
@@ -1818,7 +1810,6 @@ export interface PagesSelect<T extends boolean = true> {
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
-  useAsTemplate?: T;
   inheritsFrom?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2193,7 +2184,6 @@ export interface PostsSelect<T extends boolean = true> {
       };
   generateSlug?: T;
   slug?: T;
-  useAsTemplate?: T;
   inheritsFrom?: T;
   updatedAt?: T;
   createdAt?: T;

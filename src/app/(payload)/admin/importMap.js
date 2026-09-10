@@ -1,3 +1,4 @@
+import { WebhookBanner as WebhookBanner_558f20e81d4ecba03c5142795c808fee } from '@alacrity-education/payload-plugin-collections-globals-webhook/client'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -30,9 +31,9 @@ import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
-import { UseAsTemplateField as UseAsTemplateField_eead76c5b9b73ead958a7a55f305be1b } from '@alacrity-education/payload-plugin-collection-templates/rsc'
 import { InheritsFromField as InheritsFromField_eead76c5b9b73ead958a7a55f305be1b } from '@alacrity-education/payload-plugin-collection-templates/rsc'
 import { NewFromTemplate as NewFromTemplate_eead76c5b9b73ead958a7a55f305be1b } from '@alacrity-education/payload-plugin-collection-templates/rsc'
+import { CreateTemplateControl as CreateTemplateControl_eead76c5b9b73ead958a7a55f305be1b } from '@alacrity-education/payload-plugin-collection-templates/rsc'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
@@ -50,6 +51,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@alacrity-education/payload-plugin-collections-globals-webhook/client#WebhookBanner": WebhookBanner_558f20e81d4ecba03c5142795c808fee,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -82,9 +84,9 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
-  "@alacrity-education/payload-plugin-collection-templates/rsc#UseAsTemplateField": UseAsTemplateField_eead76c5b9b73ead958a7a55f305be1b,
   "@alacrity-education/payload-plugin-collection-templates/rsc#InheritsFromField": InheritsFromField_eead76c5b9b73ead958a7a55f305be1b,
   "@alacrity-education/payload-plugin-collection-templates/rsc#NewFromTemplate": NewFromTemplate_eead76c5b9b73ead958a7a55f305be1b,
+  "@alacrity-education/payload-plugin-collection-templates/rsc#CreateTemplateControl": CreateTemplateControl_eead76c5b9b73ead958a7a55f305be1b,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/plugin-search/client#LinkToDoc": LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,
