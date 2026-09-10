@@ -13,6 +13,7 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { SITE_NAME, SITE_OG_IMAGE } from './utilities/siteMetadata'
 import { Member } from './collections/Member'
 
 const filename = fileURLToPath(import.meta.url)
@@ -20,6 +21,11 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
+    // Without this the admin browser tab reads "… - Payload".
+    meta: {
+      titleSuffix: `- ${SITE_NAME}`,
+      icons: [{ rel: 'icon', type: 'image/png', url: SITE_OG_IMAGE }],
+    },
     components: {
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.

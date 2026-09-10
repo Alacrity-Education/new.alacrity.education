@@ -4,11 +4,12 @@ import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
+import { SITE_OG_IMAGE, titleFor } from './siteMetadata'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
 
-  let url = serverUrl + '/website-template-OG.webp'
+  let url = serverUrl + SITE_OG_IMAGE
 
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = image.sizes?.og?.url
@@ -26,9 +27,7 @@ export const generateMeta = async (args: {
 
   const ogImage = getImageURL(doc?.meta?.image)
 
-  const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+  const title = titleFor(doc?.meta?.title)
 
   // Next expects an array; the field is a comma-separated string. Trimmed and
   // de-blanked so "a, b, , c" does not emit an empty keyword.
