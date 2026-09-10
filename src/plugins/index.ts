@@ -10,6 +10,7 @@ import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { collectionTemplatesPlugin } from '@alacrity-education/payload-plugin-collection-templates'
+import { payloadPluginCollectionsGlobalsWebhook } from '@alacrity-education/payload-plugin-collections-globals-webhook'
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 
@@ -90,9 +91,29 @@ export const plugins: Plugin[] = [
     },
   }),
   collectionTemplatesPlugin({
-        collections: {
-          pages: true,
-          posts: { exclude: ['author'] },
-        },
-      }),
+    collections: {
+      pages: true,
+      posts: { exclude: ['author'] },
+    },
+  }),
+  payloadPluginCollectionsGlobalsWebhook({
+    url: process.env.PAYLOAD_WEBHOOK_URL,
+    // Without a URL there is nothing to call, so the plugin stays inert rather than
+    // failing every write.
+    disabled: !process.env.PAYLOAD_WEBHOOK_URL,
+    // Everything that can change the built output, not just what the routes query
+    // directly: a member rendered inside a person-card block, or a swapped image,
+    // changes a page without that page being written to.
+    collections: {
+      pages: true,
+      posts: true,
+      categories: true,
+      media: true,
+      members: true,
+    },
+    globals: {
+      header: true,
+      footer: true,
+    },
+  }),
 ]
