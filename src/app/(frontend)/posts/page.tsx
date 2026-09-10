@@ -6,6 +6,7 @@ import { Pagination } from '@/components/Pagination'
 import { sdk } from '@/utilities/getPayloadSDK'
 import React from 'react'
 import PageClient from './page.client'
+import { titleFor } from '@/utilities/siteMetadata'
 
 
 export default async function Page() {
@@ -52,6 +53,6 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Posts`,
+    title: titleFor('Posts'),
   }
 }
