@@ -13,12 +13,13 @@ import { collectionTemplatesPlugin } from '@alacrity-education/payload-plugin-co
 import { payloadPluginCollectionsGlobalsWebhook } from '@alacrity-education/payload-plugin-collections-globals-webhook'
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
+import { titleFor } from '@/utilities/siteMetadata'
 import type { WebhookDocumentContext } from '@alacrity-education/payload-plugin-collections-globals-webhook'
 
 const publishedOnly = ({ doc }: WebhookDocumentContext): boolean => doc._status === 'published'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+  return titleFor(doc?.title)
 }
 
 const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
