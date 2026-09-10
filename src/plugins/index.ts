@@ -13,6 +13,9 @@ import { collectionTemplatesPlugin } from '@alacrity-education/payload-plugin-co
 import { payloadPluginCollectionsGlobalsWebhook } from '@alacrity-education/payload-plugin-collections-globals-webhook'
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
+import type { WebhookDocumentContext } from '@alacrity-education/payload-plugin-collections-globals-webhook'
+
+const publishedOnly = ({ doc }: WebhookDocumentContext): boolean => doc._status === 'published'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -105,15 +108,15 @@ export const plugins: Plugin[] = [
     // directly: a member rendered inside a person-card block, or a swapped image,
     // changes a page without that page being written to.
     collections: {
-      pages: true,
-      posts: true,
-      categories: true,
-      media: true,
-      members: true,
+      pages: { filter: publishedOnly },
+      posts: { filter: publishedOnly },
+      categories: { filter: publishedOnly },
+      media: { filter: publishedOnly },
+      members: { filter: publishedOnly },
     },
     globals: {
-      header: true,
-      footer: true,
+      header: { filter: publishedOnly },
+      footer: { filter: publishedOnly },
     },
   }),
 ]
