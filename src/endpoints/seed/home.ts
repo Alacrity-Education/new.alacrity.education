@@ -1,6 +1,6 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
 import type { Media } from '@/payload-types'
-import { SITE_NAME, SITE_TAGLINE, SITE_TITLE } from '@/utilities/siteMetadata'
+import { SITE_NAME, SITE_TAGLINE } from '@/utilities/siteMetadata'
 
 type HomeArgs = {
   heroImage: Media
@@ -28,7 +28,7 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
         {
           link: {
             type: 'custom',
-            appearance: 'outline',
+            appearance: 'secondary',
             label: 'Contact',
             url: '/contact',
           },
@@ -669,7 +669,6 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
     meta: {
       description: `${SITE_TAGLINE}.`,
       image: heroImage.id,
-      title: SITE_TITLE,
     },
     title: 'Home',
   }

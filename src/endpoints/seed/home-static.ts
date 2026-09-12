@@ -1,5 +1,5 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
-import { SITE_NAME, SITE_TAGLINE, SITE_TITLE } from '@/utilities/siteMetadata'
+import { SITE_NAME, SITE_TAGLINE } from '@/utilities/siteMetadata'
 
 // Used for pre-seeded content so that the homepage is not empty
 export const homeStatic: RequiredDataFromCollectionSlug<'pages'> = {
@@ -82,7 +82,6 @@ export const homeStatic: RequiredDataFromCollectionSlug<'pages'> = {
   },
   meta: {
     description: `${SITE_TAGLINE}.`,
-    title: SITE_TITLE,
   },
   title: 'Home',
   layout: [],
