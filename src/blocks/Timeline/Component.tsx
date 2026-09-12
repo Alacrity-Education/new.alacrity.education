@@ -203,6 +203,7 @@ export const Timeline: React.FC<TimelineProps> = ({ timelineElements, title }) =
   if (!entries.length) return null
 
   return (
+        <div className='h-max w-screen overflow-x-clip'>
     <div className="container" ref={containerRef}>
       <SectionTitle title={title} className="lg:py-4" />
 
@@ -217,6 +218,7 @@ export const Timeline: React.FC<TimelineProps> = ({ timelineElements, title }) =
           ))}
         </ol>
       </div>
-    </div>
+      </div>
+        </div>
   )
 }

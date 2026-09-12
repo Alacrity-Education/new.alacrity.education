@@ -18,8 +18,9 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   }
 
   return (
+
     <div className="container my-4 px-2 sm:px-0">
-      <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 xl:gap-x-8 max-w-full text-wrap! place-items-center">
+      <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 xl:gap-x-8 max-w-full text-wrap!">
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
@@ -27,20 +28,21 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
 
             return (
               <div
-                className={cn(`col-span-4`, {
-                  'md:col-span-2': size !== 'full',
-                }, colsSpanClasses[size!])}
+                className={cn(
+                  'md:flex md:flex-col lg:pr-4',
+                  `col-span-4`,
+                  {
+                    'md:col-span-2': size !== 'full',
+                  },
+                  centerContent && 'md:justify-center',
+                  colsSpanClasses[size!],
+                )}
                 key={index}
               >
                 {hasRichTextContent(richText) && (
                   <RichText
                     data={richText}
-                    className={cn(
-                      'text-wrap! w-full h-max',
-                      // The grid's place-items-center already centres the box in
-                      // its track, so this only has to handle the text itself.
-                      centerContent && 'text-center',
-                    )}
+                    className={cn('text-wrap! w-full h-max')}
                     enableGutter={false}
                   />
                 )}
@@ -48,6 +50,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
             )
           })}
       </div>
-    </div>
+      </div>
+
   )
 }
