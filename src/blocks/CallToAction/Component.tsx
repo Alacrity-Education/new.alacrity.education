@@ -13,8 +13,8 @@ import { hasRichTextContent } from '@/utilities/richText'
 
 export const CallToActionBlock: React.FC<CTABlockProps> = ({ id, variant, links, richText, media }) => {
   const bgCls = {
-    "base":"bg-base-100 border border-2 border-primary",
-    "primary":"bg-primary",
+    "base":"",
+    "primary":"bg-primary shadow-xl",
   }
 
   const gradientCls = {
@@ -30,7 +30,7 @@ export const CallToActionBlock: React.FC<CTABlockProps> = ({ id, variant, links,
 
   return (
     <div className="container">
-      <div className={cn('relative rounded-lg sm:h-80 shadow-xl', bgCls[variant || 'base'])}>
+      <div className={cn('relative rounded-lg sm:h-80 ', bgCls[variant || 'base'])}>
         <div className={'absolute inset-0 flex flex-row z-0 rounded-lg overflow-clip bg-inherit'}>
           <div className={'flex-1'}></div>
           <div className={'w-full h-full sm:min-w-1/2 sm:w-1/2 relative bg-inherit'}>
