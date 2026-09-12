@@ -23,7 +23,7 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
-    "@alacrity-education/payload-plugin-collection-templates": "^0.4.0",
+    "@alacrity-education/payload-plugin-collection-templates": "^0.5.0",
     "@alacrity-education/payload-plugin-collections-globals-webhook": "^0.2.0",
     "@payloadcms/admin-bar": "3.88.0",
     "@payloadcms/db-postgres": "^3.88.0",

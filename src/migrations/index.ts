@@ -12,6 +12,7 @@ import * as migration_20260906_120550 from './20260906_120550';
 import * as migration_20260906_203811_timeline_rebuild from './20260906_203811_timeline_rebuild';
 import * as migration_20260906_220917 from './20260906_220917';
 import * as migration_20260907_155911 from './20260907_155911';
+import * as migration_20260912_180904_drop_inherits_from from './20260912_180904_drop_inherits_from';
 
 export const migrations = [
   {
@@ -82,6 +83,11 @@ export const migrations = [
   {
     up: migration_20260907_155911.up,
     down: migration_20260907_155911.down,
-    name: '20260907_155911'
+    name: '20260907_155911',
+  },
+  {
+    up: migration_20260912_180904_drop_inherits_from.up,
+    down: migration_20260912_180904_drop_inherits_from.down,
+    name: '20260912_180904_drop_inherits_from'
   },
 ];
