@@ -7,9 +7,8 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
  * nothing records which template a document came from and the plugin adds no columns at
  * all.
  *
- * The `up` path is guarded with IF EXISTS throughout: `main` and `static` each carry
- * their own copy of this change under a different timestamp, and merging the branches
- * would otherwise try to drop the same column twice.
+ * The `up` path is guarded with IF EXISTS so a partially applied run can simply be run
+ * again rather than needing the database inspected by hand.
  */
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
