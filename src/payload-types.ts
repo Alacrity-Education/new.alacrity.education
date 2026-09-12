@@ -261,10 +261,6 @@ export interface Page {
    */
   generateSlug?: boolean | null;
   slug: string;
-  /**
-   * Template this document was created from. Values are copied once, when the template is first applied; later template edits do not change this document.
-   */
-  inheritsFrom?: (number | null) | PagesT;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -319,10 +315,6 @@ export interface Post {
    */
   generateSlug?: boolean | null;
   slug: string;
-  /**
-   * Template this document was created from. Values are copied once, when the template is first applied; later template edits do not change this document.
-   */
-  inheritsFrom?: (number | null) | PostsT;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -499,68 +491,6 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
-}
-/**
- * Reusable templates for "posts". Templates are not posts documents and are never returned by /api/posts.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts-T".
- */
-export interface PostsT {
-  id: number;
-  /**
-   * How this template is listed when creating a new document.
-   */
-  templateName: string;
-  /**
-   * The document this template was promoted from. While that document has "Use as template" checked, saving it updates this template.
-   */
-  templateSource?: (number | null) | Post;
-  title?: string | null;
-  heroImage?: (number | null) | Media;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  relatedPosts?: (number | Post)[] | null;
-  categories?: (number | Category)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-    description?: string | null;
-    /**
-     * Comma separated, e.g. "robotics, student lab, Bucharest". Search engines largely ignore this tag, so treat it as a hint rather than a ranking lever.
-     */
-    keywords?: string | null;
-  };
-  publishedAt?: string | null;
-  authors?: (number | User)[] | null;
-  populatedAuthors?:
-    | {
-        name?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1349,6 +1279,80 @@ export interface ContactBlock {
   blockType: 'contactBlock';
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  /**
+   * You will need to rebuild the website when changing this field.
+   */
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: number;
+  form: number | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This is a collection of automatically created search results. These results are used by the global site search and will be updated automatically as documents in the CMS are created or updated.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search".
+ */
+export interface Search {
+  id: number;
+  title?: string | null;
+  priority?: number | null;
+  doc: {
+    relationTo: 'posts';
+    value: number | Post;
+  };
+  slug?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  categories?:
+    | {
+        relationTo?: string | null;
+        categoryID?: string | null;
+        title?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Reusable templates for "pages". Templates are not pages documents and are never returned by /api/pages.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1464,76 +1468,64 @@ export interface PagesT {
   createdAt: string;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: number;
-  /**
-   * You will need to rebuild the website when changing this field.
-   */
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'pages';
-          value: number | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: number | Post;
-        } | null);
-    url?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
- */
-export interface FormSubmission {
-  id: number;
-  form: number | Form;
-  submissionData?:
-    | {
-        field: string;
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This is a collection of automatically created search results. These results are used by the global site search and will be updated automatically as documents in the CMS are created or updated.
+ * Reusable templates for "posts". Templates are not posts documents and are never returned by /api/posts.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "search".
+ * via the `definition` "posts-T".
  */
-export interface Search {
+export interface PostsT {
   id: number;
+  /**
+   * How this template is listed when creating a new document.
+   */
+  templateName: string;
+  /**
+   * The document this template was promoted from. While that document has "Use as template" checked, saving it updates this template.
+   */
+  templateSource?: (number | null) | Post;
   title?: string | null;
-  priority?: number | null;
-  doc: {
-    relationTo: 'posts';
-    value: number | Post;
-  };
-  slug?: string | null;
+  heroImage?: (number | null) | Media;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
-    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
     image?: (number | null) | Media;
+    description?: string | null;
+    /**
+     * Comma separated, e.g. "robotics, student lab, Bucharest". Search engines largely ignore this tag, so treat it as a hint rather than a ranking lever.
+     */
+    keywords?: string | null;
   };
-  categories?:
+  publishedAt?: string | null;
+  authors?: (number | User)[] | null;
+  populatedAuthors?:
     | {
-        relationTo?: string | null;
-        categoryID?: string | null;
-        title?: string | null;
+        name?: string | null;
         id?: string | null;
       }[]
     | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1810,7 +1802,6 @@ export interface PagesSelect<T extends boolean = true> {
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
-  inheritsFrom?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -2184,7 +2175,6 @@ export interface PostsSelect<T extends boolean = true> {
       };
   generateSlug?: T;
   slug?: T;
-  inheritsFrom?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
