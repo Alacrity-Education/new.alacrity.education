@@ -15,13 +15,26 @@ type BigCard = BigCards[number]
 
 const imageTint = 'bg-linear-to-b from-primary/95 via-primary/88 to-primary/80'
 
-const PARTIAL_IMAGE_BASIS = 'basis-1/2 sm:basis-3/5'
+/**
+ * Also fixed across widths: with the card's own aspect pinned, a split that
+ * moved at sm would still make the same card read differently on a phone.
+ */
+const PARTIAL_IMAGE_BASIS = 'basis-3/5'
 
 
+
+/**
+ * One aspect ratio at every width, so a card is the same shape on a phone as
+ * it is in the two-up desktop row. Previously mobile was 0.60 and everything
+ * above sm was 0.90, which made the same card read as two different designs.
+ */
+const CARD_ASPECT = 'aspect-[0.9]'
 
 /** Fixed proportions, so the two cards in a row always match. */
-const CARD_SHELL =
-  'relative flex flex-col w-full overflow-hidden rounded-box bg-primary aspect-[0.60] sm:aspect-[0.90]'
+const CARD_SHELL = cn(
+  'relative flex flex-col w-full overflow-hidden rounded-box bg-primary',
+  CARD_ASPECT,
+)
 
 /** The copy layer for FullCard: stretches to own the whole card. */
 const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
@@ -140,7 +153,7 @@ export const BigVariant: React.FC<{
       {/* Default SectionTitle sizing on purpose — this variant does not restyle it. */}
       <SectionTitle title={title} className="py-4" />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
         {cards.map((card, i) => (
           <BigCardItem key={card.id ?? i} card={card} />
         ))}
