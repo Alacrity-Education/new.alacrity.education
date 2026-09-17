@@ -142,7 +142,7 @@ export const HeroImage = ({
   const isCircle = imageVariant === 'circle'
 
   return (
-    <div className="w-full lg:w-1/2 flex items-center justify-center px-0 sm:px-8 lg:px-20 xl:px-20 pt-2 sm:pt-0 sm:pb-26">
+    <div className="w-full lg:w-1/2 flex items-center justify-center px-0 sm:px-8 lg:px-20 xl:px-20 pt-2 sm:pt-0">
       <Media
         pictureClassName={cn(
           'overflow-visible transition-transform z-0',
