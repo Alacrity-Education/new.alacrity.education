@@ -316,7 +316,9 @@ export const HighlightButton = ({ highlightButton }: { highlightButton: Highligh
     return null
   }
   return (
-    <div className={'hidden md:flex md:navbar-end '}>
+    // lg, not md: the drawer (MobileHeaderNav) is lg:hidden and already lists
+    // this link, so showing it here from md up duplicated it on md screens.
+    <div className={'hidden lg:flex lg:navbar-end '}>
       <CMSLink className={'lg:ml-10 overflow-visible  '} {...highlightButton.link} />
     </div>
   )
