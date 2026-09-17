@@ -68,7 +68,10 @@ export const MediaBlock: React.FC<Props> = (props) => {
           const image = (
             <Media
               imgClassName={cn('rounded-box h-max', imgClassName)}
-              pictureClassName="rounded-box h-max"
+              // The shadow sits on the <picture>: it is the element that both
+              // carries the rounding and bounds the image, so the shadow
+              // follows the rounded edge instead of being clipped by it.
+              pictureClassName="rounded-box h-max shadow-lg"
               className="rounded-box h-max"
               resource={media}
               src={staticImage}
