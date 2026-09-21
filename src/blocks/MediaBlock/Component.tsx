@@ -67,10 +67,12 @@ export const MediaBlock: React.FC<Props> = (props) => {
         (() => {
           const image = (
             <Media
-              imgClassName={cn('rounded-box h-max', imgClassName)}
-              // The shadow sits on the <picture>: it is the element that both
-              // carries the rounding and bounds the image, so the shadow
-              // follows the rounded edge instead of being clipped by it.
+              imgClassName={cn('rounded-box shadow-xl h-max', imgClassName)}
+              // Both the <img> and its <picture> carry a shadow, so the two
+              // stack into something darker than either alone. Keep one if
+              // that is not wanted — the <picture> is the better host, being
+              // the element that both carries the rounding and bounds the
+              // image, so its shadow follows the rounded edge.
               pictureClassName="rounded-box h-max shadow-lg"
               className="rounded-box h-max"
               resource={media}
@@ -87,7 +89,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
             </div>
           )
         })()}
-      {caption && (
+      {caption && caption.root.children.length>0 && (
         <div
           className={cn(
             'mt-6',
