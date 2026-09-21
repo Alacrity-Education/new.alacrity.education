@@ -24,11 +24,12 @@ const PARTIAL_IMAGE_BASIS = 'basis-3/5'
 
 
 /**
- * One aspect ratio at every width, so a card is the same shape on a phone as
- * it is in the two-up desktop row. Previously mobile was 0.60 and everything
- * above sm was 0.90, which made the same card read as two different designs.
+ * Two ratios: a taller 0.7 on small screens where the card owns the full
+ * column, stepping to 0.9 from md. The breakpoint is md rather than the sm it
+ * used to be, so the shape changes once, at the same width the rest of the
+ * layout does.
  */
-const CARD_ASPECT = 'aspect-[0.9]'
+const CARD_ASPECT = 'aspect-[0.7] md:aspect-[0.9]'
 
 /** Fixed proportions, so the two cards in a row always match. */
 const CARD_SHELL = cn(
