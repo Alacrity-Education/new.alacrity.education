@@ -249,16 +249,28 @@
   --tw-prose-td-borders: var(--color-rule);
 
   /* Body sits at Lexend's own defaults, deliberately.
-     Sizes below track @tailwindcss/typography's prose-xl scale: a 1.25rem
-     base, with everything downstream expressed in em so it stays coupled.
-     The leading is 1.6 rather than prose-xl's own 1.8 so this matches the
-     Content block's xl toggle (`prose-xl! leading-8!`) exactly — 20px x 1.6
-     is the 2rem that leading-8 sets. */
+     Only the base size and leading move across the breakpoint; everything
+     downstream is in em — h3 1.5em, h4 1em, .lead 1.2em, code and table
+     0.9em — so it rescales on its own.
+     At md+ the leading is 1.6 rather than prose-xl's own 1.8: 20px x 1.6 is
+     the 2rem the app's old `leading-8` toggle set, and that pairing is what
+     the rest of the styles assume. */
   font-family: var(--font-body);
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.75;
   letter-spacing: 0;
+}
+
+/* Small screens read at the plugin's regular base; md and up step to its xl
+   size. Same shape as the .prose-md rule further down, which this now makes
+   redundant — that class was the opt-in for exactly this behaviour before it
+   became the default. */
+@variant md {
+  .prose-alacrity {
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
 }
 
 .prose-alacrity :is(h1, h2, h3, h4) {
