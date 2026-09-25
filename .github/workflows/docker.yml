@@ -1,13 +1,26 @@
-# Builds the full app (frontend + Payload admin/API) as a Docker image and
-# pushes it to GHCR, for deployment on Coolify via docker-compose.yml.
+# Builds the full app (frontend + Payload admin/API) as a Docker image, pushes
+# it to GHCR, and asks Coolify to redeploy.
 #
-# Payload connects to the database while Next collects page data, so the build
-# needs a reachable Postgres. A throwaway service container is used for that;
-# it holds no data and nothing from it is used at runtime.
+# The build touches no database. Every route under (frontend) renders on
+# demand, so nothing is prerendered and nothing is queried at build time —
+# which is why this workflow needs no tunnel, no Cloudflare Access application
+# and no service token. Migrations run at deploy time from the migrator image,
+# gated before the app starts (see docker-compose.yml).
 #
-# Uses the built-in GITHUB_TOKEN — no extra secrets required. Set
-# vars.NEXT_PUBLIC_SERVER_URL to the site's public URL, since it is inlined
-# into the client bundle at build time.
+# Repository configuration:
+#   vars.NEXT_PUBLIC_SERVER_URL        - public URL of this deployment
+#   vars.NEXT_PUBLIC_STADIA_API_KEY    - optional; map tiles, omit to fall back
+#                                        to CARTO Positron
+#   secrets.COOLIFY_WEBHOOK            - optional; deploy webhook from the
+#                                        application's Configuration > Webhooks
+#   secrets.COOLIFY_TOKEN              - optional; API token with deploy rights
+#
+# Both NEXT_PUBLIC_* values are repository *variables*, not secrets: they are
+# inlined into the client bundle and published in the image, so treating them
+# as secret would be theatre. Never pass PAYLOAD_SECRET or a real DATABASE_URL
+# as a build arg — the image is public and build args are readable from it.
+#
+# Pushing uses the built-in GITHUB_TOKEN; no registry credentials needed.
 name: Docker image
 
 on:
@@ -30,30 +43,10 @@ jobs:
       contents: read
       packages: write
 
-    services:
-      postgres:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_USER: payload
-          POSTGRES_PASSWORD: payload
-          POSTGRES_DB: payload
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U payload -d payload"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-
     steps:
       - uses: actions/checkout@v4
 
-      # network=host lets the build reach the Postgres service on the runner's
-      # localhost. Without it the build container is on an isolated network and
-      # Payload cannot connect.
       - uses: docker/setup-buildx-action@v3
-        with:
-          driver-opts: network=host
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -77,14 +70,13 @@ jobs:
         with:
           context: .
           push: true
-          network: host
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            DATABASE_URL=postgresql://payload:payload@127.0.0.1:5432/payload
             NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}
+            NEXT_PUBLIC_STADIA_API_KEY=${{ vars.NEXT_PUBLIC_STADIA_API_KEY }}
 
       # The standalone runtime image has no Payload CLI, so migrations ship as a
       # separate image built from the `migrator` stage. docker-compose.yml runs
@@ -112,10 +104,32 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Skipped rather than failed when the webhook is not configured, so the
+      # image still publishes while Coolify is being set up. `secrets` cannot be
+      # read in an `if:`, hence the guard inside the script.
+      - name: Trigger the Coolify deploy
+        env:
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          if [ -z "$COOLIFY_WEBHOOK" ]; then
+            echo "::notice::COOLIFY_WEBHOOK is not set — image pushed, deploy not triggered"
+            exit 0
+          fi
+          # --fail so a rejected webhook fails the run rather than reporting a
+          # deploy that never happened.
+          curl --fail --silent --show-error --max-time 60 \
+            --request GET "$COOLIFY_WEBHOOK" \
+            --header "Authorization: Bearer $COOLIFY_TOKEN"
+          echo
+          echo "::notice::Coolify deploy requested"
+
       - name: Summary
         run: |
-          echo "### Pushed images" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.meta-migrator.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### Pushed images"
+            echo '```'
+            echo "${{ steps.meta.outputs.tags }}"
+            echo "${{ steps.meta-migrator.outputs.tags }}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
