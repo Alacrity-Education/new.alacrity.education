@@ -11,6 +11,9 @@ services:
   # image built from the `migrator` stage.
   migrate:
     image: ${MIGRATOR_IMAGE:-ghcr.io/alacrity-education/new.alacrity.education:main-migrator}
+    # :main moves, so without this a redeploy can restart the cached image and
+    # report success while running the previous build.
+    pull_policy: always
     restart: 'no'
     depends_on:
       postgres:
@@ -21,6 +24,7 @@ services:
 
   app:
     image: ${APP_IMAGE:-ghcr.io/alacrity-education/new.alacrity.education:main}
+    pull_policy: always
     restart: unless-stopped
     depends_on:
       postgres:
