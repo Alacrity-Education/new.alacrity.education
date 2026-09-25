@@ -30,10 +30,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Payload connects to the database while Next collects page data, so a
-# reachable DATABASE_URL is required to build. Any throwaway database will do —
-# nothing from it is baked into the image beyond prerendered page content.
-ARG DATABASE_URL
+# The build no longer touches the database: every route under (frontend) is
+# rendered on demand, so nothing is prerendered and nothing is queried here.
+# DATABASE_URL is still declared because payload.config reads it at import, but
+# it is never connected to during the build and needs no real value.
+ARG DATABASE_URL=postgresql://build:build@127.0.0.1:5432/build
 # Build-time only. The real secret is supplied to the container at runtime.
 ARG PAYLOAD_SECRET=build-time-placeholder
 ARG NEXT_PUBLIC_SERVER_URL
@@ -44,9 +45,11 @@ ENV DATABASE_URL=$DATABASE_URL \
     NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=production
 
-# Page data is collected from the database during the build, so the schema has
-# to exist before Next runs.
-RUN npx payload migrate && npm run build
+# No `payload migrate` here. Migrations run at deploy time from the migrator
+# image, gated before the app starts (see docker-compose.yml). Running them
+# from a build would migrate the target database on every image build,
+# including builds that then fail, and before the new code is live.
+RUN npm run build
 
 # ---- runtime ----------------------------------------------------------------
 FROM base AS runner

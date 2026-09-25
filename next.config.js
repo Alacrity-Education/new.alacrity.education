@@ -9,14 +9,18 @@ const nextConfig = {
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
-      ...[process.env.NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
-        const url = new URL(item)
+      // filter(Boolean) so an unset var is skipped rather than throwing
+      // "Invalid URL" out of new URL(undefined) and failing the whole build.
+      ...[process.env.NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */]
+        .filter(Boolean)
+        .map((item) => {
+          const url = new URL(item)
 
-        return {
-          hostname: url.hostname,
-          protocol: url.protocol.replace(':', ''),
-        }
-      }),
+          return {
+            hostname: url.hostname,
+            protocol: url.protocol.replace(':', ''),
+          }
+        }),
       {
         protocol: 'http',
         hostname: 'localhost',
