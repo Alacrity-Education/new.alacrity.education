@@ -3,7 +3,11 @@
 # The app image is built and pushed by .github/workflows/docker.yml. Coolify
 # supplies the variables below; see .env.example for their meaning.
 #
-# Required: PAYLOAD_SECRET, POSTGRES_PASSWORD, NEXT_PUBLIC_SERVER_URL
+# Postgres is NOT part of this stack. It runs as its own Coolify service,
+# reachable over the shared destination network, so DATABASE_URL is supplied
+# whole rather than assembled here from user/password/host parts.
+#
+# Required: DATABASE_URL, PAYLOAD_SECRET, NEXT_PUBLIC_SERVER_URL
 services:
   # Applies Payload migrations, then exits. The app waits for it to finish, so a
   # fresh database is schema-complete before the server starts. The runtime
@@ -15,29 +19,25 @@ services:
     # report success while running the previous build.
     pull_policy: always
     restart: 'no'
-    depends_on:
-      postgres:
-        condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-payload}
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+      DATABASE_URL: ${DATABASE_URL:?}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?}
 
   app:
     image: ${APP_IMAGE:-ghcr.io/alacrity-education/new.alacrity.education:main}
     pull_policy: always
     restart: unless-stopped
     depends_on:
-      postgres:
-        condition: service_healthy
       migrate:
         condition: service_completed_successfully
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-payload}
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+      DATABASE_URL: ${DATABASE_URL:?}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?}
       NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
       CRON_SECRET: ${CRON_SECRET}
       PREVIEW_SECRET: ${PREVIEW_SECRET}
       NEXT_PUBLIC_STADIA_API_KEY: ${NEXT_PUBLIC_STADIA_API_KEY}
+      PAYLOAD_WEBHOOK_URL: ${PAYLOAD_WEBHOOK_URL}
     ports:
       - '3000:3000'
     volumes:
@@ -51,22 +51,5 @@ services:
       retries: 5
       start_period: 40s
 
-  postgres:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-payload}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-payload}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-payload} -d ${POSTGRES_DB:-payload}']
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 20s
-
 volumes:
-  pgdata:
   media:
