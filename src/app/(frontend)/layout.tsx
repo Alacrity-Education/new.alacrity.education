@@ -20,6 +20,18 @@ import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { SITE_TAGLINE, SITE_TITLE } from '@/utilities/siteMetadata'
 
+/**
+ * Rendered on demand rather than prerendered at build.
+ *
+ * Every page here reads from Payload, so prerendering meant the image build
+ * needed a live database — which in turn meant giving CI a route into it. The
+ * data itself is still cached: getCachedGlobal/getCachedDocument/getRedirects
+ * wrap their queries in unstable_cache with tags, and the collection
+ * afterChange hooks call revalidateTag on publish, so a request only reaches
+ * Postgres when the cache for that tag has actually been busted.
+ */
+export const dynamic = 'force-dynamic'
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
