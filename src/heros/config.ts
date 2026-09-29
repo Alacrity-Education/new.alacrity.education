@@ -91,6 +91,21 @@ export const hero: Field = {
           Boolean(media) && ['highImpact', 'slide'].includes(type),
       },
     },
+    {
+      name: 'mediaFit',
+      type: 'select',
+      label: 'Image Fit',
+      defaultValue: 'cover',
+      options: [
+        { label: 'Cover (fill the frame, crop the overflow)', value: 'cover' },
+        { label: 'Contain (show the whole image, letterbox it)', value: 'contain' },
+      ],
+      admin: {
+        description:
+          'Cover crops to fill the fixed 16:9 frame. Contain fits the whole image inside it, which suits logos and screenshots that must not lose their edges.',
+        condition: (_, { media, type } = {}) => Boolean(media) && type === 'mediumImpact',
+      },
+    },
   ],
   label: false,
 }
