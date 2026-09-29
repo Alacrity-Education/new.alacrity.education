@@ -97,12 +97,10 @@ export const hero: Field = {
       label: 'Image Fit',
       defaultValue: 'cover',
       options: [
-        { label: 'Cover (fill the frame, crop the overflow)', value: 'cover' },
-        { label: 'Contain (show the whole image, letterbox it)', value: 'contain' },
+        { label: 'Object cover', value: 'cover' },
+        { label: 'Object contain', value: 'contain' },
       ],
       admin: {
-        description:
-          'Cover crops to fill the fixed 16:9 frame. Contain fits the whole image inside it, which suits logos and screenshots that must not lose their edges.',
         condition: (_, { media, type } = {}) => Boolean(media) && type === 'mediumImpact',
       },
     },
