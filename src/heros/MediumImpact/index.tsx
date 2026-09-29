@@ -13,7 +13,7 @@ import { cn } from '@/utilities/ui'
 export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, mediaFit, richText }) => {
   const hasMedia = media && typeof media === 'object'
   // Null on heroes saved before the field existed, so cover stays the default.
-  const fitClass = mediaFit === 'contain' ? 'object-contain' : 'object-cover'
+  const isContain = mediaFit === 'contain'
 
   return (
     <section className="relative pt-10 sm:pt-0 bg-base-200/20 overflow-hidden md:-mt-10">
@@ -32,9 +32,13 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, mediaFit,
                 resource={media}
                 pictureClassName="w-full"
                 imgClassName={cn(
-                  'w-full rounded-2xl shadow-2xl aspect-video ring-1 ring-base-content/8',
+                  'w-full rounded-2xl aspect-video',
                   'group-hover:-translate-y-1 transition-transform duration-500',
-                  fitClass,
+                  // Contain letterboxes the image inside the frame, so a shadow
+                  // and ring would outline the empty frame rather than the art.
+                  isContain
+                    ? 'object-contain'
+                    : 'object-cover shadow-2xl ring-1 ring-base-content/8',
                 )}
                 priority
               />
