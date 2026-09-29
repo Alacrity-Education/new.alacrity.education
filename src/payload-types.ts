@@ -220,6 +220,10 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
     imageVariant?: ('rectangle' | 'circle') | null;
+    /**
+     * Cover crops to fill the fixed 16:9 frame. Contain fits the whole image inside it, which suits logos and screenshots that must not lose their edges.
+     */
+    mediaFit?: ('cover' | 'contain') | null;
   };
   layout: (
     | CallToActionBlock
@@ -1422,6 +1426,10 @@ export interface PagesT {
       | null;
     media?: (number | null) | Media;
     imageVariant?: ('rectangle' | 'circle') | null;
+    /**
+     * Cover crops to fill the fixed 16:9 frame. Contain fits the whole image inside it, which suits logos and screenshots that must not lose their edges.
+     */
+    mediaFit?: ('cover' | 'contain') | null;
   };
   layout?:
     | (
@@ -1767,6 +1775,7 @@ export interface PagesSelect<T extends boolean = true> {
             };
         media?: T;
         imageVariant?: T;
+        mediaFit?: T;
       };
   layout?:
     | T
@@ -2552,6 +2561,7 @@ export interface PagesTSelect<T extends boolean = true> {
             };
         media?: T;
         imageVariant?: T;
+        mediaFit?: T;
       };
   layout?:
     | T

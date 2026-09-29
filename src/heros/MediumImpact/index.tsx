@@ -8,9 +8,12 @@ import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 import { customConverters } from '@/components/RichText/CustomConverter'
 import { hasRichTextContent } from '@/utilities/richText'
+import { cn } from '@/utilities/ui'
 
-export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, richText }) => {
+export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, mediaFit, richText }) => {
   const hasMedia = media && typeof media === 'object'
+  // Null on heroes saved before the field existed, so cover stays the default.
+  const fitClass = mediaFit === 'contain' ? 'object-contain' : 'object-cover'
 
   return (
     <section className="relative pt-10 sm:pt-0 bg-base-200/20 overflow-hidden md:-mt-10">
@@ -28,7 +31,11 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, richText 
               <Media
                 resource={media}
                 pictureClassName="w-full"
-                imgClassName="w-full rounded-2xl shadow-2xl aspect-video object-cover ring-1 ring-base-content/8 group-hover:-translate-y-1 transition-transform duration-500"
+                imgClassName={cn(
+                  'w-full rounded-2xl shadow-2xl aspect-video ring-1 ring-base-content/8',
+                  'group-hover:-translate-y-1 transition-transform duration-500',
+                  fitClass,
+                )}
                 priority
               />
             </div>
