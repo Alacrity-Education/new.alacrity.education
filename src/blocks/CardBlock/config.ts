@@ -82,16 +82,6 @@ export const CardBlock: Block = {
       admin: { condition: isVariant('regular') },
       fields: [
         {
-          name: 'variant',
-          type: 'select',
-          label: 'Variant',
-          defaultValue: 'base',
-          options: [
-            { label: 'Base', value: 'base' },
-            { label: 'Primary', value: 'primary' },
-          ],
-        },
-        {
           name: 'title',
           type: 'text',
           label: 'Title',
@@ -107,10 +97,14 @@ export const CardBlock: Block = {
           type: 'upload',
           relationTo: 'media',
           label: 'Image',
+          admin: {
+            description:
+              'Fills the card behind the copy. Without one the card is plain primary.',
+          },
         },
-        link({
-          appearances: ['default', 'primary', 'baseOverlap', 'primaryOverlap'],
-        }),
+        // No appearance choice: these cards are a single treatment now, and the
+        // block renders the link itself so it stays legible over the tint.
+        link({ appearances: false }),
       ],
     },
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Media } from '@/components/Media'
-import { Card, CardImage, CardBody } from '@/components/primitives/card'
 import { CardScroller, cardScrollerItem } from '@/components/primitives/CardScroller'
 import { cn } from '@/utilities/ui'
 import { CMSLink } from '@/components/Link'
@@ -11,34 +10,55 @@ import type { CardBlock as CardBlockProps } from '@/payload-types'
 type RegularCards = NonNullable<CardBlockProps['cards']>
 type Layout = CardBlockProps['layout']
 
-const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => {
-  const v = card?.variant
-  const titleClass = cn(
-    'text-lg lg:text-3xl font-bold leading-snug',
-    v === 'base' ? 'text-primary' : 'text-primary-content',
-  )
-  const descClass = cn(
-    'text-sm lg:text-lg mt-1',
-    v === 'base' ? 'text-base-content/70' : 'text-primary-content/70',
-  )
+/**
+ * Same tint the big card block puts over its full-bleed image. It is what makes
+ * the copy legible over an arbitrary upload, so the card carries it whether or
+ * not there is an image — without one it is just the primary ground.
+ */
+const CARD_TINT = 'bg-linear-to-b from-primary/95 via-primary/88 to-primary/80'
 
-  return (
-    <Card variant={v ?? undefined}>
-      {card.image && (
-        <CardImage>
-          <Media className="w-full h-full" imgClassName="w-full h-full object-cover" resource={card.image} />
-        </CardImage>
+/**
+ * The big card block's full-cover treatment at regular-card scale: image across
+ * the whole card, primary tint over it, copy on top. Cards no longer pick a
+ * colour — one treatment, so a row of them reads as a set.
+ */
+const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
+  <article className="relative flex aspect-4/5 w-full flex-col overflow-hidden rounded-box bg-primary shadow-lg">
+    {card.image && (
+      <Media
+        className="absolute inset-0 h-full w-full"
+        imgClassName="h-full w-full object-cover"
+        resource={card.image}
+      />
+    )}
+
+    {/* z-10 over the image, under the copy at z-20 */}
+    <div className={cn('pointer-events-none absolute inset-0 z-10', CARD_TINT)} />
+
+    {/* Scaled down from the big card's p-8/10/12 — same inset, smaller card. */}
+    <div className="relative z-20 flex min-h-0 flex-1 flex-col p-6 lg:p-8">
+      <h3 className="text-lg font-bold leading-snug text-primary-content lg:text-3xl">
+        {card.title}
+      </h3>
+      {card.description && (
+        <p className="mt-1 text-sm text-primary-content/70 lg:text-lg">{card.description}</p>
       )}
 
-      <CardBody>
-        <h3 className={titleClass}>{card.title}</h3>
-        {card.description && <p className={descClass}>{card.description}</p>}
-      </CardBody>
-
-      {card.link?.label && <CMSLink {...card.link} />}
-    </Card>
-  )
-}
+      {card.link?.label && (
+        <CMSLink
+          {...card.link}
+          appearance="default"
+          size="sm"
+          // mt-auto, not the big card's mt-8: the aspect is fixed here, so
+          // anything else leaves the button stranded above dead space.
+          // text-sm! overrides the appearance's own text-lg, which btn-sm
+          // otherwise fights.
+          className="mt-auto w-max text-sm!"
+        />
+      )}
+    </div>
+  </article>
+)
 
 export const RegularVariant: React.FC<{
   title?: string | null
