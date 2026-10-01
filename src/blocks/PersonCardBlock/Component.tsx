@@ -132,14 +132,18 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
     'overflow-visible aspect-4/5 min-w-xs md:min-w-sm',
   )
 
+  // The section itself spans the page; only the copy around the scroller is
+  // held to the container. The scroller pads itself back in. See CardScroller.
   return (
-    <section className="container">
-      <SectionTitle
-        title={title}
-        arrow
-        className={cn(titleWrapperClass[overflowBreak], 'py-4')}
-        textClassName={titleTextClass[overflowBreak]}
-      />
+    <section>
+      <div className="container">
+        <SectionTitle
+          title={title}
+          arrow
+          className={cn(titleWrapperClass[overflowBreak], 'py-4')}
+          textClassName={titleTextClass[overflowBreak]}
+        />
+      </div>
 
       <CardScroller gapClassName="gap-6 sm:gap-10 md:gap-16 lg:gap-20">
         {resolvedMembers.map((member) => (
@@ -150,7 +154,7 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
       </CardScroller>
 
       {links && links.length > 0 && (
-        <div className="flex justify-center gap-4 mt-8">
+        <div className="container flex justify-center gap-4 mt-8">
           {links.map(({ link }, i) => (
             <CMSLink key={i} size="lg" {...link} />
           ))}

@@ -78,14 +78,18 @@ export const RegularVariant: React.FC<{
     always: 'shrink-0',
   }
 
+  // The scroller sits outside the container on purpose: it spans the page and
+  // pads itself back in to the container's content edge. See CardScroller.
   return (
-    <div className="container">
-      <SectionTitle
-        title={title}
-        arrow={isCarousel ? arrowClass[overflowBreak] : false}
-        className={cn(isCarousel ? titleWrapperClass[overflowBreak] : 'mb-8', 'lg:py-4')}
-        textClassName={isCarousel ? titleTextClass[overflowBreak] : undefined}
-      />
+    <>
+      <div className="container">
+        <SectionTitle
+          title={title}
+          arrow={isCarousel ? arrowClass[overflowBreak] : false}
+          className={cn(isCarousel ? titleWrapperClass[overflowBreak] : 'mb-8', 'lg:py-4')}
+          textClassName={isCarousel ? titleTextClass[overflowBreak] : undefined}
+        />
+      </div>
 
       {isCarousel ? (
         <CardScroller>
@@ -96,12 +100,12 @@ export const RegularVariant: React.FC<{
           ))}
         </CardScroller>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
+        <div className="container grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
           {items.map((card, i) => (
             <CardItem key={card.id ?? i} card={card} />
           ))}
         </div>
       )}
-    </div>
+    </>
   )
 }

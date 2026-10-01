@@ -153,10 +153,14 @@ export const BigVariant: React.FC<{
 
   const isCarousel = layout === 'carousel'
 
+  // The scroller sits outside the container on purpose: it spans the page and
+  // pads itself back in to the container's content edge. See CardScroller.
   return (
-    <div className="container">
-      {/* Default SectionTitle sizing on purpose — this variant does not restyle it. */}
-      <SectionTitle title={title} className="py-4" />
+    <>
+      <div className="container">
+        {/* Default SectionTitle sizing on purpose — this variant does not restyle it. */}
+        <SectionTitle title={title} className="py-4" />
+      </div>
 
       {isCarousel ? (
         <CardScroller>
@@ -169,12 +173,12 @@ export const BigVariant: React.FC<{
           ))}
         </CardScroller>
       ) : (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="container grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           {cards.map((card, i) => (
             <BigCardItem key={card.id ?? i} card={card} />
           ))}
         </div>
       )}
-    </div>
+    </>
   )
 }
