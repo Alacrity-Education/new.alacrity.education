@@ -15,7 +15,12 @@ export function Card({
   return (
     <div
       className={cn(
-        'w-78 aspect-4/5 flex flex-col relative overflow-clip p-4 shadow-lg  rounded-2xl',
+        // The card fills whatever box it is given; the wrapper decides how wide
+        // that is. Setting a responsive width here instead made grid cells
+        // unfixable from outside — tailwind-merge does not treat a bare w-full
+        // as conflicting with md:w-sm, so the md width survived and grid cards
+        // stopped filling their cell above that breakpoint.
+        'w-full aspect-4/5 flex flex-col relative overflow-clip p-4 shadow-lg rounded-2xl',
         variant === 'base'
           ? 'bg-base-100 border-2 border-primary/20'
           : 'bg-primary border-2 border-primary-content/20',

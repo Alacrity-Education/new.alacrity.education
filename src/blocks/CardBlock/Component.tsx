@@ -3,7 +3,7 @@ import React from 'react'
 import type { CardBlock as CardBlockProps } from '@/payload-types'
 
 import { BigVariant } from './BigVariant'
-import { CarouselVariant } from './CarouselVariant'
+import { RegularVariant } from './RegularVariant'
 import { FeaturedVariant } from './FeaturedVariant'
 
 /**
@@ -11,10 +11,11 @@ import { FeaturedVariant } from './FeaturedVariant'
  * one branching renderer — FeaturedVariant is a client component (gsap
  * ScrollTrigger) and the others need not be.
  *
- * `variant` is null on rows predating the field; those are all carousels.
+ * `variant` is null on rows predating the field; those are all regular cards.
  */
 export const CardBlock: React.FC<CardBlockProps> = ({
   variant,
+  layout,
   title,
   cards,
   featuredCards,
@@ -24,9 +25,9 @@ export const CardBlock: React.FC<CardBlockProps> = ({
     case 'featured':
       return <FeaturedVariant title={title} cards={featuredCards} />
     case 'big':
-      return <BigVariant title={title} cards={bigCards} />
-    case 'carousel':
+      return <BigVariant title={title} cards={bigCards} layout={layout} />
+    case 'regular':
     default:
-      return <CarouselVariant title={title} cards={cards} />
+      return <RegularVariant title={title} cards={cards} layout={layout} />
   }
 }

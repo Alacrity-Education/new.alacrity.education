@@ -40,3 +40,31 @@ export function hasRichTextContent<T>(data: T | null | undefined): data is T {
     ?.children
   return Array.isArray(children) && children.some(nodeHasContent)
 }
+
+/**
+ * Flattens a Lexical field to plain text.
+ *
+ * For places that can only take a string — a lightbox caption, an alt
+ * attribute, a meta description — where the markup has nowhere to go. Block
+ * level nodes are joined with spaces so words from adjacent paragraphs do not
+ * run together.
+ */
+export function richTextToPlainText(data: unknown): string {
+  const walk = (node: LexicalNode | null | undefined): string => {
+    if (!node || typeof node !== 'object') return ''
+    if (typeof node.text === 'string') return node.text
+    if (Array.isArray(node.children)) return node.children.map(walk).join('')
+    return ''
+  }
+
+  const children = (data as { root?: { children?: LexicalNode[] } } | null | undefined)?.root
+    ?.children
+  if (!Array.isArray(children)) return ''
+
+  return children
+    .map(walk)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+}

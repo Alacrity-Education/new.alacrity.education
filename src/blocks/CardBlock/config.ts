@@ -40,15 +40,32 @@ export const CardBlock: Block = {
       name: 'variant',
       type: 'select',
       label: 'Variant',
-      defaultValue: 'carousel',
+      defaultValue: 'regular',
       options: [
-        { label: 'Carousel', value: 'carousel' },
+        { label: 'Regular', value: 'regular' },
         { label: 'Featured', value: 'featured' },
         { label: 'Big', value: 'big' },
       ],
       admin: {
         description:
-          'Carousel: horizontally scrolling cards. Featured: full-width cards that pin and scale on scroll (md and up). Big: see BigVariant.tsx.',
+          'Regular: standard cards. Featured: full-width cards that pin and scale on scroll (md and up). Big: large two-up cards.',
+      },
+    },
+    {
+      // Shared by regular and big: both render the same cards either as a
+      // horizontal scroller or as a grid, so one field drives both rather than
+      // two that would have to be kept in step.
+      name: 'layout',
+      type: 'select',
+      label: 'Layout',
+      defaultValue: 'grid',
+      options: [
+        { label: 'Grid', value: 'grid' },
+        { label: 'Carousel', value: 'carousel' },
+      ],
+      admin: {
+        condition: (_, siblingData) =>
+          siblingData?.variant === 'regular' || siblingData?.variant === 'big',
       },
     },
     {
@@ -62,7 +79,7 @@ export const CardBlock: Block = {
       name: 'cards',
       type: 'array',
       label: 'Cards',
-      admin: { condition: isVariant('carousel') },
+      admin: { condition: isVariant('regular') },
       fields: [
         {
           name: 'variant',
