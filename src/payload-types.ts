@@ -887,9 +887,11 @@ export interface CardBlock {
   title?: string | null;
   cards?:
     | {
-        variant?: ('base' | 'primary') | null;
         title: string;
         description?: string | null;
+        /**
+         * Fills the card behind the copy. Without one the card is plain primary.
+         */
         image?: (number | null) | Media;
         link: {
           type?: ('reference' | 'custom') | null;
@@ -905,10 +907,6 @@ export interface CardBlock {
               } | null);
           url?: string | null;
           label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'primary' | 'baseOverlap' | 'primaryOverlap') | null;
         };
         id?: string | null;
       }[]
@@ -1945,7 +1943,6 @@ export interface CardBlockSelect<T extends boolean = true> {
   cards?:
     | T
     | {
-        variant?: T;
         title?: T;
         description?: T;
         image?: T;
@@ -1957,7 +1954,6 @@ export interface CardBlockSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
-              appearance?: T;
             };
         id?: T;
       };

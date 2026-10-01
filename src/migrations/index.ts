@@ -17,6 +17,7 @@ import * as migration_20260912_180709_drop_inherits_from from './20260912_180709
 import * as migration_20260929_161156 from './20260929_161156';
 import * as migration_20261001_205718_rename_card_variant_add_layout from './20261001_205718_rename_card_variant_add_layout';
 import * as migration_20261002_001500_gallery_single_title from './20261002_001500_gallery_single_title';
+import * as migration_20261002_013000_card_single_treatment from './20261002_013000_card_single_treatment';
 
 export const migrations = [
   {
@@ -113,5 +114,10 @@ export const migrations = [
     up: migration_20261002_001500_gallery_single_title.up,
     down: migration_20261002_001500_gallery_single_title.down,
     name: '20261002_001500_gallery_single_title'
+  },
+  {
+    up: migration_20261002_013000_card_single_treatment.up,
+    down: migration_20261002_013000_card_single_treatment.down,
+    name: '20261002_013000_card_single_treatment'
   },
 ];
