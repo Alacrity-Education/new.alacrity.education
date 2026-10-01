@@ -220,9 +220,6 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
     imageVariant?: ('rectangle' | 'circle') | null;
-    /**
-     * Cover crops to fill the fixed 16:9 frame. Contain fits the whole image inside it, which suits logos and screenshots that must not lose their edges.
-     */
     mediaFit?: ('cover' | 'contain') | null;
   };
   layout: (
@@ -866,9 +863,7 @@ export interface LogoCarousel {
  * via the `definition` "GalleryBlock".
  */
 export interface GalleryBlock {
-  heading?: string | null;
-  headingHighlight?: string | null;
-  subtitle?: string | null;
+  title?: string | null;
   images?:
     | {
         image: number | Media;
@@ -885,9 +880,10 @@ export interface GalleryBlock {
  */
 export interface CardBlock {
   /**
-   * Carousel: horizontally scrolling cards. Featured: full-width cards that pin and scale on scroll (md and up). Big: see BigVariant.tsx.
+   * Regular: standard cards. Featured: full-width cards that pin and scale on scroll (md and up). Big: large two-up cards.
    */
-  variant?: ('carousel' | 'featured' | 'big') | null;
+  variant?: ('regular' | 'featured' | 'big') | null;
+  layout?: ('grid' | 'carousel') | null;
   title?: string | null;
   cards?:
     | {
@@ -1426,9 +1422,6 @@ export interface PagesT {
       | null;
     media?: (number | null) | Media;
     imageVariant?: ('rectangle' | 'circle') | null;
-    /**
-     * Cover crops to fill the fixed 16:9 frame. Contain fits the whole image inside it, which suits logos and screenshots that must not lose their edges.
-     */
     mediaFit?: ('cover' | 'contain') | null;
   };
   layout?:
@@ -1931,9 +1924,7 @@ export interface LogoCarouselSelect {
  * via the `definition` "GalleryBlock_select".
  */
 export interface GalleryBlockSelect<T extends boolean = true> {
-  heading?: T;
-  headingHighlight?: T;
-  subtitle?: T;
+  title?: T;
   images?:
     | T
     | {
@@ -1949,6 +1940,7 @@ export interface GalleryBlockSelect<T extends boolean = true> {
  */
 export interface CardBlockSelect<T extends boolean = true> {
   variant?: T;
+  layout?: T;
   title?: T;
   cards?:
     | T

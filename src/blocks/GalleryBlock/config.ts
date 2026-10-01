@@ -5,22 +5,9 @@ export const GalleryBlock: Block = {
   interfaceName: 'GalleryBlock',
   fields: [
     {
-      name: 'heading',
+      name: 'title',
       type: 'text',
-      label: 'Main Heading',
-      defaultValue: 'Our Impact.',
-    },
-    {
-      name: 'headingHighlight',
-      type: 'text',
-      label: 'Heading Highlight (in primary color)',
-      defaultValue: 'In Pictures.',
-    },
-    {
-      name: 'subtitle',
-      type: 'text',
-      label: 'Subtitle',
-      defaultValue: 'Some pictures from our projects.',
+      label: 'Section Title',
     },
     {
       name: 'images',

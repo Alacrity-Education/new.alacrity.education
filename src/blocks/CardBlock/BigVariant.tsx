@@ -4,6 +4,7 @@ import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 import { SectionTitle } from '@/components/SectionTitle'
+import { CardScroller, cardScrollerItem } from '@/components/primitives/CardScroller'
 import { cn } from '@/utilities/ui'
 
 import type { CardBlock as CardBlockProps } from '@/payload-types'
@@ -146,19 +147,34 @@ const BigCardItem: React.FC<{ card: BigCard }> = ({ card }) => {
 export const BigVariant: React.FC<{
   title?: string | null
   cards?: BigCards | null
-}> = ({ title, cards }) => {
+  layout?: CardBlockProps['layout']
+}> = ({ title, cards, layout }) => {
   if (!cards?.length) return null
+
+  const isCarousel = layout === 'carousel'
 
   return (
     <div className="container">
       {/* Default SectionTitle sizing on purpose — this variant does not restyle it. */}
       <SectionTitle title={title} className="py-4" />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-        {cards.map((card, i) => (
-          <BigCardItem key={card.id ?? i} card={card} />
-        ))}
-      </div>
+      {isCarousel ? (
+        <CardScroller>
+          {cards.map((card, i) => (
+            // Wider than a regular card: these carry a whole copy block, and at
+            // the carousel's one-up width they would otherwise read as cramped.
+            <div key={card.id ?? i} className={cn(cardScrollerItem, 'w-[85vw] sm:w-sm lg:w-md')}>
+              <BigCardItem card={card} />
+            </div>
+          ))}
+        </CardScroller>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+          {cards.map((card, i) => (
+            <BigCardItem key={card.id ?? i} card={card} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

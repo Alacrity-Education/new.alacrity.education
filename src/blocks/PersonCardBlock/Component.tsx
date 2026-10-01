@@ -5,6 +5,7 @@ import { getMediaUrl } from '@/utilities/getMediaUrl'
 import type { PersonCardBlock as PersonCardBlockProps, Member } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { SectionTitle } from '@/components/SectionTitle'
+import { CardScroller, cardScrollerItem } from '@/components/primitives/CardScroller'
 import Image from 'next/image'
 import { cn } from '@/utilities/ui'
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
@@ -123,9 +124,12 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
     xl: 'text-xl shrink-0 ',
     always: 'text-xl shrink-0 ',
   }
-//sm:w-[calc(50%-40px)] lg:w-[calc(33.33%-53px)] xl:w-[calc(25%-60px)]  max-w-xs
-  const cardWrapperClass =
-    'shrink-0 snap-center  py-6 overflow-visible aspect-4/5 min-w-xs md:min-w-sm'
+  // snap-start, not snap-center: the first and last card cannot centre without
+  // overscroll, so centring leaves them sitting half out of view.
+  const cardWrapperClass = cn(
+    cardScrollerItem,
+    'overflow-visible aspect-4/5 min-w-xs md:min-w-sm',
+  )
 
   return (
     <section className="container">
@@ -136,15 +140,13 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
         textClassName={titleTextClass[overflowBreak]}
       />
 
-      <div className="-my-8">
-        <div className="flex flex-row gap-2 sm:gap-10 md:gap-16 lg:gap-20 px-2 py-4 overflow-x-auto snap-x snap-mandatory">
-          {resolvedMembers.map((member) => (
-            <div key={member.id} className={cardWrapperClass}>
-              <PersonCard member={member} />
-            </div>
-          ))}
-        </div>
-      </div>
+      <CardScroller gapClassName="gap-6 sm:gap-10 md:gap-16 lg:gap-20">
+        {resolvedMembers.map((member) => (
+          <div key={member.id} className={cardWrapperClass}>
+            <PersonCard member={member} />
+          </div>
+        ))}
+      </CardScroller>
 
       {links && links.length > 0 && (
         <div className="flex justify-center gap-4 mt-8">
