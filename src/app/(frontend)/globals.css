@@ -151,6 +151,31 @@
   @variant xl { .container { max-width: var(--breakpoint-xl); } }
   @variant 2xl { .container { max-width: var(--breakpoint-2xl); } }
 
+  /* A row that spans the page but starts where .container's content starts, so
+     it lines up with the copy above it at rest and only reaches the screen edge
+     once scrolled. The start padding reproduces what margin-inline:auto gives
+     .container, which is why the two sit together — change them together.
+
+     Percentages resolve against this element's own width, i.e. the page width.
+     A 100vw break-out cannot do that: vw counts the scrollbar the page width
+     does not, so it lands half a scrollbar off and overflows by the same. */
+  .bleed-row {
+    --bleed-max: 100%;
+    --bleed-gutter: 1rem;
+    --bleed-inset: calc((100% - min(100%, var(--bleed-max))) / 2 + var(--bleed-gutter));
+
+    padding-inline-start: var(--bleed-inset);
+    padding-inline-end: var(--bleed-gutter);
+    /* Must match the start padding, or a snapped card parks underneath it. */
+    scroll-padding-inline-start: var(--bleed-inset);
+  }
+
+  @variant sm { .bleed-row { --bleed-max: var(--breakpoint-sm); } }
+  @variant md { .bleed-row { --bleed-max: var(--breakpoint-md); --bleed-gutter: 2rem; } }
+  @variant lg { .bleed-row { --bleed-max: var(--breakpoint-lg); } }
+  @variant xl { .bleed-row { --bleed-max: var(--breakpoint-xl); } }
+  @variant 2xl { .bleed-row { --bleed-max: var(--breakpoint-2xl); } }
+
   /* Reading measure. Put this on text columns, not on the container. */
   .measure { max-width: 68ch; }
 
