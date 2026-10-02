@@ -24,7 +24,12 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, mediaFit,
       </div>
 
       <div className="hero min-h-[48vh] sm:min-h-[52vh] pt-16 sm:pt-20 pb-14 sm:pb-18">
-        <div className="hero-content flex-col w-full max-w-3xl px-4 text-center gap-0 relative z-10">
+        {/* Widens once there is room for it: 3xl is a comfortable measure on a
+            laptop but leaves the hero image undersized from lg up. The gutter
+            steps up with it, to .container's — at exactly lg the hero fills the
+            viewport, and without it the image would sit 16px from the edge
+            while everything below it sits at 32px. */}
+        <div className="hero-content flex-col w-full max-w-3xl lg:max-w-5xl px-4 lg:px-8 text-center gap-0 relative z-10">
 
           {hasMedia && (
             <div className="w-full mb-8 sm:mb-10 group">
