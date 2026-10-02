@@ -2869,7 +2869,7 @@ export interface Footer {
   tagline?: string | null;
   socialLinks?:
     | {
-        platform: 'instagram' | 'linkedin' | 'facebook' | 'youtube' | 'twitter';
+        platform: 'instagram' | 'linkedin' | 'facebook' | 'youtube' | 'twitter' | 'github';
         url: string;
         id?: string | null;
       }[]

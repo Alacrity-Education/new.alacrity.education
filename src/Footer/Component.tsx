@@ -2,7 +2,7 @@ import { getCachedGlobal } from '@/utilities/getGlobals'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { LuFacebook, LuInstagram, LuLinkedin, LuX, LuYoutube } from "react-icons/lu";
+import { LuFacebook, LuGithub, LuInstagram, LuLinkedin, LuX, LuYoutube } from "react-icons/lu";
 
 import type { Footer } from '@/payload-types'
 import { Logo } from '@/components/Logo/Logo'
@@ -17,6 +17,7 @@ const SocialIcon = ({ platform }: { platform: string }) => {
     case 'facebook':  return <LuFacebook className={cls} />
     case 'youtube':   return <LuYoutube className={cls} />
     case 'twitter':   return <LuX className={cls} />
+    case 'github':    return <LuGithub className={cls} />
     default:          return null
   }
 }

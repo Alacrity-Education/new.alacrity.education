@@ -18,6 +18,8 @@ import * as migration_20260929_162915_templates_0_5_1 from './20260929_162915_te
 import * as migration_20261001_205718_rename_card_variant_add_layout from './20261001_205718_rename_card_variant_add_layout';
 import * as migration_20261002_001500_gallery_single_title from './20261002_001500_gallery_single_title';
 import * as migration_20261002_013000_card_single_treatment from './20261002_013000_card_single_treatment';
+import * as migration_20261002_154500_footer_github from './20261002_154500_footer_github';
+import * as migration_20261002_160000_footer_link_url_nullable from './20261002_160000_footer_link_url_nullable';
 
 export const migrations = [
   {
@@ -119,5 +121,15 @@ export const migrations = [
     up: migration_20261002_013000_card_single_treatment.up,
     down: migration_20261002_013000_card_single_treatment.down,
     name: '20261002_013000_card_single_treatment'
+  },
+  {
+    up: migration_20261002_154500_footer_github.up,
+    down: migration_20261002_154500_footer_github.down,
+    name: '20261002_154500_footer_github'
+  },
+  {
+    up: migration_20261002_160000_footer_link_url_nullable.up,
+    down: migration_20261002_160000_footer_link_url_nullable.down,
+    name: '20261002_160000_footer_link_url_nullable'
   },
 ];
