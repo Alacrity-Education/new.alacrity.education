@@ -10,7 +10,7 @@ import { customConverters } from '@/components/RichText/CustomConverter'
 import { hasRichTextContent } from '@/utilities/richText'
 import { cn } from '@/utilities/ui'
 
-export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, mediaFit, richText }) => {
+export const MediumImpactHero: React.FC<Page['hero']> = ({ links, media, mediaFit, richText }) => {
   const hasMedia = media && typeof media === 'object'
   // Null on heroes saved before the field existed, so cover stays the default.
   const isContain = mediaFit === 'contain'
@@ -60,9 +60,13 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ cta, media, mediaFit,
             />
           )}
 
-          {cta?.selectCTA === 'Button' && cta.links && cta.links.length > 0 && (
+          {/* `links` is the hero's own link group, same field the high impact
+              hero renders. This used to read a `cta` group that the hero config
+              has never had, so the buttons could not appear however they were
+              filled in. */}
+          {links && links.length > 0 && (
             <div className="flex flex-row flex-wrap gap-3 mt-8 justify-center">
-              {cta.links.map(({ link }, i) => (
+              {links.map(({ link }, i) => (
                 <CMSLink key={i} size="lg" {...link} />
               ))}
             </div>
