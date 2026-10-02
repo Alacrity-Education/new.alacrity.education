@@ -73,6 +73,7 @@ export const Footer: GlobalConfig = {
             { label: 'Facebook', value: 'facebook' },
             { label: 'YouTube', value: 'youtube' },
             { label: 'Twitter / X', value: 'twitter' },
+            { label: 'GitHub', value: 'github' },
           ],
         },
         { name: 'url', type: 'text', required: true },
