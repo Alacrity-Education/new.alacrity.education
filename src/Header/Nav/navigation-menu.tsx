@@ -7,18 +7,76 @@ import { NavigationMenu as NavigationMenuPrimitive } from 'radix-ui'
 
 import { cn } from '@/utilities/ui'
 
+/**
+ * How long a panel opened by hover ignores a click on its own trigger.
+ *
+ * Radix opens on hover and toggles on click, so the ordinary gesture — move to
+ * an item, click it — opens the panel and shuts it again in one motion. Worse,
+ * it stays shut: the trigger's pointer-move handler will not reopen a menu it
+ * just click-closed until the pointer leaves and comes back, so the panel
+ * reads as having vanished while the cursor sits right on it.
+ *
+ * Half a second covers the click that trails a hover without taking the toggle
+ * away — past the window a click still closes, as it should.
+ */
+const HOVER_OPEN_GRACE_MS = 500
+
+type TriggerGuard = {
+  /** Whether a click closing the open panel should be swallowed right now. */
+  shouldIgnoreCloseClick: () => boolean
+  /** Marks the open a click is about to cause, so that panel is not guarded. */
+  markOpenedByClick: () => void
+}
+
+const TriggerGuardContext = React.createContext<TriggerGuard | null>(null)
+
 function NavigationMenu({
   className,
   children,
   viewport = true,
   viewportClassName,
   viewportWrapperClassName,
+  onValueChange,
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
   viewport?: boolean
   viewportClassName?: string
   viewportWrapperClassName?: string
 }) {
+  // When the open panel appeared, and whether a click is what opened it. A
+  // click-opened panel is never guarded: that click was deliberate, so the
+  // next one should close it with no delay. Keyboard Enter arrives as a click
+  // too, which is why tabbing to a trigger and toggling it stays instant.
+  const openedAtRef = React.useRef(0)
+  const openedByClickRef = React.useRef(false)
+  const pendingClickOpenRef = React.useRef(false)
+
+  // Radix calls this even though the root stays uncontrolled, so the guard can
+  // watch the open state without taking ownership of it.
+  const handleValueChange = React.useCallback(
+    (next: string) => {
+      if (next) {
+        openedAtRef.current = performance.now()
+        openedByClickRef.current = pendingClickOpenRef.current
+      }
+      pendingClickOpenRef.current = false
+      onValueChange?.(next)
+    },
+    [onValueChange],
+  )
+
+  const guard = React.useMemo<TriggerGuard>(
+    () => ({
+      shouldIgnoreCloseClick: () =>
+        !openedByClickRef.current &&
+        performance.now() - openedAtRef.current < HOVER_OPEN_GRACE_MS,
+      markOpenedByClick: () => {
+        pendingClickOpenRef.current = true
+      },
+    }),
+    [],
+  )
+
   return (
     <NavigationMenuPrimitive.Root
       data-slot="navigation-menu"
@@ -27,9 +85,10 @@ function NavigationMenu({
         'group/navigation-menu relative flex max-w-max flex-1 items-center justify-center',
         className,
       )}
+      onValueChange={handleValueChange}
       {...props}
     >
-      {children}
+      <TriggerGuardContext.Provider value={guard}>{children}</TriggerGuardContext.Provider>
       {viewport && (
         <NavigationMenuViewport
           className={viewportClassName}
@@ -75,12 +134,29 @@ const navigationMenuTriggerStyle = cva(
 function NavigationMenuTrigger({
   className,
   children,
+  onClick,
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
+  const guard = React.useContext(TriggerGuardContext)
+
+  // Radix composes handlers and skips its own once the default is prevented,
+  // so preventDefault here is what stops the toggle — see its Trigger onClick.
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event)
+    if (event.defaultPrevented || !guard) return
+
+    if (event.currentTarget.dataset.state === 'open') {
+      if (guard.shouldIgnoreCloseClick()) event.preventDefault()
+    } else {
+      guard.markOpenedByClick()
+    }
+  }
+
   return (
     <NavigationMenuPrimitive.Trigger
       data-slot="navigation-menu-trigger"
       className={cn(navigationMenuTriggerStyle(), 'group', className)}
+      onClick={handleClick}
       {...props}
     >
       {children}{' '}
