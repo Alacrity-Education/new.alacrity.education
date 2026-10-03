@@ -6,10 +6,12 @@ import {
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  TextStateFeature,
   UploadFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { link } from '@/fields/link'
+import { textColorStates } from '@/fields/textColors'
 import { Banner } from '@/blocks/Banner/config'
 import { Code } from '@/blocks/Code/config'
 import { MapBlock } from '@/blocks/Map/config'
@@ -48,6 +50,9 @@ const columnFields: Field[] = [
           ...rootFeatures,
           ...defaultFeatures,
           HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          // Just these two, not Payload's default swatch grid — the point is a
+          // couple of deliberate house treatments, not a colour picker.
+          TextStateFeature({ state: { color: textColorStates } }),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
           UploadFeature(),
