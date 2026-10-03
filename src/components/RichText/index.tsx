@@ -24,6 +24,7 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { MapBlockInline } from '@/blocks/Map/MapBlockInline'
 import { cn } from '@/utilities/ui'
 import { customConverters } from '@/components/RichText/CustomConverter'
+import { textColorClasses, type TextColor } from '@/fields/textColors'
 
 type NodeTypes =
   | DefaultNodeTypes
@@ -41,6 +42,28 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...LinkJSXConverter({ internalDocToHref }),
+
+  /**
+   * Paints the colour an editor picked with TextStateFeature. Inert for every
+   * editor that does not have the feature, since nothing sets `$.color` there.
+   *
+   * It delegates before it wraps: the default converter is what turns the
+   * format bitmask into <strong>, <em>, <code> and the rest, so replacing it
+   * outright would silently drop every one of them.
+   */
+  text: (args) => {
+    const renderDefault = defaultConverters.text as
+      | ((a: typeof args) => React.ReactNode)
+      | undefined
+    const rendered = renderDefault?.(args) ?? args.node.text
+
+    const color = (args.node as { $?: { color?: string } }).$?.color
+    const className = color ? textColorClasses[color as TextColor] : undefined
+    if (!className) return rendered
+
+    return <span className={className}>{rendered}</span>
+  },
+
   blocks: {
     banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
     mediaBlock: ({ node }) => (

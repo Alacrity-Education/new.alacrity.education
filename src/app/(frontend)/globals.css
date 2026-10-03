@@ -667,6 +667,75 @@
 }
 
 
+/* .mark-primary — the plain house colour for a run of text.
+
+   The descendant selector is doing real work: inside .prose-alacrity the
+   typography plugin sets its own colour on strong, em and code, and a rule on
+   the element beats a colour inherited from the span wrapping it. Without it,
+   bolding part of a coloured run silently drops the colour. */
+
+.mark-primary,
+.mark-primary * {
+  color: var(--color-primary);
+}
+
+
+/* .mark-highlight — .mark-burn's lighter, stiller sibling.
+
+   Every stop sits a step up the scale from the burn, and nothing animates it.
+   Both are deliberate: this one goes in body copy, where heat travelling
+   through the words pulls the eye off the sentence it is meant to be reading. */
+
+.mark-highlight {
+  /* A step lighter than the scale goes, so brand-500 is lifted toward the
+     brand-200 wash. 4.83:1 on base-100 — the lightest this can be and still
+     clear AA for body text, which binds harder here than on .mark-burn:
+     the gradient never moves, so whichever glyphs land on the peak stay
+     there. */
+  --highlight-peak: color-mix(in srgb, var(--color-brand-500) 85%, var(--color-brand-200));
+
+  /* Same 100deg tilt as the burn, so the two read as one family. */
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-700) 0%,
+    var(--color-brand-500) 30%,
+    var(--highlight-peak) 50%,
+    var(--color-brand-500) 70%,
+    var(--color-brand-700) 100%
+  );
+
+  /* 100%, not the burn's 320%: the gradient spans the run once and stops
+     there. No background-size headroom means there is nothing to sweep. */
+  background-size: 100% 100%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  padding-inline: 0.04em;
+}
+
+/* Transparent fill kills the selection highlight. Restore it. */
+.mark-highlight::selection {
+  -webkit-text-fill-color: var(--color-brand-900);
+  color: var(--color-brand-900);
+  background: var(--color-brand-200);
+}
+
+/* Without background-clip:text the text renders invisible.
+   Never let the fallback be nothing. */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .mark-highlight {
+    color: var(--color-brand-500);
+    -webkit-text-fill-color: var(--color-brand-500);
+    background-image: none;
+  }
+}
+
+
 .progressive-blur-container > .blur-filter:nth-child(7) {
   backdrop-filter: blur(2px);
   mask: linear-gradient(rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 50%);
