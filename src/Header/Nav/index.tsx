@@ -11,7 +11,7 @@ import RichText from '@/components/RichText'
 import { cn } from '@/utilities/ui'
 import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
 import { IoIosClose } from 'react-icons/io'
-import { IoClose } from 'react-icons/io5'
+import { IoChevronBack, IoChevronForward, IoClose } from 'react-icons/io5'
 
 import {
   NavigationMenu,
@@ -185,27 +185,71 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
 }
 
 // ---------------------------------------------------------------------------
-// Mobile — unchanged sidebar behaviour, columns flattened into one stack
+// Mobile — a drawer that pushes: tapping a parent slides its links in over the
+// top-level list, rather than expanding underneath it
 // ---------------------------------------------------------------------------
 
 const MOBILE_DIALOG_ID = 'header-mobile-nav'
+
+/** Matches the drawer's own 300ms slide, so panel and drawer never look out of step. */
+const PANEL_SLIDE = 'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]'
+
+/** Every panel fills the drawer and scrolls on its own. */
+const PANEL_BASE = 'absolute inset-0 overflow-y-auto overflow-x-hidden px-2 pb-6'
+
+const MobileNavLink: React.FC<{ item: NavColumnLink }> = ({ item }) => (
+  <li>
+    <CMSLink {...item.link} appearance={'inline'} className={cn('block w-full', ITEM_BOX)}>
+      <RichText
+        data={item.content}
+        enableGutter={false}
+        enableProse={false}
+        className={cn('max-w-none invert', itemTypography('sidebar'))}
+      />
+    </CMSLink>
+  </li>
+)
+
 export const MobileHeaderNav: React.FC<{ data: HeaderType, highlightButton?: HighlightButtonType }> = ({ data, highlightButton }) => {
   const navItems = data?.navItems
+  const dialogRef = React.useRef<HTMLDialogElement>(null)
+  // Index of the parent that has taken over the drawer, or null for the
+  // top-level list.
+  const [openPanel, setOpenPanel] = useState<number | null>(null)
 
   if (!navItems?.length) {
     return null
   }
 
+  const openDrawer = () => {
+    // Reset on open, not on close: at close time the drawer is still sliding
+    // out, so snapping back to the top-level list happens in full view.
+    setOpenPanel(null)
+    dialogRef.current?.showModal()
+  }
+
+  /**
+   * Any link in the drawer closes it. Client-side navigation leaves the dialog
+   * mounted and open, so the drawer used to sit over the page the reader had
+   * just asked for.
+   *
+   * Delegated rather than wired per link: CMSLink takes no onClick, and one
+   * handler covers the highlight button, the top-level links and every panel
+   * link without each having to remember.
+   */
+  const closeOnLink = (event: React.MouseEvent<HTMLElement>) => {
+    if ((event.target as HTMLElement).closest('a[href]')) dialogRef.current?.close()
+  }
+
+  const panels = navItems
+    .map((item, index) => ({ item, index, columns: columnsOf(item) }))
+    .filter(({ item, columns }) => item.itemType === 'parent' && columns.length > 0)
+
+  const activeItem = openPanel === null ? null : navItems[openPanel]
+
   return (
     <div className={'navbar-end lg:hidden '}>
-      <button
-        className="btn btn-primary rounded-md"
-        aria-label="Open navigation"
-        onClick={() => {
-          const dialog = document.getElementById(MOBILE_DIALOG_ID) as HTMLDialogElement | null
-          dialog?.showModal()
-        }}
-      >
+      <button className="btn btn-primary rounded-md" aria-label="Open navigation" onClick={openDrawer}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"
@@ -227,81 +271,105 @@ export const MobileHeaderNav: React.FC<{ data: HeaderType, highlightButton?: Hig
           on purpose — it sat on .modal and killed the `visibility .3s
           allow-discrete` transition, so the drawer slid IN but vanished
           instantly on close instead of sliding back out. */}
-      <dialog id={MOBILE_DIALOG_ID} className="modal modal-start">
+      <dialog ref={dialogRef} id={MOBILE_DIALOG_ID} className="modal modal-start">
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>
-        <div className="modal-box rounded-none p-2 bg-base-200/80 backdrop-blur-sm h-max max-h-screen min-h-screen overflow-y-auto overflow-x-clip w-screen sm:w-80 max-w-screen">
-          <div className="fixed top-5 right-0 w-full px-5">
-            <form method="dialog" className={'flex flex-row w-full items-center'}>
+        {/* A column, not a scroll box: the header stays put and each panel does
+            its own scrolling, so sliding between them never moves the header. */}
+        <div className="modal-box flex flex-col rounded-none p-0 bg-base-200/80 backdrop-blur-sm h-screen max-h-screen min-h-screen overflow-hidden w-screen sm:w-80 max-w-screen">
+          <div className="flex shrink-0 flex-row items-center gap-1 px-5 py-5">
+            {activeItem ? (
+              <button
+                type="button"
+                onClick={() => setOpenPanel(null)}
+                className="flex items-center gap-1 text-primary text-2xl"
+                aria-label="Back to the main menu"
+              >
+                <IoChevronBack className="text-xl" />
+                <span className="truncate">{activeItem.label || 'Menu'}</span>
+              </button>
+            ) : (
               <div className={'text-primary text-2xl'}>Navigation</div>
-              <div className={'grow'}></div>
+            )}
+            <div className={'grow'}></div>
+            <form method="dialog" className="flex items-center">
               <button className="text-3xl text-primary" aria-label="Close navigation">
                 <IoClose />
               </button>
             </form>
           </div>
 
-          <ul className="menu w-full h-full pt-14">
-            <li className='pb-4'>
-                   <CMSLink {...highlightButton?.link} className='w-full' />
-            </li>
-            {navItems.map((item, i) => {
-              if (item.itemType === 'parent') {
-                const columns = columnsOf(item)
-
-                if (!columns.length) return null
-
-                return (
-                  <li key={i}>
-                    <details>
-                      <summary className={'text-lg '}>
-                        {item.label || 'Menu'}
-                      </summary>
-                      <ul className="rounded-t-none p-2 dropdown-start">
-                        {columns.map((column, columnIdx) => (
-                          <React.Fragment key={columnIdx}>
-                            {column.heading && (
-                              <li className="menu-title px-2 pt-2 pb-1 text-xs tracking-[0.08em]  uppercase">
-                                {column.heading}
-                              </li>
-                            )}
-                            {(column.links || []).map((subItem, idx) => (
-                              <li key={idx}>
-                                <CMSLink
-                                  {...subItem.link}
-                                  appearance={'inline'}
-                                  className={cn('block w-full', ITEM_BOX)}
-                                >
-                                  <RichText
-                                    data={subItem.content}
-                                    enableGutter={false}
-                                    enableProse={false}
-                                    className={cn('max-w-none invert', itemTypography('sidebar'))}
-                                  />
-                                </CMSLink>
-                              </li>
-                            ))}
-                          </React.Fragment>
-                        ))}
-                      </ul>
-                    </details>
+          <div className="relative grow overflow-hidden" onClick={closeOnLink}>
+            {/* Top level. `inert` as well as the transform, so a panel that has
+                slid off is not still reachable by tab or screen reader. */}
+            <div
+              className={cn(PANEL_BASE, PANEL_SLIDE, openPanel === null ? 'translate-x-0' : '-translate-x-full')}
+              inert={openPanel !== null}
+            >
+              <ul className="menu w-full">
+                {highlightButton?.link && (
+                  <li className="pb-4">
+                    <CMSLink {...highlightButton.link} className="w-full" />
                   </li>
-                )
-              }
+                )}
+                {navItems.map((item, i) => {
+                  if (item.itemType === 'parent') {
+                    if (!columnsOf(item).length) return null
 
-              return (
-                <li key={i}>
-                  <CMSLink
-                    {...item.link}
-                    appearance={'inline'}
-                    className={'text-start text-lg text-primary-content invert'}
-                  />
-                </li>
-              )
-            })}
-          </ul>
+                    return (
+                      <li key={i}>
+                        <button
+                          type="button"
+                          onClick={() => setOpenPanel(i)}
+                          className="flex w-full flex-row items-center text-start text-lg"
+                        >
+                          <span className="grow">{item.label || 'Menu'}</span>
+                          <IoChevronForward className="shrink-0 text-base opacity-60" />
+                        </button>
+                      </li>
+                    )
+                  }
 
+                  return (
+                    <li key={i}>
+                      <CMSLink
+                        {...item.link}
+                        appearance={'inline'}
+                        className={'text-start text-lg text-primary-content invert'}
+                      />
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+
+            {/* One panel per parent, parked off the right edge until called for.
+                All of them stay mounted: the nav is a handful of links, and a
+                panel that mounts on tap has nothing to slide in from. */}
+            {panels.map(({ item, index, columns }) => (
+              <div
+                key={index}
+                className={cn(PANEL_BASE, PANEL_SLIDE, openPanel === index ? 'translate-x-0' : 'translate-x-full')}
+                inert={openPanel !== index}
+              >
+                <ul className="menu w-full">
+                  {columns.map((column, columnIdx) => (
+                    <React.Fragment key={columnIdx}>
+                      {column.heading && (
+                        <li className="menu-title px-2 pt-2 pb-1 text-xs tracking-[0.08em] uppercase">
+                          {column.heading}
+                        </li>
+                      )}
+                      {(column.links || []).map((subItem, idx) => (
+                        <MobileNavLink key={idx} item={subItem} />
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </dialog>
     </div>
