@@ -74,7 +74,24 @@ const TimelineEntry: React.FC<{ entry: Entry; index: number }> = ({ entry, index
       {/* The rail turns white as it crosses a highlighted entry. Same geometry
           as the shared rail, painted over the panel that just hid it. */}
       {highlighted && (
-        <div aria-hidden="true" className={cn(RAIL, 'inset-y-[-100px] rounded-full z-20 bg-linear-to-b from-brand-900 to-brand-900 via-base-100  ')} />
+        // Reaches less far above on small screens. 100px clears the section's
+        // own top padding, so on the first entry the rail used to come out
+        // above the block entirely and land on the section title — there is
+        // only ~12px between the two at phone widths. 40px still covers the
+        // panel, which extends 30px past the article, so the white segment
+        // still crosses it cleanly. The long reach comes back at lg, not md:
+        // at md the title still only cleared the rail by 4px. Stated as
+        // top/bottom rather than inset-y because twMerge does not treat the
+        // two as conflicting, so the override has to be on the same property
+        // to win.
+        <div
+          aria-hidden="true"
+          className={cn(
+            RAIL,
+            '-top-[40px] -bottom-[100px] lg:-top-[100px]',
+            'rounded-full z-20 bg-linear-to-b from-brand-900 to-brand-900 via-base-100',
+          )}
+        />
       )}
       <div className={cn(BADGE, 'bg-brand-500 text-primary-content ',highlighted && "bg-base-300 text-primary",  eyebrow && "top-5")} aria-hidden="true">
         <span className="text-lg font-semibold leading-none">{index + 1}</span>
