@@ -13,7 +13,6 @@ import { hasRichTextContent } from '@/utilities/richText'
 type BigCards = NonNullable<CardBlockProps['bigCards']>
 type BigCard = BigCards[number]
 
-
 const imageTint = 'bg-linear-to-b from-primary/95 via-primary/88 to-primary/80'
 
 /**
@@ -22,15 +21,13 @@ const imageTint = 'bg-linear-to-b from-primary/95 via-primary/88 to-primary/80'
  */
 const PARTIAL_IMAGE_BASIS = 'basis-3/5'
 
-
-
 /**
- * Two ratios: a taller 0.7 on small screens where the card owns the full
- * column, stepping to 0.9 from md. The breakpoint is md rather than the sm it
- * used to be, so the shape changes once, at the same width the rest of the
- * layout does.
+ * The same 4:5 the regular cards use. These were taller and wider than a
+ * regular card — 0.7 stepping to 0.9 from md, two across — and are now the
+ * same card at the same size; what still separates the variants is the content
+ * they take, not their footprint.
  */
-const CARD_ASPECT = 'aspect-[0.7] md:aspect-[0.9]'
+const CARD_ASPECT = 'aspect-4/5'
 
 /** Fixed proportions, so the two cards in a row always match. */
 const CARD_SHELL = cn(
@@ -41,7 +38,7 @@ const CARD_SHELL = cn(
 /** The copy layer for FullCard: stretches to own the whole card. */
 const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
   // z-20 keeps the copy above the tint (z-10) and the image (absolute, z-auto).
-  <div className="relative z-20 flex min-h-0 flex-1 flex-col p-8 sm:p-10 lg:p-12">
+  <div className="relative z-20 flex min-h-0 flex-1 flex-col p-6 lg:p-8">
     {hasRichTextContent(card.richText) && (
       // Sizes come from .prose-alacrity, same as every other rich text field in
       // the app. `prose-on-primary` repoints only the colour palette.
@@ -51,7 +48,6 @@ const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
         className="prose-on-primary prose-md mx-0"
       />
     )}
-
 
     {card.link && (
       <CMSLink
@@ -89,10 +85,9 @@ const FullCard: React.FC<{ card: BigCard }> = ({ card }) => (
   </article>
 )
 
-
 const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
   <article className={CARD_SHELL}>
-    <div className={cn('relative z-20 flex shrink-0 flex-col', "px-6 sm:px-10 lg:px-12 pt-8 sm:pt-10 lg:pt-12")}>
+    <div className={cn('relative z-20 flex shrink-0 flex-col', 'px-6 pt-6 lg:px-8 lg:pt-8')}>
       {hasRichTextContent(card.richText) && (
         <RichText
           data={card.richText}
@@ -104,16 +99,12 @@ const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
         <CMSLink
           {...card.link}
           appearance="default"
-          size={"sm"}
+          size={'sm'}
           // No size class: inherits, so it tracks the surrounding text.
-          className={cn(
-            'w-max text-sm!',
-          )}
+          className={cn('w-max text-sm!')}
         />
       )}
     </div>
-
-
 
     {card.image && (
       <div className={cn('relative mt-auto w-full overflow-hidden', PARTIAL_IMAGE_BASIS)}>
@@ -124,8 +115,6 @@ const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
         />
       </div>
     )}
-
-
   </article>
 )
 
@@ -165,15 +154,16 @@ export const BigVariant: React.FC<{
       {isCarousel ? (
         <CardScroller>
           {cards.map((card, i) => (
-            // Wider than a regular card: these carry a whole copy block, and at
-            // the carousel's one-up width they would otherwise read as cramped.
-            <div key={card.id ?? i} className={cn(cardScrollerItem, 'w-[85vw] sm:w-sm lg:w-md')}>
+            // The regular carousel's own widths, before that variant was taken
+            // down a step. These carry a whole copy block, so they keep the
+            // larger of the two.
+            <div key={card.id ?? i} className={cn(cardScrollerItem, 'w-xs md:w-sm')}>
               <BigCardItem card={card} />
             </div>
           ))}
         </CardScroller>
       ) : (
-        <div className="container grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="container grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
           {cards.map((card, i) => (
             <BigCardItem key={card.id ?? i} card={card} />
           ))}
