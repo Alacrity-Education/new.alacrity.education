@@ -83,6 +83,12 @@ export default function GalleryContent({ title, images }: GalleryContentProps) {
         // Arrows and keyboard navigation are core behaviour; captions are only
         // shown for slides that actually carry one.
         captions={{ showToggle: true, descriptionTextAlign: 'center' }}
+        // The counter ships pinned to the top left, which is exactly where the
+        // captions plugin puts the slide title — a full-width bar on its own
+        // dark ground, so the count read as sitting behind the caption. Moving
+        // it to the bottom left clears the title; the description down there is
+        // centred, so the corner stays free.
+        counter={{ container: { style: { top: 'unset', bottom: 0 } } }}
         carousel={{ finite: true }}
       />
     </div>
