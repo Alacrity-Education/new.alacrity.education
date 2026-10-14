@@ -14,17 +14,22 @@ import { hasRichTextContent } from '@/utilities/richText'
 type FeaturedCards = NonNullable<CardBlockProps['featuredCards']>
 
 /**
- * Tailwind's `md`, verbatim. The GSAP query and every `md:` class below have to
+ * Tailwind's `lg`, verbatim. The GSAP query and every `lg:` class below have to
  * agree exactly: at any width where they disagree you get the stacked layout
  * with the pinned parallax, or the row layout without it. The old 800px query
  * sat between two breakpoints and did exactly that.
  *
- * Written in rem, not the 768px it currently resolves to, because Tailwind
- * emits `@media (width >= 48rem)` — so the boundary moves with the root font
+ * This was `md` until md was handed the small-screen layout. The whole
+ * breakpoint moved together rather than just the flex direction, because the
+ * side-by-side layout and the pinning are one design: a tall stacked card,
+ * pinned, is the mismatch the paragraph above warns about.
+ *
+ * Written in rem, not the 1024px it currently resolves to, because Tailwind
+ * emits `@media (width >= 64rem)` — so the boundary moves with the root font
  * size. A reader who has bumped their browser's default font would otherwise
  * cross the CSS breakpoint and the JS one at two different widths.
  */
-const PARALLAX_QUERY = '(min-width: 48rem)'
+const PARALLAX_QUERY = '(min-width: 64rem)'
 
 export const FeaturedVariant: React.FC<{
   title?: string | null
@@ -40,7 +45,7 @@ export const FeaturedVariant: React.FC<{
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia()
 
-      // Parallax is md-and-up only. Below that the cards are a plain vertical
+      // Parallax is lg-and-up only. Below that the cards are a plain vertical
       // stack, so there is no second branch here: matchMedia reverts every pin
       // and transform on its own when the query stops matching, which also
       // covers resizing down across the breakpoint.
@@ -114,7 +119,7 @@ export const FeaturedVariant: React.FC<{
           where the pinning does — below md it would just be dead space. */}
       <section
         ref={containerRef}
-        className="container relative pb-16 md:pb-[40lvh]  gsap-section-wrapper"
+        className="container relative pb-16 lg:pb-[40lvh]  gsap-section-wrapper"
       >
         <SectionTitle
           ref={titleRef}
@@ -126,18 +131,18 @@ export const FeaturedVariant: React.FC<{
           className="relative z-10 py-4 h-fit bg-transparent"
         />
 
-        {/* Real gap between stacked cards; at md+ the pins overlap them by
+        {/* Real gap between stacked cards; at lg+ the pins overlap them by
             design and the per-card margins take over. */}
-        <div className="flex flex-col gap-8 md:gap-0 mt-8 items-center">
+        <div className="flex flex-col gap-8 lg:gap-0 mt-8 items-center">
           {(cards || []).map((card, i) => (
             <div
               key={i}
-              className="gsap-card-wrapper relative w-full md:mb-[40lvh] md:last:mb-[15lvh] md:[perspective:1000px]"
+              className="gsap-card-wrapper relative w-full lg:mb-[40lvh] lg:last:mb-[15lvh] lg:[perspective:1000px]"
             >
               <div className="gsap-card w-full h-max rounded-2xl border-4 border-primary/50 bg-base-100 shadow-xl overflow-hidden">
                 {/* flex-col-reverse puts the gallery above the text while
                     keeping the text first in the DOM and reading order. */}
-                <div className="flex flex-col-reverse md:flex-row h-max p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 gap-8 md:gap-6">
+                <div className="flex flex-col-reverse lg:flex-row h-max p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 gap-8 lg:gap-6">
                   <div className="flex flex-col flex-1 min-w-0 ">
                     {hasRichTextContent(card.richText) && (
                       <RichText
@@ -150,7 +155,7 @@ export const FeaturedVariant: React.FC<{
                     <div className="flex-1" />
 
                     {card.links && card.links.length > 0 && (
-                      <div className="flex flex-row flex-wrap gap-4 pt-4 justify-end md:justify-start">
+                      <div className="flex flex-row flex-wrap gap-4 pt-4 justify-end lg:justify-start">
                         {card.links.map(({ link }, j) => (
                           <CMSLink key={j} size={'lg'} {...link} />
                         ))}
@@ -159,7 +164,12 @@ export const FeaturedVariant: React.FC<{
                   </div>
 
                   {card.gallery && card.gallery.length > 0 && (
-                    <div className="w-full md:w-2/5 shrink-0">
+                    // w-[32%] where it used to be w-2/5: the photo stack is
+                    // square, so taking four fifths of its width takes four
+                    // fifths of its diagonal too — a fifth off the picture.
+                    // The card follows it down, since from lg the stack is
+                    // what the card is as tall as, not the copy beside it.
+                    <div className="w-full lg:w-[32%] shrink-0">
                       <ImageStack images={card.gallery} />
                     </div>
                   )}
