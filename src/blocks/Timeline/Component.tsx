@@ -99,7 +99,7 @@ const TimelineEntry: React.FC<{ entry: Entry; index: number }> = ({ entry, index
 
       <div
         aria-hidden="true"
-        className={cn("hidden absolute left-10 top-0 h-10 w-10 sm:w-20 z-10  bg-linear-to-r from-brand-900 to-transparent md:w-20 lg:block"
+        className={cn("hidden absolute left-10 top-0 h-10 w-10 sm:w-16 z-10  bg-linear-to-r from-brand-900 to-transparent md:w-16 lg:block"
           ,
           highlighted && "bg-linear-to-r from-base-100/50 to-transparent",
           eyebrow && "top-7"
