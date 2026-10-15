@@ -114,19 +114,13 @@ export const RegularVariant: React.FC<{
       {isCarousel ? (
         <CardScroller>
           {items.map((card, i) => (
-            // 0.8x the w-xs/w-sm these used to be. The aspect is fixed, so
-            // taking a fifth off the width takes a fifth off the diagonal.
-            <div key={card.id ?? i} className={cn(cardScrollerItem, 'w-64 md:w-[19.2rem]')}>
+            <div key={card.id ?? i} className={cn(cardScrollerItem, 'w-xs md:w-sm')}>
               <CardItem card={card} />
             </div>
           ))}
         </CardScroller>
       ) : (
-        // Four across at lg where it used to be three — a grid card has no
-        // width of its own to scale, so a column is how it gets smaller. Below
-        // lg the ramp is unchanged: at those widths the card is already close
-        // to full bleed, and taking a fifth off it there reads as a thumbnail.
-        <div className="container grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
+        <div className="container grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8">
           {items.map((card, i) => (
             <CardItem key={card.id ?? i} card={card} />
           ))}
