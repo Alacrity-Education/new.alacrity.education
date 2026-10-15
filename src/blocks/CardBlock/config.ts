@@ -81,16 +81,27 @@ export const CardBlock: Block = {
       label: 'Cards',
       admin: { condition: isVariant('regular') },
       fields: [
+        // Rich text rather than text/textarea, on the same editor the big
+        // cards use. The two variants hold their content in separate arrays,
+        // so a block that switches variant keeps both — but only if the
+        // shapes match: a lexical value pasted from a big card into a plain
+        // text field arrives as `[object Object]`.
+        //
+        // The card renders the title as an h2 and the description as body
+        // copy, scaled to the card by .prose-card. Headings above h2 are not
+        // on offer, same as the big card.
         {
           name: 'title',
-          type: 'text',
+          type: 'richText',
           label: 'Title',
           required: true,
+          editor: cardRichTextEditor,
         },
         {
           name: 'description',
-          type: 'textarea',
+          type: 'richText',
           label: 'Description',
+          editor: cardRichTextEditor,
         },
         {
           name: 'image',

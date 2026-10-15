@@ -4,6 +4,8 @@ import { CardScroller, cardScrollerItem } from '@/components/primitives/CardScro
 import { cn } from '@/utilities/ui'
 import { CMSLink } from '@/components/Link'
 import { SectionTitle } from '@/components/SectionTitle'
+import RichText from '@/components/RichText'
+import { hasRichTextContent } from '@/utilities/richText'
 
 import type { CardBlock as CardBlockProps } from '@/payload-types'
 
@@ -37,11 +39,22 @@ const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
 
     {/* Scaled down from the big card's p-8/10/12 — same inset, smaller card. */}
     <div className="relative z-20 flex min-h-0 flex-1 flex-col p-6 lg:p-8">
-      <h3 className="text-lg font-bold leading-snug text-primary-content lg:text-3xl">
-        {card.title}
-      </h3>
-      {card.description && (
-        <p className="mt-1 text-sm text-primary-content/70 lg:text-lg">{card.description}</p>
+      {/* Both fields are rich text now, the same shape the big cards hold.
+          prose-card does the scaling: the title's h2 and the description's
+          paragraphs come down to the sizes this card used as plain markup. */}
+      {hasRichTextContent(card.title) && (
+        <RichText
+          data={card.title}
+          enableGutter={false}
+          className="prose-on-primary prose-card mx-0"
+        />
+      )}
+      {hasRichTextContent(card.description) && (
+        <RichText
+          data={card.description}
+          enableGutter={false}
+          className="prose-on-primary prose-card prose-card-muted mx-0 mt-1"
+        />
       )}
 
       {card.link?.label && (

@@ -20,6 +20,7 @@ import * as migration_20261002_001500_gallery_single_title from './20261002_0015
 import * as migration_20261002_013000_card_single_treatment from './20261002_013000_card_single_treatment';
 import * as migration_20261002_154500_footer_github from './20261002_154500_footer_github';
 import * as migration_20261002_160000_footer_link_url_nullable from './20261002_160000_footer_link_url_nullable';
+import * as migration_20261015_234500_card_title_description_rich_text from './20261015_234500_card_title_description_rich_text';
 
 export const migrations = [
   {
@@ -131,5 +132,10 @@ export const migrations = [
     up: migration_20261002_160000_footer_link_url_nullable.up,
     down: migration_20261002_160000_footer_link_url_nullable.down,
     name: '20261002_160000_footer_link_url_nullable'
+  },
+  {
+    up: migration_20261015_234500_card_title_description_rich_text.up,
+    down: migration_20261015_234500_card_title_description_rich_text.down,
+    name: '20261015_234500_card_title_description_rich_text'
   },
 ];

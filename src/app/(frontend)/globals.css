@@ -576,6 +576,57 @@
   --tw-prose-td-borders: var(--color-primary-content);
 }
 
+/* ------------------------------------------------------------------
+   .prose-card — rich text scaled down to a regular card.
+
+   The card's title is an h2 and its description is body copy, which at
+   .prose-alacrity's own sizes means a clamp(2.25rem, 3vw, 2.75rem)
+   heading with 4rem above it inside a 280px card. This keeps the h2 an
+   h2 — display family, its weight, its tracking — and only resets what
+   the card cannot afford: size, leading and the block margins.
+
+   The sizes are the ones the card used before the fields became rich
+   text: text-lg stepping to text-3xl for the title, text-sm to text-lg
+   for the description.
+
+   Unlayered and doubled-class for the usual reason: .prose-alacrity's
+   own declarations are unlayered, so a Tailwind utility — prose-h2:text-lg
+   included — can never override them.
+   ------------------------------------------------------------------ */
+.prose-alacrity.prose-card :is(h1, h2, h3, h4) {
+  font-size: 1.125rem;
+  line-height: 1.25;
+  margin-block: 0;
+}
+
+.prose-alacrity.prose-card p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-block: 0;
+}
+
+/* A description can hold more than one paragraph; only the gap between
+   them needs space, never the edges — the card's padding owns those. */
+.prose-alacrity.prose-card p + p {
+  margin-top: 0.5rem;
+}
+
+@variant lg {
+  .prose-alacrity.prose-card :is(h1, h2, h3, h4) {
+    font-size: 1.875rem;
+  }
+
+  .prose-alacrity.prose-card p {
+    font-size: 1.125rem;
+  }
+}
+
+/* The description sat at primary-content/70 as plain markup. Only the body
+   colour moves — a link inside it still reads at full strength. */
+.prose-alacrity.prose-card-muted {
+  --tw-prose-body: color-mix(in oklab, var(--color-primary-content) 70%, transparent);
+}
+
 /* The few places .prose-alacrity paints a colour directly rather than
    through a --tw-prose-* variable. */
 .prose-alacrity.prose-on-primary :is(em, strong) {
