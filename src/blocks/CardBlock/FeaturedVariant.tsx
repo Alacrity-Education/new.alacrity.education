@@ -164,7 +164,12 @@ export const FeaturedVariant: React.FC<{
                   </div>
 
                   {card.gallery && card.gallery.length > 0 && (
-                    <div className="w-full lg:w-2/5 shrink-0">
+                    // w-[32%] where it used to be w-2/5: the photo stack is
+                    // square, so taking four fifths of its width takes four
+                    // fifths of its diagonal too — a fifth off the picture.
+                    // The card follows it down, since from lg the stack is
+                    // what the card is as tall as, not the copy beside it.
+                    <div className="w-full lg:w-[32%] shrink-0">
                       <ImageStack images={card.gallery} />
                     </div>
                   )}
