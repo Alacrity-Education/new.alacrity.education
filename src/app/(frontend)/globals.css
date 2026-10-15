@@ -277,7 +277,7 @@
      Only the base size and leading move across the breakpoint; everything
      downstream is in em — h3 1.5em, h4 1em, .lead 1.2em, code and table
      0.9em — so it rescales on its own.
-     At md+ the leading is 1.6 rather than prose-xl's own 1.8: 20px x 1.6 is
+     At lg+ the leading is 1.6 rather than prose-xl's own 1.8: 20px x 1.6 is
      the 2rem the app's old `leading-8` toggle set, and that pairing is what
      the rest of the styles assume. */
   font-family: var(--font-body);
@@ -287,11 +287,14 @@
   letter-spacing: 0;
 }
 
-/* Small screens read at the plugin's regular base; md and up step to its xl
-   size. Same shape as the .prose-md rule further down, which this now makes
+/* Everything below lg reads at the plugin's regular base; lg and up step to
+   its xl size. The step was at md until md was handed the small-screen
+   treatment elsewhere — a 20px body is wide copy's size, and at md the
+   container is still narrow enough that it runs short of words per line.
+   Same shape as the .prose-md rule further down, which this now makes
    redundant — that class was the opt-in for exactly this behaviour before it
    became the default. */
-@variant md {
+@variant lg {
   .prose-alacrity {
     font-size: 1.25rem;
     line-height: 1.6;
@@ -518,14 +521,14 @@
 
    .prose-alacrity is pinned to the xl step (20px) at every width, which
    is heavy on a phone. This drops it to the plugin's default step below
-   md and restores xl from md up.
+   lg and restores xl from lg up.
 
    Only the base font-size and leading move. Everything downstream is
    already expressed in em — h3 1.5em, h4 1em, .lead 1.2em, code and
    table 0.9em — so it rescales on its own. h1 and h2 are viewport
    clamps and are deliberately left alone.
 
-   Leading is 1.6 at md+, matching .prose-alacrity, NOT the plugin's xl
+   Leading is 1.6 at lg+, matching .prose-alacrity, NOT the plugin's xl
    value of 1.8 — 20px x 1.6 is the 2rem the old `leading-8` toggle set,
    and that pairing is what the app standardised on.
 
@@ -538,7 +541,7 @@
   line-height: 1.75;
 }
 
-@variant md {
+@variant lg {
   .prose-alacrity.prose-md {
     font-size: 1.25rem; /* plugin `prose-xl` size, app leading */
     line-height: 1.6;
