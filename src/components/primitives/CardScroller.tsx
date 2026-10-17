@@ -19,6 +19,9 @@ const MOBILE_QUERY = '(max-width: 39.99rem)'
  * only once scrolled. Rendering it inside a container instead would clip the
  * cards at the gutter, which reads as a row cut off mid-card.
  *
+ * Children must carry `cardScrollerItem`, which is what gives them a snap
+ * point — see that module for why it is not declared here.
+ *
  * Snapping is `snap-start` against a matching `scroll-padding`, not
  * `snap-center`: the first and last card have nothing to centre against and
  * settle partly out of view. Below sm the padding is widened instead — see
@@ -78,6 +81,23 @@ export const CardScroller: React.FC<{
   }, [centreOnMobile, children])
 
   /**
+   * Where a snapped card's start edge sits, in viewport coordinates.
+   *
+   * Read from padding, not scroll-padding. `.bleed-row` sets scroll-padding to
+   * a calc() over a percentage, and a percentage against the element's own
+   * width does not get resolved for the computed value — it comes back as the
+   * literal string `calc(32px + (0.5 * (100% - min(100%, 1280px))))`, which
+   * parseFloat turns into NaN. The two are defined to be equal, here and in
+   * centreOnMobile, so the padding is the same number and always resolved.
+   */
+  const snapOrigin = (el: HTMLDivElement): number => {
+    const styles = getComputedStyle(el)
+    const scrollPad = parseFloat(styles.scrollPaddingInlineStart)
+    const pad = Number.isFinite(scrollPad) ? scrollPad : parseFloat(styles.paddingInlineStart) || 0
+    return el.getBoundingClientRect().left + pad
+  }
+
+  /**
    * Where the row would land if it snapped from here.
    *
    * Needed because turning `scroll-snap-type` back on does not re-snap what is
@@ -88,8 +108,7 @@ export const CardScroller: React.FC<{
     const track = el.firstElementChild
     if (!track) return null
 
-    const padStart = parseFloat(getComputedStyle(el).scrollPaddingInlineStart) || 0
-    const origin = el.getBoundingClientRect().left + padStart
+    const origin = snapOrigin(el)
 
     let best: number | null = null
     for (const item of Array.from(track.children)) {
@@ -198,6 +217,3 @@ export const CardScroller: React.FC<{
     </div>
   )
 }
-
-/** Wrapper every direct child of CardScroller needs, so snapping applies. */
-export const cardScrollerItem = 'shrink-0 snap-start'

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Media } from '@/components/Media'
-import { CardScroller, cardScrollerItem } from '@/components/primitives/CardScroller'
+import { CardScroller } from '@/components/primitives/CardScroller'
+import { cardScrollerItem } from '@/components/primitives/cardScrollerItem'
 import { cn } from '@/utilities/ui'
 import { CMSLink } from '@/components/Link'
 import { SectionTitle } from '@/components/SectionTitle'
