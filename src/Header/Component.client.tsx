@@ -13,7 +13,7 @@ interface HeaderClientProps {
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   return (
-    <nav className="fixed top-0 z-50 flex flex-col pt-1">
+    <nav className="fixed top-0 z-50 flex flex-col">
       {/*<HighlightBanner highlightBanner={data.highlightBanner} />*/}
       <div className="navbar z-10 absolute top-0 inset-x-0 flex flex-row h-max items-center py-2 px-4 lg:px-8 w-screen ">
 
@@ -29,7 +29,12 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
         <HighlightButton highlightButton={data.highlightButton} />
 
       </div>
-      <div className='flex flex-col h-22 relative z-0'>
+      {/* h-23, not h-22: the white band is `grow` inside this fixed height, so
+          a unit here is a unit of white under the navbar. It replaces the pt-1
+          that used to sit on the nav itself — that padded the whole column
+          down, moving the logo and links with it, rather than giving them more
+          room to sit in. */}
+      <div className='flex flex-col h-23 relative z-0'>
         <div className='bg-base-100 grow'></div>
       <div className="progressive-blur-container h-8 w-screen relative z-0   rotate-180 ">
         <div className="blur-filter opacity-80"></div>
