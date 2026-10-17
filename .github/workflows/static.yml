@@ -51,11 +51,28 @@ jobs:
       #   (payload)            - admin UI + REST/GraphQL handlers
       #   (frontend)/next      - preview, exit-preview and seed handlers
       #   (frontend)/(sitemaps)- dynamic getServerSideSitemap handlers
-      - name: Strip server-only routes
+      #
+      # The data client is swapped the same way, by copying a file rather than
+      # by a bundler alias: next.config.js's `webpack` hook is ignored under
+      # Turbopack, so an alias there left @/data pointing at the Local API and
+      # the export went looking for a database.
+      - name: Strip server-only routes and switch to the REST data client
         run: |
           rm -rf "src/app/(payload)"
           rm -rf "src/app/(frontend)/next"
           rm -rf "src/app/(frontend)/(sitemaps)"
+          cp src/data/index.static.ts src/data/index.ts
+          grep -q "from './remote'" src/data/index.ts
+
+          # `output: export` rejects force-dynamic, and route segment config
+          # has to be a literal, so there is no flag that turns it off — the
+          # line goes. The greps are the point: a sed that quietly matches
+          # nothing would hand the export a dynamic layout and fail it later
+          # with something unrelated-looking.
+          layout="src/app/(frontend)/layout.tsx"
+          grep -q "^export const dynamic = 'force-dynamic'$" "$layout"
+          sed -i "/^export const dynamic = 'force-dynamic'$/d" "$layout"
+          ! grep -q "export const dynamic" "$layout"
 
       # `npx next build` rather than `npm run build`: the latter triggers the
       # postbuild next-sitemap hook, which is configured for the server build.

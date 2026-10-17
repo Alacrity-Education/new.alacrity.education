@@ -14,7 +14,6 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { data } from '@/data'
 import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
 import { isDraftEnabled } from '@/utilities/draft'
-import { requireServerRender } from '@/utilities/dynamicRendering'
 
 const NO_POSTS_PLACEHOLDER = 'no-posts'
 
@@ -44,7 +43,6 @@ type Args = {
 }
 
 export default async function Post({ params: paramsPromise }: Args) {
-  await requireServerRender()
 
   const draft = await isDraftEnabled()
   const { slug = '' } = await paramsPromise

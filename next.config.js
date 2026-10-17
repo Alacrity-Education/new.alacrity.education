@@ -1,18 +1,15 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
-
 import { withPayload } from '@payloadcms/next/withPayload'
 
 import redirects from './redirects.js'
-
-const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 /**
  * One codebase, two builds. See src/utilities/buildTarget.ts for what each is.
  *
  * Everything below that reads this flag is build plumbing, not site behaviour:
- * where the output goes, which data client is bundled, and which Next features
- * an export can have.
+ * where the output goes and which Next features an export can have. Which data
+ * client gets bundled is NOT decided here — the `webpack` hook below is
+ * ignored under Turbopack, which both builds use, so the workflow copies
+ * src/data/index.static.ts into place instead.
  */
 const isStatic = process.env.NEXT_PUBLIC_BUILD_TARGET === 'static'
 
@@ -69,17 +66,6 @@ const nextConfig = {
       '.cjs': ['.cts', '.cjs'],
       '.js': ['.ts', '.tsx', '.js', '.jsx'],
       '.mjs': ['.mts', '.mjs'],
-    }
-
-    // The data client is chosen here rather than by an `if` inside src/data,
-    // because a runtime branch still bundles both arms — and the Local API arm
-    // drags in payload, pg and sharp, none of which an export can compile or
-    // has a database for. Aliasing means the export never sees that module.
-    if (isStatic) {
-      webpackConfig.resolve.alias = {
-        ...webpackConfig.resolve.alias,
-        [path.resolve(dirname, 'src/data/local')]: path.resolve(dirname, 'src/data/remote.ts'),
-      }
     }
 
     return webpackConfig

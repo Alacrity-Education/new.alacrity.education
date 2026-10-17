@@ -9,7 +9,6 @@ import { notFound } from 'next/navigation'
 import { titleFor } from '@/utilities/siteMetadata'
 import { data } from '@/data'
 import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
-import { requireServerRender } from '@/utilities/dynamicRendering'
 
 
 type Args = {
@@ -19,7 +18,6 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  await requireServerRender()
 
   const { pageNumber } = await paramsPromise
 

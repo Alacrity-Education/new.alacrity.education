@@ -21,9 +21,26 @@ import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { SITE_TAGLINE, SITE_TITLE } from '@/utilities/siteMetadata'
 
-// Rendering mode is not set here. Route segment config has to be a literal,
-// and this layout is shared by two builds that want opposite answers — see
-// requireServerRender, which each page calls instead.
+/**
+ * Rendered on demand rather than prerendered at build.
+ *
+ * Every page here reads from Payload, so prerendering meant the image build
+ * needed a live database — which in turn meant giving CI a route into it. The
+ * data itself is still cached: getCachedGlobal/getCachedDocument/getRedirects
+ * wrap their queries in unstable_cache with tags, and the collection
+ * afterChange hooks call revalidateTag on publish, so a request only reaches
+ * Postgres when the cache for that tag has actually been busted.
+ *
+ * THE STATIC BUILD DELETES THE LINE BELOW. It has to: `output: export` rejects
+ * force-dynamic outright. And it has to be deleted rather than switched on a
+ * flag, because Next parses route segment config out of the source and accepts
+ * nothing but a literal here.
+ *
+ * It cannot be pushed down into the pages either. Next prerenders /_not-found
+ * whatever that route says — force-dynamic on it does nothing — so the only
+ * thing keeping that prerender off the database is this layout being dynamic.
+ */
+export const dynamic = 'force-dynamic'
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Always false in the static build, where there is no server to preview from
   // and nothing for the admin bar to link back to.

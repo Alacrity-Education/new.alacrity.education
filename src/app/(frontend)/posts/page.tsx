@@ -7,11 +7,9 @@ import React from 'react'
 import PageClient from './page.client'
 import { titleFor } from '@/utilities/siteMetadata'
 import { data } from '@/data'
-import { requireServerRender } from '@/utilities/dynamicRendering'
 
 
 export default async function Page() {
-  await requireServerRender()
 
   const posts = await data.find({
     collection: 'posts',

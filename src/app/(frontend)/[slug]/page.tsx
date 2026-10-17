@@ -15,7 +15,6 @@ import { data } from '@/data'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
 import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
 import { isDraftEnabled } from '@/utilities/draft'
-import { requireServerRender } from '@/utilities/dynamicRendering'
 
 /**
  * The export prerenders every published page; the server build prerenders
@@ -45,7 +44,6 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  await requireServerRender()
 
   const draft = await isDraftEnabled()
   const { slug = 'home' } = await paramsPromise

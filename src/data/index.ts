@@ -1,12 +1,14 @@
 /**
  * The frontend's one way to read content.
  *
- * This re-exports the Local API client. The static build swaps it for the REST
- * one through a webpack alias in next.config.js — `./local` resolves to
- * `./remote` when BUILD_TARGET=static — rather than by branching at runtime,
- * because a runtime check would still bundle `payload`, `pg` and `sharp` into
- * an export build that has no database to talk to and cannot compile them.
+ * This is the server build's client: Payload's Local API. The static build
+ * does not import it — its workflow copies index.static.ts over this file
+ * before building, so `@/data` resolves to the REST client instead and the
+ * export never pulls in payload, pg or sharp, none of which it can compile or
+ * has a database for.
  *
- * So: import from `@/data`, never from `@/data/local` or `@/data/remote`.
+ * So: import from `@/data`, never from `@/data/local` or `@/data/remote` —
+ * except in a client component, which always wants `@/data/remote`, because
+ * this file is the Local API in the browser's bundle too.
  */
 export { data } from './local'
