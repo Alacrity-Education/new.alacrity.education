@@ -324,9 +324,12 @@
   /* Purple by default — h2 is the section heading, and this is the one place
      the brand colour carries a whole line without fighting the body copy.
      Set on the element rather than through --tw-prose-headings, which the
-     plugin applies to h1-h4 alike. Blocks that were already asking for it
-     with `prose-h2:text-primary` keep working: that utility is a class on the
-     container, so it still beats this on specificity. */
+     plugin applies to h1-h4 alike.
+
+     This cannot be overridden by a `prose-h2:text-*` utility. Those live in
+     Tailwind's utilities layer, and everything in this file is unlayered —
+     unlayered beats any layer regardless of specificity. A block that needs a
+     different h2 colour needs an unlayered rule here, like the one below. */
   color: var(--color-primary);
 }
 

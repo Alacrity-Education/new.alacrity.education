@@ -1,11 +1,14 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import { cn } from '@/utilities/ui'
 
 /** Below this many pixels a drag is a click that wobbled, not a drag. */
 const DRAG_THRESHOLD = 5
+
+/** Tailwind's `sm`. Below it a card is centred rather than aligned left. */
+const MOBILE_QUERY = '(max-width: 39.99rem)'
 
 /**
  * Horizontal card scroller, shared by the card and person-card sections.
@@ -18,7 +21,9 @@ const DRAG_THRESHOLD = 5
  *
  * Snapping is `snap-start` against a matching `scroll-padding`, not
  * `snap-center`: the first and last card have nothing to centre against and
- * settle partly out of view.
+ * settle partly out of view. Below sm the padding is widened instead — see
+ * centreOnMobile — which centres the cards without changing the alignment, so
+ * the first and last still behave.
  */
 export const CardScroller: React.FC<{
   children: React.ReactNode
@@ -28,6 +33,74 @@ export const CardScroller: React.FC<{
 }> = ({ children, className, gapClassName = 'gap-6 md:gap-8' }) => {
   const ref = useRef<HTMLDivElement>(null)
   const drag = useRef<{ startX: number; startLeft: number; moved: boolean } | null>(null)
+
+  /**
+   * On a phone a card is far narrower than the screen, so starting it at the
+   * gutter leaves most of the next one showing and the row reads as parked
+   * off to one side. Padding both ends by the leftover half centres every
+   * card — including the first and last, which is what `snap-center` cannot
+   * do — while the snapping stays `snap-start`.
+   *
+   * It is measured rather than declared because the padding depends on the
+   * card's width, and that differs per section and per breakpoint.
+   */
+  const centreOnMobile = useCallback(() => {
+    const el = ref.current
+    const item = el?.firstElementChild?.firstElementChild as HTMLElement | undefined
+    if (!el || !item) return
+
+    if (!window.matchMedia(MOBILE_QUERY).matches) {
+      el.style.paddingInlineStart = ''
+      el.style.paddingInlineEnd = ''
+      el.style.scrollPaddingInlineStart = ''
+      return
+    }
+
+    const pad = Math.max(0, Math.round((el.clientWidth - item.offsetWidth) / 2))
+    el.style.paddingInlineStart = `${pad}px`
+    el.style.paddingInlineEnd = `${pad}px`
+    // Must track the start padding, or a snapped card parks underneath it.
+    el.style.scrollPaddingInlineStart = `${pad}px`
+  }, [])
+
+  useEffect(() => {
+    centreOnMobile()
+    const el = ref.current
+    if (!el) return
+    // The card's own width moves at breakpoints, so watching the element
+    // catches what a resize listener alone would miss.
+    const observer = new ResizeObserver(centreOnMobile)
+    observer.observe(el)
+    if (el.firstElementChild?.firstElementChild) {
+      observer.observe(el.firstElementChild.firstElementChild)
+    }
+    return () => observer.disconnect()
+  }, [centreOnMobile, children])
+
+  /**
+   * Where the row would land if it snapped from here.
+   *
+   * Needed because turning `scroll-snap-type` back on does not re-snap what is
+   * already on screen — the browser snaps as the result of a scroll, so a drag
+   * that ends off a snap point simply stays there.
+   */
+  const nearestSnapLeft = (el: HTMLDivElement): number | null => {
+    const track = el.firstElementChild
+    if (!track) return null
+
+    const padStart = parseFloat(getComputedStyle(el).scrollPaddingInlineStart) || 0
+    const origin = el.getBoundingClientRect().left + padStart
+
+    let best: number | null = null
+    for (const item of Array.from(track.children)) {
+      const delta = item.getBoundingClientRect().left - origin
+      if (best === null || Math.abs(delta) < Math.abs(best)) best = delta
+    }
+    if (best === null) return null
+
+    const max = el.scrollWidth - el.clientWidth
+    return Math.max(0, Math.min(max, el.scrollLeft + best))
+  }
 
   // Mouse only. Touch and trackpads already scroll this natively, and taking
   // their pointer events over would replace momentum scrolling with this.
@@ -40,7 +113,8 @@ export const CardScroller: React.FC<{
 
     // Snapping and smooth scrolling both fight a drag: the first keeps yanking
     // the row to the nearest card mid-gesture, the second animates towards
-    // each position so the row lags the cursor. Off for the duration.
+    // each position so the row lags the cursor. Off for the duration, and put
+    // back by endDrag.
     el.style.scrollSnapType = 'none'
     el.style.scrollBehavior = 'auto'
   }
@@ -70,6 +144,7 @@ export const CardScroller: React.FC<{
 
     if (state.moved) {
       if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId)
+
       // The click that follows this pointerup would otherwise open whichever
       // card the drag finished over.
       const swallow = (click: MouseEvent) => {
@@ -80,11 +155,17 @@ export const CardScroller: React.FC<{
       // If no click arrives — the pointer left the row, say — the listener has
       // to go, or it eats the next real one.
       window.setTimeout(() => el.removeEventListener('click', swallow, true), 0)
+
+      const target = nearestSnapLeft(el)
+      el.style.scrollSnapType = ''
+      el.style.scrollBehavior = ''
+      if (target !== null) el.scrollTo({ left: target, behavior: 'smooth' })
+    } else {
+      el.style.scrollSnapType = ''
+      el.style.scrollBehavior = ''
     }
 
     drag.current = null
-    el.style.scrollSnapType = ''
-    el.style.scrollBehavior = ''
   }
 
   return (
@@ -94,6 +175,11 @@ export const CardScroller: React.FC<{
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
+      // Images and links are draggable by default, so without this a real
+      // mouse starts a native drag — the browser lifts a ghost of the card and
+      // the row never moves. dragstart bubbles, so this one handler covers
+      // every image and link inside.
+      onDragStart={(e) => e.preventDefault()}
       className={cn(
         'bleed-row',
         'overflow-x-auto overflow-y-visible',

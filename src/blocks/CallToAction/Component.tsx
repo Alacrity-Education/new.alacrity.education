@@ -24,8 +24,12 @@ export const CallToActionBlock: React.FC<CTABlockProps> = ({ id, variant, links,
 
   const textCls = {
     base: 'text-primary prose-h2:text-primary prose-h3:text-primary prose-h4:text-primary prose-b:text-primary',
-    primary:
-      'text-primary-content prose-h2:text-primary-content prose-h3:text-primary-content prose-h:text-primary-content prose-b:text-primary-content',
+    // prose-on-primary, not a list of prose-h*: utilities. Those are in
+    // Tailwind's utilities layer and .prose-alacrity's own colours are
+    // unlayered, and unlayered always wins over a layer whatever the
+    // specificity — so the h2 came out purple on purple. prose-on-primary is
+    // unlayered too, and repoints the whole palette in one class.
+    primary: 'text-primary-content prose-on-primary',
   }
 
   return (

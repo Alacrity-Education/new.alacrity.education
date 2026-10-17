@@ -252,6 +252,9 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
+      // Each logo is an image inside a link, both draggable by default: a real
+      // mouse would lift a ghost of the logo instead of moving the track.
+      onDragStart={(e) => e.preventDefault()}
       className="w-full py-16 select-none cursor-default [@media(hover:hover)_and_(pointer:fine)]:cursor-grab [@media(hover:hover)_and_(pointer:fine)]:active:cursor-grabbing"
     >
       <div className="relative">
