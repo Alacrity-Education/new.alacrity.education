@@ -1,6 +1,6 @@
 import React from 'react'
-import { getPayload } from 'payload'
-import config from '@payload-config'
+import { data } from '@/data'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 import type { PersonCardBlock as PersonCardBlockProps, Member } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -13,7 +13,7 @@ import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
 const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
   const imageUrl =
     member.image && typeof member.image === 'object' && member.image.url
-      ? member.image.url
+      ? getMediaUrl(member.image.url, member.image.updatedAt)
       : '/Falcon.svg'
 
   const imageAlt =
@@ -77,13 +77,12 @@ export const PersonCardBlock: React.FC<PersonCardBlockProps> = async ({
   const resolvedMembers: Member[] = []
 
   if (members && members.length > 0) {
-    const payload = await getPayload({ config })
     const ids = members
       .map((m) => (typeof m.member === 'number' ? m.member : m.member?.id))
       .filter((id): id is number => typeof id === 'number')
 
     if (ids.length > 0) {
-      const { docs } = await payload.find({
+      const { docs } = await data.find({
         collection: 'members',
         where: { id: { in: ids } },
         depth: 2,

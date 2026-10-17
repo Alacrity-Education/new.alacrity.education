@@ -3,22 +3,20 @@ import type { Metadata } from 'next/types'
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import React from 'react'
 import PageClient from './page.client'
 import { titleFor } from '@/utilities/siteMetadata'
+import { data } from '@/data'
+import { requireServerRender } from '@/utilities/dynamicRendering'
 
-export const revalidate = 600
 
 export default async function Page() {
-  const payload = await getPayload({ config: configPromise })
+  await requireServerRender()
 
-  const posts = await payload.find({
+  const posts = await data.find({
     collection: 'posts',
     depth: 1,
     limit: 12,
-    overrideAccess: false,
     select: {
       title: true,
       slug: true,

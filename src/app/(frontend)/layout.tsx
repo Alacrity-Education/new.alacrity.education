@@ -11,8 +11,9 @@ import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode } from 'next/headers'
 import { Lexend, Lexend_Deca } from 'next/font/google'
+import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
+import { isDraftEnabled } from '@/utilities/draft'
 
 const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend', display: 'swap' })
 const lexendDeca = Lexend_Deca({ subsets: ['latin'], variable: '--font-lexend-deca', display: 'swap' })
@@ -20,20 +21,13 @@ import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { SITE_TAGLINE, SITE_TITLE } from '@/utilities/siteMetadata'
 
-/**
- * Rendered on demand rather than prerendered at build.
- *
- * Every page here reads from Payload, so prerendering meant the image build
- * needed a live database — which in turn meant giving CI a route into it. The
- * data itself is still cached: getCachedGlobal/getCachedDocument/getRedirects
- * wrap their queries in unstable_cache with tags, and the collection
- * afterChange hooks call revalidateTag on publish, so a request only reaches
- * Postgres when the cache for that tag has actually been busted.
- */
-export const dynamic = 'force-dynamic'
-
+// Rendering mode is not set here. Route segment config has to be a literal,
+// and this layout is shared by two builds that want opposite answers — see
+// requireServerRender, which each page calls instead.
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
+  // Always false in the static build, where there is no server to preview from
+  // and nothing for the admin bar to link back to.
+  const isEnabled = await isDraftEnabled()
 
   return (
     <html className={`${lexend.variable} ${lexendDeca.variable}`} lang="en" suppressHydrationWarning>
@@ -44,11 +38,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
+          {!IS_STATIC_EXPORT && (
+            <AdminBar
+              adminBarProps={{
+                preview: isEnabled,
+              }}
+            />
+          )}
 
           <Header />
           {children}
