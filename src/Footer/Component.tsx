@@ -7,7 +7,7 @@ import { LuFacebook, LuGithub, LuInstagram, LuLinkedin, LuX, LuYoutube } from "r
 import type { Footer } from '@/payload-types'
 import { Logo } from '@/components/Logo/Logo'
 import { CMSLink } from '@/components/Link'
-import { FaLinkedinIn } from 'react-icons/fa6';
+import { FaLinkedinIn, FaTiktok } from 'react-icons/fa6';
 
 const SocialIcon = ({ platform }: { platform: string }) => {
   const cls = 'h-full w-full text-primary opacity-80'
@@ -16,6 +16,8 @@ const SocialIcon = ({ platform }: { platform: string }) => {
     case 'linkedin':  return <FaLinkedinIn className={cls} />
     case 'facebook':  return <LuFacebook className={cls} />
     case 'youtube':   return <LuYoutube className={cls} />
+    // No TikTok in lucide, so it comes from fa6 like LinkedIn's mark.
+    case 'tiktok':    return <FaTiktok className={cls} />
     case 'twitter':   return <LuX className={cls} />
     case 'github':    return <LuGithub className={cls} />
     default:          return null

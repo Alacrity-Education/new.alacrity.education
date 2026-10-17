@@ -26,6 +26,11 @@ export const CarouselCard = ({ media, link }: { media: MediaType | number; link:
 const FRICTION = 0.18
 // Auto-scroll speed in px per frame at 60 fps (1 ≈ 60 px/s)
 const AUTO_SPEED = 1
+// Below this many pixels a drag is a click that wobbled, not a drag.
+const DRAG_THRESHOLD = 5
+// How far a flick carries after release, as a multiple of the last frame's
+// travel. The spring in the tick loop does the actual easing.
+const FLICK_MOMENTUM = 8
 
 const Carousel: React.FC<CarouselProps> = ({ children }) => {
   const trackRef  = useRef<HTMLDivElement>(null)
@@ -35,6 +40,14 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
   const targetRef = useRef(0)    // destination the spring chases
   const pausedRef = useRef(false)
   const rafRef    = useRef<number | null>(null)
+  const dragRef   = useRef<{
+    pointerId: number
+    startX: number
+    startPos: number
+    lastX: number
+    velocity: number
+    moved: boolean
+  } | null>(null)
   const [numCopies, setNumCopies] = useState(10)
 
   const items = React.Children.toArray(children).filter(Boolean)
@@ -111,7 +124,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
     const el = wrapRef.current
     if (!el) return
     const pause  = () => { pausedRef.current = true  }
-    const resume = () => { pausedRef.current = false }
+    const resume = () => { if (!dragRef.current) pausedRef.current = false }
     el.addEventListener('mouseenter',  pause)
     el.addEventListener('mouseleave',  resume)
     el.addEventListener('touchstart',  pause,  { passive: true })
@@ -125,6 +138,78 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
       el.removeEventListener('touchcancel', resume)
     }
   }, [])
+
+  /**
+   * Drag to scroll, mouse only.
+   *
+   * Touch is left alone: the track is a transform, not a scroller, so taking
+   * touch over would mean reimplementing momentum and fighting the browser for
+   * the gesture. A finger gets the auto-scroll and the arrows.
+   *
+   * The drag writes pos and target together so the track tracks the cursor
+   * exactly — letting the spring chase the cursor instead adds a lag that
+   * reads as the logos sliding out from under the hand. On release the last
+   * frame's travel becomes a flick: target moves ahead of pos, and the tick
+   * loop's spring eases the rest.
+   */
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return
+    dragRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startPos: posRef.current,
+      lastX: e.clientX,
+      velocity: 0,
+      moved: false,
+    }
+    pausedRef.current = true
+  }
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current
+    if (!drag) return
+
+    const dx = e.clientX - drag.startX
+    if (!drag.moved && Math.abs(dx) < DRAG_THRESHOLD) return
+
+    if (!drag.moved) {
+      drag.moved = true
+      e.currentTarget.setPointerCapture(drag.pointerId)
+    }
+
+    drag.velocity = e.clientX - drag.lastX
+    drag.lastX = e.clientX
+
+    posRef.current    = drag.startPos + dx
+    targetRef.current = posRef.current
+    applyTransform(posRef.current)
+  }
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current
+    if (!drag) return
+
+    if (drag.moved) {
+      if (e.currentTarget.hasPointerCapture(drag.pointerId)) {
+        e.currentTarget.releasePointerCapture(drag.pointerId)
+      }
+      targetRef.current = posRef.current + drag.velocity * FLICK_MOMENTUM
+
+      // Each card is a link; without this the click that follows the release
+      // opens whichever one the drag ended on.
+      const swallow = (click: MouseEvent) => {
+        click.preventDefault()
+        click.stopPropagation()
+      }
+      const el = e.currentTarget
+      el.addEventListener('click', swallow, { capture: true, once: true })
+      window.setTimeout(() => el.removeEventListener('click', swallow, true), 0)
+    }
+
+    dragRef.current = null
+    // Hovering still counts as paused; mouseleave resumes.
+    pausedRef.current = e.currentTarget.matches(':hover')
+  }
 
   // Re-anchor when copy width changes (e.g. responsive card size breakpoint hit)
   useEffect(() => {
@@ -161,7 +246,14 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
   if (items.length === 0) return null
 
   return (
-    <div ref={wrapRef} className="w-full py-16">
+    <div
+      ref={wrapRef}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      className="w-full py-16 select-none cursor-default [@media(hover:hover)_and_(pointer:fine)]:cursor-grab [@media(hover:hover)_and_(pointer:fine)]:active:cursor-grabbing"
+    >
       <div className="relative">
 
         {/* Arrows live outside the overflow-hidden clip so they are never cropped */}

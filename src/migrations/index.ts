@@ -21,6 +21,7 @@ import * as migration_20261002_013000_card_single_treatment from './20261002_013
 import * as migration_20261002_154500_footer_github from './20261002_154500_footer_github';
 import * as migration_20261002_160000_footer_link_url_nullable from './20261002_160000_footer_link_url_nullable';
 import * as migration_20261015_234500_card_title_description_rich_text from './20261015_234500_card_title_description_rich_text';
+import * as migration_20261017_140000_footer_tiktok from './20261017_140000_footer_tiktok';
 
 export const migrations = [
   {
@@ -137,5 +138,10 @@ export const migrations = [
     up: migration_20261015_234500_card_title_description_rich_text.up,
     down: migration_20261015_234500_card_title_description_rich_text.down,
     name: '20261015_234500_card_title_description_rich_text'
+  },
+  {
+    up: migration_20261017_140000_footer_tiktok.up,
+    down: migration_20261017_140000_footer_tiktok.down,
+    name: '20261017_140000_footer_tiktok'
   },
 ];

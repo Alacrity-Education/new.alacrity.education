@@ -16,8 +16,12 @@ type Layout = CardBlockProps['layout']
  * Same tint the big card block puts over its full-bleed image. It is what makes
  * the copy legible over an arbitrary upload, so the card carries it whether or
  * not there is an image — without one it is just the primary ground.
+ *
+ * Kept in step with the big card's by hand, including the tenth that came off
+ * each stop: the two variants sit on the same page and a difference between
+ * them reads as a mistake.
  */
-const CARD_TINT = 'bg-linear-to-b from-primary/95 via-primary/88 to-primary/80'
+const CARD_TINT = 'bg-linear-to-b from-primary/85 via-primary/79 to-primary/72'
 
 /**
  * The big card block's full-cover treatment at regular-card scale: image across

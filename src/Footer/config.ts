@@ -60,7 +60,7 @@ export const Footer: GlobalConfig = {
     {
       name: 'socialLinks',
       type: 'array',
-      maxRows: 6,
+      maxRows: 7,
       admin: { initCollapsed: true },
       fields: [
         {
@@ -74,6 +74,12 @@ export const Footer: GlobalConfig = {
             { label: 'YouTube', value: 'youtube' },
             { label: 'Twitter / X', value: 'twitter' },
             { label: 'GitHub', value: 'github' },
+            // Last on purpose: Postgres only appends to an enum, so the
+            // migration's ADD VALUE puts tiktok at the end. Listing it
+            // mid-array reads as a reorder to the schema differ, which then
+            // wants to drop and rebuild the type — a data-loss prompt on
+            // every dev boot.
+            { label: 'TikTok', value: 'tiktok' },
           ],
         },
         { name: 'url', type: 'text', required: true },

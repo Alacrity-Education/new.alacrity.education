@@ -2897,7 +2897,7 @@ export interface Footer {
   tagline?: string | null;
   socialLinks?:
     | {
-        platform: 'instagram' | 'linkedin' | 'facebook' | 'youtube' | 'twitter' | 'github';
+        platform: 'instagram' | 'linkedin' | 'facebook' | 'youtube' | 'twitter' | 'github' | 'tiktok';
         url: string;
         id?: string | null;
       }[]

@@ -13,7 +13,9 @@ import { hasRichTextContent } from '@/utilities/richText'
 type BigCards = NonNullable<CardBlockProps['bigCards']>
 type BigCard = BigCards[number]
 
-const imageTint = 'bg-linear-to-b from-primary/95 via-primary/88 to-primary/80'
+// A tenth off each stop of what it was (95/88/80): the copy still holds
+// against an arbitrary upload, but the picture reads through it.
+const imageTint = 'bg-linear-to-b from-primary/85 via-primary/79 to-primary/72'
 
 /**
  * Also fixed across widths: with the card's own aspect pinned, a split that
