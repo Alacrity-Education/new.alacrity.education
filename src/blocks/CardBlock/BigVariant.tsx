@@ -14,9 +14,18 @@ import { hasRichTextContent } from '@/utilities/richText'
 type BigCards = NonNullable<CardBlockProps['bigCards']>
 type BigCard = BigCards[number]
 
-// A tenth off each stop of what it was (95/88/80): the copy still holds
-// against an arbitrary upload, but the picture reads through it.
-const imageTint = 'bg-linear-to-b from-primary/85 via-primary/79 to-primary/72'
+/**
+ * Two stops, 90 down to 72, rather than the regular card's three.
+ *
+ * The heading sits at the top of this card and the picture has the whole
+ * height to show through, so the tint is heaviest exactly where the type is
+ * and lightest where there is nothing over it. Dropping the middle stop is
+ * what makes it a run rather than three near-identical steps.
+ *
+ * The regular card keeps its own 85/79/72: it is a smaller card whose copy
+ * reaches further down, so it cannot afford to thin out at the bottom.
+ */
+const imageTint = 'bg-linear-to-b from-primary/90 to-primary/72'
 
 /**
  * Also fixed across widths: with the card's own aspect pinned, a split that
@@ -55,13 +64,12 @@ const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
     {card.link && (
       <CMSLink
         {...card.link}
-        appearance="inline"
-        // No size class: inherits, so it tracks the surrounding text.
-        className={cn(
-          'mt-8 inline-flex w-max items-center gap-2 font-medium text-primary-content',
-          'underline decoration-primary-content/50 underline-offset-4',
-          'transition-colors hover:decoration-primary-content',
-        )}
+        appearance="default"
+        // No size: that is the button's regular size. mt-auto rather than the
+        // old mt-8, so it sits on the bottom edge of the copy whatever the
+        // rich text above it runs to — the card's aspect is fixed, so a
+        // fixed gap left it stranded mid-card.
+        className="mt-auto w-max"
       />
     )}
   </div>
