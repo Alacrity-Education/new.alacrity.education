@@ -48,7 +48,7 @@ export const CardBlock: Block = {
       ],
       admin: {
         description:
-          'Regular: standard cards. Featured: full-width cards that pin and scale on scroll (md and up). Big: large two-up cards.',
+          'Regular and Big render the same cards differently — switching between them keeps what you have entered. Featured is its own set: full-width cards that pin and scale on scroll from lg up.',
       },
     },
     {
@@ -74,27 +74,32 @@ export const CardBlock: Block = {
       label: 'Section Title',
     },
 
-    // ── Carousel ────────────────────────────────────────────────────────────
+    // ── Cards: regular and big ──────────────────────────────────────────────
     {
       name: 'cards',
       type: 'array',
       label: 'Cards',
-      admin: { condition: isVariant('regular') },
+      // Both variants read this one array, so switching between them keeps
+      // the content — they used to hold separate arrays, and the editor went
+      // blank on every switch because the other one was empty. What the
+      // variant chooses now is only how these are rendered.
+      admin: {
+        condition: (_, siblingData) =>
+          isVariant('regular')(_, siblingData) || isVariant('big')(_, siblingData),
+      },
       fields: [
-        // Rich text rather than text/textarea, on the same editor the big
-        // cards use. The two variants hold their content in separate arrays,
-        // so a block that switches variant keeps both — but only if the
-        // shapes match: a lexical value pasted from a big card into a plain
-        // text field arrives as `[object Object]`.
-        //
         // The card renders the title as an h2 and the description as body
         // copy, scaled to the card by .prose-card. Headings above h2 are not
-        // on offer, same as the big card.
+        // on offer, same as the featured variant.
         {
           name: 'title',
           type: 'richText',
           label: 'Title',
-          required: true,
+          // Not required. A big card's heading was optional — its copy was one
+          // rich text field with no rule about opening with a heading — and
+          // those cards live in this array now. Requiring it would make every
+          // such card fail validation on the next save of a page that has one.
+          // A card without a title simply renders no heading.
           editor: cardRichTextEditor,
         },
         {
@@ -111,6 +116,26 @@ export const CardBlock: Block = {
           admin: {
             description:
               'Fills the card behind the copy. Without one the card is plain primary.',
+          },
+        },
+        {
+          name: 'backgroundType',
+          type: 'select',
+          label: 'Background coverage',
+          defaultValue: 'full',
+          options: [
+            { label: 'Full', value: 'full' },
+            { label: 'Partial', value: 'partial' },
+          ],
+          admin: {
+            // Meaningless without something to cover the card with. It cannot
+            // also be conditioned on the variant: inside an array row the
+            // siblings are the row, so `variant` is not reachable from here —
+            // the same reason each variant used to need its own array. The
+            // regular variant ignores the value.
+            condition: (_, siblingData) => Boolean(siblingData?.image),
+            description:
+              'Big variant only. Full bleeds the image behind the whole card with the text over it; Partial puts it in the lower 3/5 with the text above.',
           },
         },
         // No appearance choice: these cards are a single treatment now, and the
@@ -166,55 +191,6 @@ export const CardBlock: Block = {
       ],
     },
 
-    // ── Big ─────────────────────────────────────────────────────────────────
-    {
-      name: 'bigCards',
-      type: 'array',
-      label: 'Big Cards',
-      admin: {
-        condition: isVariant('big'),
-        description:
-          'Tall violet panels, two across. The h2 in the rich text is the card heading — there is no separate title field.',
-      },
-      fields: [
-        {
-          // Same editor as the featured variant: h2 is the largest heading on
-          // offer, since anything above it competes with the section title.
-          name: 'richText',
-          type: 'richText',
-          label: false,
-          editor: cardRichTextEditor,
-        },
-        {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-          label: 'Background image',
-          admin: {
-            description:
-              'Optional. Sits behind the card under a primary tint that keeps the white text legible.',
-          },
-        },
-        {
-          name: 'backgroundType',
-          type: 'select',
-          label: 'Background coverage',
-          defaultValue: 'full',
-          options: [
-            { label: 'Full', value: 'full' },
-            { label: 'Partial', value: 'partial' },
-          ],
-          admin: {
-            // Meaningless without something to cover the card with.
-            condition: (_, siblingData) => Boolean(siblingData?.image),
-            description:
-              'Full bleeds the image behind the whole card with the text over it. Partial puts the image in the lower 3/5 with the text above it.',
-          },
-        },
-        // No appearance options: this renders as a text link, never a button.
-        link({ appearances: false }),
-      ],
-    },
   ],
   labels: {
     plural: 'Card Sections',

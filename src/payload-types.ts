@@ -880,14 +880,14 @@ export interface GalleryBlock {
  */
 export interface CardBlock {
   /**
-   * Regular: standard cards. Featured: full-width cards that pin and scale on scroll (md and up). Big: large two-up cards.
+   * Regular and Big render the same cards differently — switching between them keeps what you have entered. Featured is its own set: full-width cards that pin and scale on scroll from lg up.
    */
   variant?: ('regular' | 'featured' | 'big') | null;
   layout?: ('grid' | 'carousel') | null;
   title?: string | null;
   cards?:
     | {
-        title: {
+        title?: {
           root: {
             type: string;
             children: {
@@ -901,7 +901,7 @@ export interface CardBlock {
             version: number;
           };
           [k: string]: unknown;
-        };
+        } | null;
         description?: {
           root: {
             type: string;
@@ -921,6 +921,10 @@ export interface CardBlock {
          * Fills the card behind the copy. Without one the card is plain primary.
          */
         image?: (number | null) | Media;
+        /**
+         * Big variant only. Full bleeds the image behind the whole card with the text over it; Partial puts it in the lower 3/5 with the text above.
+         */
+        backgroundType?: ('full' | 'partial') | null;
         link: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
@@ -989,52 +993,6 @@ export interface CardBlock {
               id?: string | null;
             }[]
           | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Tall violet panels, two across. The h2 in the rich text is the card heading — there is no separate title field.
-   */
-  bigCards?:
-    | {
-        richText?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        /**
-         * Optional. Sits behind the card under a primary tint that keeps the white text legible.
-         */
-        image?: (number | null) | Media;
-        /**
-         * Full bleeds the image behind the whole card with the text over it. Partial puts the image in the lower 3/5 with the text above it.
-         */
-        backgroundType?: ('full' | 'partial') | null;
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
         id?: string | null;
       }[]
     | null;
@@ -1974,6 +1932,7 @@ export interface CardBlockSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         image?: T;
+        backgroundType?: T;
         link?:
           | T
           | {
@@ -2009,23 +1968,6 @@ export interface CardBlockSelect<T extends boolean = true> {
                     appearance?: T;
                   };
               id?: T;
-            };
-        id?: T;
-      };
-  bigCards?:
-    | T
-    | {
-        richText?: T;
-        image?: T;
-        backgroundType?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
             };
         id?: T;
       };

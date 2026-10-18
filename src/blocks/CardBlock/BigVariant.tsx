@@ -11,7 +11,9 @@ import { cn } from '@/utilities/ui'
 import type { CardBlock as CardBlockProps } from '@/payload-types'
 import { hasRichTextContent } from '@/utilities/richText'
 
-type BigCards = NonNullable<CardBlockProps['bigCards']>
+// The same rows the regular variant renders. One array, two ways of drawing
+// it — which is what lets a section switch variant without going blank.
+type BigCards = NonNullable<CardBlockProps['cards']>
 type BigCard = BigCards[number]
 
 /**
@@ -51,13 +53,23 @@ const CARD_SHELL = cn(
 const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
   // z-20 keeps the copy above the tint (z-10) and the image (absolute, z-auto).
   <div className="relative z-20 flex min-h-0 flex-1 flex-col p-6 lg:p-8">
-    {hasRichTextContent(card.richText) && (
-      // Sizes come from .prose-alacrity, same as every other rich text field in
-      // the app. `prose-on-primary` repoints only the colour palette.
+    {/* Sizes come from .prose-alacrity, same as every other rich text field
+        in the app. `prose-on-primary` repoints only the colour palette. The
+        two fields render as one block of copy — the heading the editor put in
+        the title, then the body — which is what the single rich text field
+        used to hold. */}
+    {hasRichTextContent(card.title) && (
       <RichText
-        data={card.richText}
+        data={card.title}
         enableGutter={false}
         className="prose-on-primary prose-md mx-0"
+      />
+    )}
+    {hasRichTextContent(card.description) && (
+      <RichText
+        data={card.description}
+        enableGutter={false}
+        className="prose-on-primary prose-md mx-0 mt-2"
       />
     )}
 
@@ -99,11 +111,18 @@ const FullCard: React.FC<{ card: BigCard }> = ({ card }) => (
 const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
   <article className={CARD_SHELL}>
     <div className={cn('relative z-20 flex shrink-0 flex-col', 'px-6 pt-6 lg:px-8 lg:pt-8')}>
-      {hasRichTextContent(card.richText) && (
+      {hasRichTextContent(card.title) && (
         <RichText
-          data={card.richText}
+          data={card.title}
           enableGutter={false}
           className="prose-on-primary prose-md mx-0"
+        />
+      )}
+      {hasRichTextContent(card.description) && (
+        <RichText
+          data={card.description}
+          enableGutter={false}
+          className="prose-on-primary prose-md mx-0 mt-2"
         />
       )}
       {card.link && (
