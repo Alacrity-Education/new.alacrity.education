@@ -272,9 +272,9 @@ addressed as provided in clause 1.3.
 
 | Processing operation | Retention period |
 |---|---|
-| Access to the Website (clause 4.1) | [●], after which the records are deleted or anonymised |
-| Audience measurement (clause 4.2) | [●] |
-| Forms submitted through the Website (clause 4.5) | [●] from the date of the last communication between the parties |
+| Access to the Website (clause 4.1) | No record of individual requests is retained on our server. Error logs produced by it are overwritten in rotation once they reach a fixed size. Records held by Cloudflare are retained in accordance with its data processing agreement |
+| Audience measurement (clause 4.2) | Twenty-four months from the date of recording, after which the records are deleted |
+| Forms submitted through the Website (clause 4.5) | Three years from the date of submission, after which the submission is deleted from our content management system |
 
 8.2. Notwithstanding clause 8.1, personal data may be retained for a longer
 period where retention is required in order to comply with a legal obligation to
