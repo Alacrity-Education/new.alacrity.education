@@ -534,6 +534,14 @@
   padding-block: 0.75rem;
 }
 
+/* Lexical wraps each table cell's content in a paragraph, and the rule above
+   gives every paragraph 1.25rem of block margin — inside a cell that reads as
+   a blank line above and below each value. The cell's own padding is what
+   should space a row. */
+.prose-alacrity :is(th, td) > p {
+  margin-block: 0;
+}
+
 /* ------------------------------------------------------------------
    .prose-md — responsive body scale.
 

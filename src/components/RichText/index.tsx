@@ -5,8 +5,12 @@ import {
   SerializedLinkNode,
   SerializedUploadNode,
   type DefaultTypedEditorState,
+  type SerializedTableCellNode,
+  type SerializedTableNode,
+  type SerializedTableRowNode,
 } from '@payloadcms/richtext-lexical'
 import {
+  type JSXConverterArgs,
   JSXConvertersFunction,
   LinkJSXConverter,
   RichText as ConvertRichText,
@@ -29,8 +33,14 @@ import { getMediaUrl } from '@/utilities/getMediaUrl'
 import type { Media } from '@/payload-types'
 import { textColorClasses, type TextColor } from '@/fields/textColors'
 
+// DefaultNodeTypes does not cover the table nodes: the feature is still
+// experimental upstream, so its nodes are not in the default union and have to
+// be added by hand.
 type NodeTypes =
   | DefaultNodeTypes
+  | SerializedTableNode
+  | SerializedTableRowNode
+  | SerializedTableCellNode
   | SerializedBlockNode<CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps | MapBlockProps>
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -96,8 +106,68 @@ const uploadConverter = ({ node }: { node: SerializedUploadNode }) => {
   )
 }
 
+/**
+ * Replaces Payload's own table converters.
+ *
+ * Theirs hard-code `border: 1px solid #ccc` and `padding: 8px` as inline
+ * styles on every cell, and an inline style beats any stylesheet — so the
+ * table rules this site already carries could never apply and tables would
+ * arrive in a grey that is nowhere else in the palette.
+ *
+ * These emit plain markup instead, so a table is styled by the typography
+ * plugin and .prose-alacrity exactly like one written in Markdown would be.
+ * --tw-prose-th-borders and --tw-prose-td-borders are already pointed at the
+ * house colours further up globals.css.
+ *
+ * The only addition is the scroll wrapper: a table of any width has to fit a
+ * phone somehow, and swiping it beats wrapping every cell to three lines.
+ */
+const tableConverters = {
+  table: ({ node, nodesToJSX }: JSXConverterArgs<SerializedTableNode>) => {
+    // A first row of nothing but header cells becomes a real <thead>. Payload
+    // puts every row in <tbody>, and the typography plugin pads `thead th` and
+    // `tbody td` but not a `th` inside tbody — so the header text sat half a
+    // character left of the column under it. It is also what a screen reader
+    // needs to announce the column a cell belongs to.
+    const [first, ...rest] = node.children
+    const firstRow = first?.type === 'tablerow' ? (first as SerializedTableRowNode) : undefined
+    const headerCells = (firstRow?.children ?? []) as SerializedTableCellNode[]
+    const firstIsHeader =
+      headerCells.length > 0 && headerCells.every((cell) => cell.headerState > 0)
+
+    return (
+      <div className="w-full overflow-x-auto">
+        <table>
+          {firstIsHeader && <thead>{nodesToJSX({ nodes: [first] })}</thead>}
+          <tbody>{nodesToJSX({ nodes: firstIsHeader ? rest : node.children })}</tbody>
+        </table>
+      </div>
+    )
+  },
+
+  tablerow: ({ node, nodesToJSX }: JSXConverterArgs<SerializedTableRowNode>) => (
+    <tr>{nodesToJSX({ nodes: node.children })}</tr>
+  ),
+
+  tablecell: ({ node, nodesToJSX }: JSXConverterArgs<SerializedTableCellNode>) => {
+    // headerState is a bitmask: 1 is a header row, 2 a header column, 3 both.
+    const Cell = node.headerState > 0 ? 'th' : 'td'
+
+    return (
+      <Cell
+        colSpan={node.colSpan && node.colSpan > 1 ? node.colSpan : undefined}
+        rowSpan={node.rowSpan && node.rowSpan > 1 ? node.rowSpan : undefined}
+        style={node.backgroundColor ? { backgroundColor: node.backgroundColor } : undefined}
+      >
+        {nodesToJSX({ nodes: node.children })}
+      </Cell>
+    )
+  },
+}
+
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
+  ...tableConverters,
   ...LinkJSXConverter({ internalDocToHref }),
   upload: uploadConverter,
 

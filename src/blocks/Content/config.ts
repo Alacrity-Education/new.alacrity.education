@@ -2,6 +2,7 @@ import type { Block, Field } from 'payload'
 
 import {
   BlocksFeature,
+  EXPERIMENTAL_TableFeature,
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
@@ -56,6 +57,11 @@ const columnFields: Field[] = [
           FixedToolbarFeature(),
           InlineToolbarFeature(),
           UploadFeature(),
+          // Experimental upstream, and named so by Payload: the node shape is
+          // not guaranteed to stay put across releases. Tables that editors
+          // write now are plain lexical JSON, so nothing needs migrating to
+          // turn it on, but a future upstream change to the shape would.
+          EXPERIMENTAL_TableFeature(),
           BlocksFeature({ blocks: [Banner, Code, MapBlock] }),
         ]
       },

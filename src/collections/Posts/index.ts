@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import {
   BlocksFeature,
+  EXPERIMENTAL_TableFeature,
   FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
@@ -94,6 +95,9 @@ export const Posts: CollectionConfig<'posts'> = {
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),
                     HorizontalRuleFeature(),
+                    // See the note in blocks/Content/config.ts: upstream calls
+                    // it experimental, and the export name says so.
+                    EXPERIMENTAL_TableFeature(),
                   ]
                 },
               }),
