@@ -49,24 +49,33 @@ significantly affecting them, within the meaning of Article 22 GDPR.
 
 ### 4.1. Access to the Website
 
-4.1.1. When the Website is accessed, our hosting and content delivery provider
-processes technical data relating to each request, namely: the IP address from
+4.1.1. When the Website is accessed, our hosting and content delivery
+providers process technical data relating to each request, namely: the IP address from
 which the request originates, the resource requested, the date and time of the
 request, the HTTP response status, the user agent string (browser and operating
 system version) and, where transmitted by the browser, the referring address.
 
-4.1.2. **Purpose.** Delivery of the Website, maintenance of its availability and
+4.1.2. The pages and static assets of the Website are delivered through the
+network of Cloudflare, Inc. ("Cloudflare"), which also stands in front of the
+server referred to in the following sentence. The content management system
+from which the Website is produced, the media files uploaded to it and the
+submissions referred to in clause 4.5 are held on a virtual machine which we
+operate ourselves on Microsoft Azure infrastructure, in the West Europe region
+(Netherlands).
+
+4.1.3. **Purpose.** Delivery of the Website, maintenance of its availability and
 integrity, prevention and investigation of abuse, and protection against
 attacks directed at the Website.
 
-4.1.3. **Legal basis.** Article 6(1)(f) GDPR, our legitimate interest in
+4.1.4. **Legal basis.** Article 6(1)(f) GDPR, our legitimate interest in
 operating a secure and functioning website.
 
 ### 4.2. Audience measurement
 
 4.2.1. We measure the use of the Website by means of Umami, an analytics
-application [operated by us on our own infrastructure located in [LOCATION] /
-provided by Umami Software, Inc. and hosted within the European Union].
+application which we operate ourselves on the virtual machine referred to in
+clause 4.1.2. The data which it records are held on that machine and are not
+transmitted to the publisher of that application or to any other recipient.
 
 4.2.2. Umami operates without cookies and without any other form of storage on
 or access to the terminal equipment of the visitor. It does not retain IP
@@ -97,7 +106,7 @@ does not apply to this processing.
 4.3.1. Certain pages of the Website display a map. The map is rendered in the
 visitor's browser by means of the MapLibre GL JS library, which is served from
 our own domain. The map imagery is requested by the visitor's browser directly
-from Stadia Maps AB ("**Stadia Maps**") as the map is displayed.
+from Stadia Maps ("**Stadia Maps**") as the map is displayed.
 
 4.3.2. By reason of that direct request, Stadia Maps receives the visitor's IP
 address, the user agent string and the identifiers of the map imagery
@@ -157,8 +166,8 @@ of processing carried out prior to it.
 through the Website, we process the data entered into the fields of that form,
 which comprise, depending on the form concerned, the name, electronic mail
 address, telephone number and message of the sender, together with any further
-data which the relevant form requests. Submissions are stored in our content
-management system, hosted at [HOSTING LOCATION].
+data which the relevant form requests. Submissions are stored in the content
+management system referred to in clause 4.1.2.
 
 4.5.2. **Purpose.** Receipt of, and response to, the communication, and the
 conduct of any subsequent correspondence or pre-contractual exchange arising
@@ -178,6 +187,10 @@ it into account.
 falling within the special categories referred to in Article 9(1) GDPR. Where
 communication of such data is necessary, an appropriate means of transmission
 may be requested from us at the address indicated in clause 1.3.
+
+4.5.6. Where we notify ourselves of a submission, or correspond with the sender
+in reply to it, by electronic mail, that correspondence is carried by Google
+Workspace, a service provided by Google Ireland Limited.
 
 ### 4.6. Display preferences
 
@@ -201,7 +214,7 @@ browser concerned.
 | `payload-theme` (local storage) | First party | Retention of the selected light or dark appearance | Until browsing data are cleared | No (strictly necessary) |
 | `payload-token` (cookie) | First party | Authentication of editorial users to the content management system. Set exclusively upon login by authorised personnel and never in respect of visitors to the Website | [SESSION / 7 days] | No (strictly necessary) |
 | Map imagery requests | Stadia Maps | Rendering of map content | Not applicable (no storage on terminal equipment) | No |
-| Audience measurement | Umami | Measurement of page views without cookies | Not applicable (no storage on terminal equipment) | No |
+| Audience measurement | First party (Umami, self-hosted) | Measurement of page views without cookies | Not applicable (no storage on terminal equipment) | No |
 | YouTube cookies and comparable identifiers | Google | Video playback and the own purposes of Google | As determined by Google | **Yes** (see clause 4.4) |
 
 5.2. No cookies are employed on the Website for advertising, retargeting or
@@ -214,27 +227,32 @@ following categories of recipient:
 
 | Recipient | Function | Categories of data | Place of processing |
 |---|---|---|---|
-| [HOSTING AND CONTENT DELIVERY PROVIDER] | Hosting of the Website and protection against attacks | Data referred to in clause 4.1.1 | [●] |
-| Stadia Maps AB | Supply of map imagery | Data referred to in clause 4.3.2 | [●] |
-| [Umami Software, Inc., where the hosted service is used] | Audience measurement | Data referred to in clause 4.2.2 | European Union |
-| Google Ireland Limited | Hosting of video content | Data referred to in clause 4.4.2 | Global |
-| [ELECTRONIC MAIL SERVICE PROVIDER, where form submissions are forwarded by electronic mail] | Transmission of electronic mail | Content of the communication | [●] |
+| Cloudflare, Inc. | Delivery of the Website and protection against attacks | Data referred to in clause 4.1.1 | Global network of distribution points |
+| [MICROSOFT CONTRACTING ENTITY] (Microsoft Azure) | Supply of the infrastructure on which the virtual machine referred to in clause 4.1.2 runs | Data referred to in clauses 4.1.1, 4.2.2 and 4.5.1, as held on that machine | West Europe region (Netherlands) |
+| Stadia Maps | Supply of map imagery | Data referred to in clause 4.3.2 | [●] |
+| Google Ireland Limited | Hosting of video content (YouTube) | Data referred to in clause 4.4.2 | Global |
+| Google Ireland Limited | Transmission of electronic mail (Google Workspace) | Content of the communication | Global |
 
-6.2. The recipients listed in clause 6.1, with the exception of Google, act as
-processors on our behalf pursuant to data processing agreements concluded in
-accordance with Article 28 GDPR, and process personal data solely on our
-documented instructions.
+6.2. The recipients listed in clause 6.1, with the exception of Google in its
+capacity as the provider of YouTube, act as processors on our behalf pursuant
+to data processing agreements concluded in accordance with Article 28 GDPR, and
+process personal data solely on our documented instructions.
 
-6.3. Beyond the recipients listed above, personal data are disclosed only
+6.3. The audience measurement described in Section 4.2 involves no recipient:
+the application is operated by us and the data which it records do not leave
+the virtual machine referred to in clause 4.1.2.
+
+6.4. Beyond the recipients listed above, personal data are disclosed only
 where disclosure is required by law or by a decision of a competent authority or
 court, or where it is necessary for the establishment, exercise or defence of
 legal claims.
 
 ## 7. Transfers to third countries
 
-7.1. Certain recipients referred to in Section 6 carry out processing operations
-outside the European Economic Area, principally in the United States of
-America.
+7.1. The virtual machine referred to in clause 4.1.2 is located within the
+European Economic Area. Certain recipients referred to in Section 6
+nevertheless carry out processing operations outside it, principally in the
+United States of America.
 
 7.2. Where such a transfer occurs, it is effected on the basis of an adequacy
 decision of the European Commission, including, where the recipient is
