@@ -49,7 +49,7 @@ jobs:
       # Next has no way to exclude app routes via config, so anything that
       # cannot be prerendered is deleted from the checkout before building:
       #   (payload)            - admin UI + REST/GraphQL handlers
-      #   (frontend)/next      - preview, exit-preview and seed handlers
+      #   (frontend)/next      - preview and exit-preview handlers
       #   (frontend)/(sitemaps)- dynamic getServerSideSitemap handlers
       #
       # The data client is swapped the same way, by copying a file rather than
