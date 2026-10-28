@@ -2,24 +2,34 @@ import { getCachedGlobal } from '@/utilities/getGlobals'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { LuFacebook, LuGithub, LuInstagram, LuLinkedin, LuX, LuYoutube } from "react-icons/lu";
+import {
+  TbBrandFacebook,
+  TbBrandGithub,
+  TbBrandInstagram,
+  TbBrandLinkedin,
+  TbBrandTiktok,
+  TbBrandX,
+  TbBrandYoutube,
+} from 'react-icons/tb'
 
 import type { Footer } from '@/payload-types'
 import { Logo } from '@/components/Logo/Logo'
 import { CMSLink } from '@/components/Link'
-import { FaLinkedinIn, FaTiktok } from 'react-icons/fa6';
 
+// Every mark from Tabler's outline brand set. Lucide has no TikTok, which is how
+// a Font Awesome TikTok and LinkedIn ended up beside Lucide's outlines: solid
+// glyphs next to 2px strokes. Tabler draws all of them, TikTok included, on the
+// same grid and stroke, so the row reads as one set.
 const SocialIcon = ({ platform }: { platform: string }) => {
   const cls = 'h-full w-full text-primary opacity-80'
   switch (platform) {
-    case 'instagram': return <LuInstagram className={cls} />
-    case 'linkedin':  return <FaLinkedinIn className={cls} />
-    case 'facebook':  return <LuFacebook className={cls} />
-    case 'youtube':   return <LuYoutube className={cls} />
-    // No TikTok in lucide, so it comes from fa6 like LinkedIn's mark.
-    case 'tiktok':    return <FaTiktok className={cls} />
-    case 'twitter':   return <LuX className={cls} />
-    case 'github':    return <LuGithub className={cls} />
+    case 'instagram': return <TbBrandInstagram className={cls} />
+    case 'linkedin':  return <TbBrandLinkedin className={cls} />
+    case 'facebook':  return <TbBrandFacebook className={cls} />
+    case 'youtube':   return <TbBrandYoutube className={cls} />
+    case 'tiktok':    return <TbBrandTiktok className={cls} />
+    case 'twitter':   return <TbBrandX className={cls} />
+    case 'github':    return <TbBrandGithub className={cls} />
     default:          return null
   }
 }
