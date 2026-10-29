@@ -861,3 +861,137 @@
 .prose-alacrity p:has(> br:only-child) {
   display: none;
 }
+
+/* ------------------------------------------------------------------
+   View transitions.
+
+   Two motions, both driven by React's <ViewTransition> through Next's
+   experimental.viewTransition (next.config.js):
+
+   - Every page's content lifts in: the old page fades out fast, the new one
+     fades in a beat later while rising 12px. Old leaves quickly so it does
+     not compete; new arrives more gently so it registers. (PageTransition.)
+   - A clicked card opens into the next page's hero — a container
+     transform: the card's box grows into the hero's box while the one
+     crossfades into the other. (CardMorph + the .vt-hero wrapper.)
+
+   Everything else holds still: the root snapshot swaps instantly instead of
+   cross-fading, and the header is pinned above the moving content.
+   ------------------------------------------------------------------ */
+
+:root {
+  --vt-exit: 140ms;
+  --vt-enter: 300ms;
+  --vt-enter-delay: 90ms;
+  --vt-morph: 460ms;
+  --vt-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-lift-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* Only named things animate. Without this the browser cross-fades the whole
+   page as well, so the footer and backdrop would ghost under the content. */
+::view-transition-old(root) {
+  display: none;
+}
+::view-transition-new(root) {
+  animation: none;
+}
+
+/* Pinned: no animation of its own, and painted above the content groups,
+   which would otherwise draw over it as they lift in. `display: none` on the
+   old snapshot stops both headers showing for a frame. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Page content (the classes PageTransition gives its <ViewTransition>). */
+::view-transition-old(.page-exit) {
+  animation: var(--vt-exit) ease-in both vt-fade-out;
+}
+::view-transition-new(.page-enter) {
+  animation: var(--vt-enter) var(--vt-ease) var(--vt-enter-delay) both vt-lift-in;
+}
+
+/* The hero's name is held in --vt-hero-name and applied only while a
+   transition is running. A permanent view-transition-name would make the
+   wrapper a stacking context and could change how the hero layers. */
+:active-view-transition .vt-hero {
+  view-transition-name: var(--vt-hero-name);
+}
+.vt-hero,
+[data-vt-card] {
+  view-transition-class: hero;
+}
+
+/* A card and a hero paired by name: the box travels card -> hero. Both
+   snapshots fill that box and are cropped rather than stretched, since a
+   4:5 card and a wide hero do not share an aspect ratio. */
+::view-transition-group(.hero) {
+  animation-duration: var(--vt-morph);
+  animation-timing-function: var(--vt-ease);
+}
+::view-transition-old(.hero),
+::view-transition-new(.hero) {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Fade-through rather than the browser's crossfade. A 4:5 card stretched to a
+   wide hero blows its own text up several times over; crossfading for the
+   whole morph left that oversized copy ghosting across the hero until the
+   last frames. The card's contents are gone within the first third of the
+   movement and the hero's arrive after, so only the box carries the motion.
+   The plus-lighter blend the default crossfade uses is dropped with it. */
+::view-transition-old(.hero) {
+  mix-blend-mode: normal;
+  animation: 150ms ease-out both vt-fade-out;
+}
+::view-transition-new(.hero) {
+  mix-blend-mode: normal;
+  animation: 300ms var(--vt-ease) 120ms both vt-fade-in;
+}
+
+/* A hero with no card to pair with — an ordinary navigation — is not a
+   morph: it leaves and arrives with the rest of its page. */
+::view-transition-old(.hero):only-child {
+  animation: var(--vt-exit) ease-in both vt-fade-out;
+}
+::view-transition-new(.hero):only-child {
+  animation: var(--vt-enter) var(--vt-ease) var(--vt-enter-delay) both vt-lift-in;
+}
+
+/* Reduced motion: no movement and no fades — the page simply changes, which
+   is what navigating does without any of this. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

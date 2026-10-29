@@ -2,9 +2,11 @@ import Link from 'next/link'
 import React from 'react'
 
 import { Button } from '@/components/ui/button'
+import { PageTransition } from '@/components/PageTransition'
 
 export default function NotFound() {
   return (
+    <PageTransition>
     <div className="container py-28">
       <div className="prose max-w-none">
         <h1 style={{ marginBottom: 0 }}>404</h1>
@@ -14,5 +16,6 @@ export default function NotFound() {
         <Link href="/">Go home</Link>
       </Button>
     </div>
+    </PageTransition>
   )
 }

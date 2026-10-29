@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation'
 import { titleFor } from '@/utilities/siteMetadata'
 import { data } from '@/data'
 import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
+import { PageTransition } from '@/components/PageTransition'
 
 
 type Args = {
@@ -33,6 +34,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   })
 
   return (
+    <PageTransition key={pageNumber}>
     <div className="pt-24 pb-24">
       <PageClient />
       <div className="container mb-16">
@@ -58,6 +60,7 @@ export default async function Page({ params: paramsPromise }: Args) {
         )}
       </div>
     </div>
+    </PageTransition>
   )
 }
 

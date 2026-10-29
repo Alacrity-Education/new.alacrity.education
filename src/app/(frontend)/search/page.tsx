@@ -6,9 +6,11 @@ import { Search } from '@/search/Component'
 import PageClient from './page.client'
 import { SearchResults } from './SearchResults'
 import { titleFor } from '@/utilities/siteMetadata'
+import { PageTransition } from '@/components/PageTransition'
 
 export default function Page() {
   return (
+    <PageTransition>
     <div className="pt-24 pb-24">
       <PageClient />
       <div className="container mb-16">
@@ -26,6 +28,7 @@ export default function Page() {
         <SearchResults />
       </Suspense>
     </div>
+    </PageTransition>
   )
 }
 

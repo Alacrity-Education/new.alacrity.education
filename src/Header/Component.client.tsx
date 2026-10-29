@@ -12,8 +12,11 @@ interface HeaderClientProps {
 }
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
+  // Named so a page transition leaves the header in place: it stays above the
+  // content lifting in beneath it rather than being part of that content. See
+  // ::view-transition-group(site-header) in globals.css.
   return (
-    <nav className="fixed top-0 z-50 flex flex-col">
+    <nav className="fixed top-0 z-50 flex flex-col" style={{ viewTransitionName: 'site-header' }}>
       {/*<HighlightBanner highlightBanner={data.highlightBanner} />*/}
       <div className="navbar z-10 absolute top-0 inset-x-0 flex flex-row h-max items-center py-2 px-4 lg:px-8 w-screen ">
 

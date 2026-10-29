@@ -7,6 +7,7 @@ import React from 'react'
 import PageClient from './page.client'
 import { titleFor } from '@/utilities/siteMetadata'
 import { data } from '@/data'
+import { PageTransition } from '@/components/PageTransition'
 
 
 export default async function Page() {
@@ -24,6 +25,7 @@ export default async function Page() {
   })
 
   return (
+    <PageTransition>
     <div className="pt-24 pb-24">
       <PageClient />
       <div className="container mb-16">
@@ -49,6 +51,7 @@ export default async function Page() {
         )}
       </div>
     </div>
+    </PageTransition>
   )
 }
 

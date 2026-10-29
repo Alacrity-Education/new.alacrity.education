@@ -14,6 +14,7 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { data } from '@/data'
 import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
 import { isDraftEnabled } from '@/utilities/draft'
+import { PageTransition } from '@/components/PageTransition'
 
 const NO_POSTS_PLACEHOLDER = 'no-posts'
 
@@ -54,6 +55,7 @@ export default async function Post({ params: paramsPromise }: Args) {
   if (!post) return <PayloadRedirects url={url} />
 
   return (
+    <PageTransition key={decodedSlug}>
     <article className="pt-16 pb-16">
       <PageClient />
 
@@ -76,6 +78,7 @@ export default async function Post({ params: paramsPromise }: Args) {
         </div>
       </div>
     </article>
+    </PageTransition>
   )
 }
 
