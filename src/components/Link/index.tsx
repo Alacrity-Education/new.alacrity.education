@@ -32,10 +32,18 @@ export const resolveLinkHref = ({
   type,
   reference,
   url,
-}: Pick<CMSLinkType, 'type' | 'reference' | 'url'>): string | null | undefined =>
-  type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-    ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${reference.value.slug}`
-    : url
+}: Pick<CMSLinkType, 'type' | 'reference' | 'url'>): string | null | undefined => {
+  if (!(type === 'reference' && typeof reference?.value === 'object' && reference.value.slug)) {
+    return url
+  }
+
+  // The home page lives at `/`. The static export doesn't generate /home at
+  // all ([slug]/page.tsx leaves it out of generateStaticParams), so a link
+  // built as /home was a 404 on the Pages deployment.
+  if (reference.relationTo === 'pages' && reference.value.slug === 'home') return '/'
+
+  return `${reference.relationTo !== 'pages' ? `/${reference.relationTo}` : ''}/${reference.value.slug}`
+}
 
 export const CMSLink: React.FC<CMSLinkType> = (props) => {
   const {
