@@ -171,16 +171,9 @@ export const CardScroller: React.FC<{
         click.stopPropagation()
       }
       el.addEventListener('click', swallow, { capture: true, once: true })
-      // Said in the DOM as well, for listeners on the document — the page
-      // loader's runs before this element's own and would otherwise take the
-      // click as a navigation. See utilities/pageLinkTarget.
-      el.dataset.swallowClick = ''
       // If no click arrives — the pointer left the row, say — the listener has
       // to go, or it eats the next real one.
-      window.setTimeout(() => {
-        el.removeEventListener('click', swallow, true)
-        delete el.dataset.swallowClick
-      }, 0)
+      window.setTimeout(() => el.removeEventListener('click', swallow, true), 0)
 
       const target = nearestSnapLeft(el)
       el.style.scrollSnapType = ''
