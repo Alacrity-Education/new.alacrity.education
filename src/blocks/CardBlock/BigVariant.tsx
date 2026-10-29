@@ -95,7 +95,7 @@ const CardTint: React.FC = () => (
  * Image bled across the whole card, with the copy floating over it.
  */
 const FullCard: React.FC<{ card: BigCard }> = ({ card }) => (
-  <article data-vt-card className={CARD_SHELL}>
+  <article className={CARD_SHELL}>
     {card.image && (
       <Media
         className="absolute inset-0 h-full w-full"
@@ -109,7 +109,7 @@ const FullCard: React.FC<{ card: BigCard }> = ({ card }) => (
 )
 
 const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
-  <article data-vt-card className={CARD_SHELL}>
+  <article className={CARD_SHELL}>
     <div className={cn('relative z-20 flex shrink-0 flex-col', 'px-6 pt-6 lg:px-8 lg:pt-8')}>
       {hasRichTextContent(card.title) && (
         <RichText

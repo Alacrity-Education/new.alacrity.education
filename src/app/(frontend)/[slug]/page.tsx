@@ -7,7 +7,6 @@ import React, { cache } from 'react'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { PageTransition } from '@/components/PageTransition'
-import { heroTransitionName } from '@/components/PageTransition/names'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
@@ -66,8 +65,6 @@ export default async function Page({ params: paramsPromise }: Args) {
       ? getMediaUrl(bgMedia.url, bgMedia.updatedAt)
       : null
 
-  const hasHero = Boolean(hero?.type && hero.type !== 'none')
-
   return (
     // Keyed by slug: one page to another is a page leaving and a page arriving.
     <PageTransition key={decodedSlug}>
@@ -80,18 +77,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 
       {bgUrl && <PageBackground url={bgUrl} opacity={background?.opacity ?? 10} />}
 
-      {/* The name a clicked card takes on to open into this hero. Held in a
-          custom property and only applied while a transition runs (see
-          .vt-hero in globals.css), so outside one the wrapper is an ordinary
-          div — no stacking context to change how the hero layers. */}
-      {hasHero && (
-        <div
-          className="vt-hero"
-          style={{ '--vt-hero-name': heroTransitionName(decodedSlug) } as React.CSSProperties}
-        >
-          <RenderHero hero={hero} />
-        </div>
-      )}
+      <RenderHero hero={hero} />
       <RenderBlocks blocks={layout} />
     </article>
     </PageTransition>

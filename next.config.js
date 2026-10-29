@@ -73,9 +73,8 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     // Hooks route navigations into React's <ViewTransition>, which is how pages
-    // lift in and a clicked card opens into the next page's hero. See
-    // src/components/PageTransition and the view-transition rules in
-    // globals.css. Without browser support navigation simply isn't animated.
+    // lift in. See src/components/PageTransition and the view-transition rules
+    // in globals.css. Without browser support navigation simply isn't animated.
     viewTransition: true,
   },
   // Next cannot serve redirects from an export; Cloudflare Pages does it with

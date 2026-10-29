@@ -30,7 +30,7 @@ const CARD_TINT = 'bg-linear-to-b from-primary/85 via-primary/79 to-primary/72'
  * colour — one treatment, so a row of them reads as a set.
  */
 const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
-  <article data-vt-card className="relative flex aspect-4/5 w-full flex-col overflow-hidden rounded-box bg-primary shadow-lg">
+  <article className="relative flex aspect-4/5 w-full flex-col overflow-hidden rounded-box bg-primary shadow-lg">
     {card.image && (
       <Media
         className="absolute inset-0 h-full w-full"
