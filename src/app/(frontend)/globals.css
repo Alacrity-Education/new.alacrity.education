@@ -647,6 +647,15 @@
   }
 }
 
+/* .prose-big-card — headings in a big card sit straight on the copy below
+   them. Only the bottom margin goes: the big card keeps .prose-alacrity's
+   heading sizes, and its title and description are separate rich text
+   blocks, already spaced by the description's own top margin. Unlayered
+   and doubled-class for the same reason as .prose-card above. */
+.prose-alacrity.prose-big-card :is(h1, h2, h3, h4) {
+  margin-bottom: 0;
+}
+
 /* The description sat at primary-content/70 as plain markup. Only the body
    colour moves — a link inside it still reads at full strength. */
 .prose-alacrity.prose-card-muted {
