@@ -69,7 +69,7 @@ const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
       <RichText
         data={card.description}
         enableGutter={false}
-        className="prose-on-primary prose-md prose-big-card mx-0 mt-2"
+        className="prose-on-primary prose-md prose-big-card mx-0 mt-1"
       />
     )}
 
@@ -122,7 +122,7 @@ const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
         <RichText
           data={card.description}
           enableGutter={false}
-          className="prose-on-primary prose-md prose-big-card mx-0 mt-2"
+          className="prose-on-primary prose-md prose-big-card mx-0 mt-1"
         />
       )}
       {card.link && (

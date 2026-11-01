@@ -647,13 +647,18 @@
   }
 }
 
-/* .prose-big-card — headings in a big card sit straight on the copy below
-   them. Only the bottom margin goes: the big card keeps .prose-alacrity's
-   heading sizes, and its title and description are separate rich text
-   blocks, already spaced by the description's own top margin. Unlayered
-   and doubled-class for the same reason as .prose-card above. */
-.prose-alacrity.prose-big-card :is(h1, h2, h3, h4) {
-  margin-bottom: 0;
+/* .prose-big-card — a big card's copy spaced exactly like a regular card's
+   (.prose-card above): no block margins on headings or paragraphs, only the
+   gap between consecutive paragraphs, and the card's own padding owns the
+   edges. What it does not take from .prose-card is the size — a big card
+   keeps .prose-alacrity's type scale. Unlayered and doubled-class for the
+   same reason as .prose-card. */
+.prose-alacrity.prose-big-card :is(h1, h2, h3, h4, p) {
+  margin-block: 0;
+}
+
+.prose-alacrity.prose-big-card p + p {
+  margin-top: 0.5rem;
 }
 
 /* The description sat at primary-content/70 as plain markup. Only the body
