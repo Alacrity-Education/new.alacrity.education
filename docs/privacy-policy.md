@@ -1,22 +1,18 @@
 # Privacy Policy
 
-**Effective date: [DATE]**
+**Effective date: 27 October 2026**
 
 ## 1. Controller identity and contact details
 
 1.1. This website, available at alacrity.education and its subdomains (the
-"**Website**"), is operated by [FULL LEGAL ENTITY NAME], a company incorporated
-under the laws of Romania, having its registered office at [REGISTERED
+"**Website**"), is operated by [FULL LEGAL ENTITY NAME], a non-profit association established under the laws of Romania pursuant to Government Ordinance no. 26/2000 on associations and foundations, having its registered office at [REGISTERED
 ADDRESS], registered with the Trade Registry under no. [J.../.../...], sole
-registration code (CUI) [CUI] ("**we**", "**us**", "**our**").
+registration code (CUI) [CUI].
 
-1.2. We act as the controller of the personal data described in this Privacy
-Policy within the meaning of Article 4(7) of Regulation (EU) 2016/679 (the
-"**GDPR**").
+1.2. We act as the controller of the personal data provided by users described in this Privacy Policy within the meaning of Article 4(7) of Regulation (EU) 2016/679 (the "**GDPR**") and within the limits mentioned below.
 
 1.3. Requests concerning this Privacy Policy or the exercise of the rights set
-out in Section 9 may be addressed to us at [PRIVACY CONTACT EMAIL], or in
-writing at the registered office indicated above.
+out in Section 9 may be addressed to us at [PRIVACY CONTACT EMAIL], and will be handled as set out in Section 9.
 
 1.4. [We have appointed a Data Protection Officer, who may be contacted at [DPO
 EMAIL]. / We have determined that we are not required to appoint a Data
@@ -32,7 +28,7 @@ the rights available to data subjects.
 2.2. This Privacy Policy does not apply to websites, platforms or services
 operated by third parties to which the Website may link, including our social
 media profiles. Processing carried out by the operators of those destinations
-is governed by their own privacy notices.
+is governed by their own privacy notices and we recommend users to check them beforehand.
 
 ## 3. Principles
 
@@ -63,19 +59,19 @@ submissions referred to in clause 4.5 are held on a virtual machine which we
 operate ourselves on Microsoft Azure infrastructure, in the West Europe region
 (Netherlands).
 
-4.1.3. **Purpose.** Delivery of the Website, maintenance of its availability and
+4.1.3. **Purpose.** The collected data serves exclusively for the delivery of the Website, maintenance of its availability and
 integrity, prevention and investigation of abuse, and protection against
 attacks directed at the Website.
 
 4.1.4. **Legal basis.** Article 6(1)(f) GDPR, our legitimate interest in
-operating a secure and functioning website.
+operating a secure and functioning website, providing an efficient and enjoyable experience for our users.
 
 ### 4.2. Audience measurement
 
 4.2.1. We measure the use of the Website by means of Umami, an analytics
 application which we operate ourselves on the virtual machine referred to in
 clause 4.1.2. The data which it records are held on that machine and are not
-transmitted to the publisher of that application or to any other recipient.
+transmitted to the publisher of that application or to any other recipient. We are the sole users of the collected data, access to it being limited to determined members of Alacrity with responsibilities regarding this matter.
 
 4.2.2. Umami operates without cookies and without any other form of storage on
 or access to the terminal equipment of the visitor. It does not retain IP
@@ -89,9 +85,9 @@ of the request, derived from the IP address, which is not itself retained.
 Umami generates a one-way hash from the IP address, the user agent and a secret
 value which is rotated every twenty-four hours. By reason of such rotation, the
 resulting identifier cannot be attributed to a data subject and ceases to
-correspond to the same visitor after that period.
+correspond to the same visitor after that period, aspect which guarantees the privacy of users.
 
-4.2.4. **Purpose.** Measurement of audience and of the use made of individual
+4.2.4. **Purpose.** The collected data offers a measurement of audience and of the use made of individual
 pages, for the purpose of maintaining and improving the content and structure
 of the Website.
 
@@ -103,18 +99,9 @@ does not apply to this processing.
 
 ### 4.3. Map functionality
 
-4.3.1. Certain pages of the Website display a map. The map is rendered in the
-visitor's browser by means of the MapLibre GL JS library, which is served from
-our own domain. The map imagery is requested by the visitor's browser directly
-from Stadia Maps ("**Stadia Maps**") as the map is displayed.
+4.3.1. Certain pages of the Website display a map. The map is rendered in the visitor's browser by means of the MapLibre GL JS library, which is served from our own domain. The map imagery is requested by the visitor's browser directly from the CARTO basemap service, operated by CartoDB Inc., 307 Fifth Avenue, Floor 9, New York, NY 10016, United States of America ("****") as the map is displayed.
 
-4.3.2. By reason of that direct request, Stadia Maps receives the visitor's IP
-address, the user agent string and the identifiers of the map imagery
-requested, which disclose the geographic area displayed. No further data are
-transmitted to Stadia Maps by us, and we receive no data concerning the visitor
-in return. Stadia Maps acts as our processor under a data processing agreement
-concluded pursuant to Article 28 GDPR. Its privacy notice is available at
-https://stadiamaps.com/privacy-policy/.
+4.3.2. By reason of that direct request, CARTO receives the visitor's IP address, the address of the page on which the map is displayed, the user agent string and the identifiers of the map imagery requested, which disclose the geographic area displayed. No further data are transmitted to CARTO by us, and we receive no data concerning the visitor in return. CARTO acts as our processor pursuant to Article 28 GDPR, under its basemap terms and its personal data processing agreement. CARTO truncates the IP address upon receipt, by removing its final segment, and retains the resulting request records in the United States of America for thirty days. Its privacy notice is available at https://carto.com/privacy.
 
 4.3.3. The map is loaded upon the opening of a page containing it, and not upon
 interaction with it.
@@ -124,7 +111,7 @@ in an external mapping service, no data are transmitted to the operator of that
 service unless and until the link is activated by the visitor, at which point
 the visitor leaves the Website and the privacy notice of that operator applies.
 
-4.3.5. **Purpose.** Display of the geographic location of our premises.
+4.3.5. **Purpose.** The accessed data is necessary for displaying the geographic location of our premises.
 
 4.3.6. **Legal basis.** Article 6(1)(f) GDPR, our legitimate interest in
 indicating our location to visitors.
@@ -150,8 +137,7 @@ https://policies.google.com/privacy, and is outside our control.
 4.4.3. For that reason, no YouTube player is loaded, and no data are
 transmitted to Google, unless the visitor first requests playback. Until such
 request, the location of the video displays a static image together with a
-notice to that effect. Activation of the player by the visitor constitutes the
-consent referred to in clause 4.4.4.
+notice to that effect. Activation of the player by the visitor constitutes the consent referred to in clause 4.4.4. We do not receive or collect any user data in a direct manner, the provided data is subject to YouTube’s privacy policies and the user has a choice in this matter.
 
 4.4.4. **Legal basis.** Article 6(1)(a) GDPR, the consent of the data subject,
 and Article 5(3) of Directive 2002/58/EC as transposed by Law no. 506/2004 in
@@ -167,7 +153,7 @@ through the Website, we process the data entered into the fields of that form,
 which comprise, depending on the form concerned, the name, electronic mail
 address, telephone number and message of the sender, together with any further
 data which the relevant form requests. Submissions are stored in the content
-management system referred to in clause 4.1.2.
+management system referred to in clause 4.1.2. Certain forms may be provided through Google Forms, in which case this is indicated on the Website. Responses submitted through such forms are not stored in our content management system; they are received and stored by Google Ireland Limited on our behalf, as part of the Google Workspace service referred to in clause 4.5.6.
 
 4.5.2. **Purpose.** Receipt of, and response to, the communication, and the
 conduct of any subsequent correspondence or pre-contractual exchange arising
@@ -212,8 +198,8 @@ browser concerned.
 | Identifier / mechanism | Origin | Purpose | Duration | Consent required |
 |---|---|---|---|---|
 | `payload-theme` (local storage) | First party | Retention of the selected light or dark appearance | Until browsing data are cleared | No (strictly necessary) |
-| `payload-token` (cookie) | First party | Authentication of editorial users to the content management system. Set exclusively upon login by authorised personnel and never in respect of visitors to the Website | [SESSION / 7 days] | No (strictly necessary) |
-| Map imagery requests | Stadia Maps | Rendering of map content | Not applicable (no storage on terminal equipment) | No |
+| `payload-token` (cookie) | First party | Authentication of editorial users to the content management system. Set exclusively upon login by authorised personnel and never in respect of visitors to the Website | Two hours from login | No (strictly necessary) |
+| Map imagery requests | CARTO | Rendering of map content | Not applicable (no storage on terminal equipment) | No |
 | Audience measurement | First party (Umami, self-hosted) | Measurement of page views without cookies | Not applicable (no storage on terminal equipment) | No |
 | YouTube cookies and comparable identifiers | Google | Video playback and the own purposes of Google | As determined by Google | **Yes** (see clause 4.4) |
 
@@ -228,10 +214,11 @@ following categories of recipient:
 | Recipient | Function | Categories of data | Place of processing |
 |---|---|---|---|
 | Cloudflare, Inc. | Delivery of the Website and protection against attacks | Data referred to in clause 4.1.1 | Global network of distribution points |
-| [MICROSOFT CONTRACTING ENTITY] (Microsoft Azure) | Supply of the infrastructure on which the virtual machine referred to in clause 4.1.2 runs | Data referred to in clauses 4.1.1, 4.2.2 and 4.5.1, as held on that machine | West Europe region (Netherlands) |
-| Stadia Maps | Supply of map imagery | Data referred to in clause 4.3.2 | [●] |
+| Microsoft Ireland Operations Limited (Microsoft Azure) | Supply of the infrastructure on which the virtual machine referred to in clause 4.1.2 runs | Data referred to in clauses 4.1.1, 4.2.2 and 4.5.1, as held on that machine | West Europe region (Netherlands) |
+| CartoDB Inc. (CARTO) | Supply of map imagery | Data referred to in clause 4.3.2 | United States of America |
 | Google Ireland Limited | Hosting of video content (YouTube) | Data referred to in clause 4.4.2 | Global |
 | Google Ireland Limited | Transmission of electronic mail (Google Workspace) | Content of the communication | Global |
+| Google Ireland Limited | Receipt and storage of responses to forms provided through Google Forms (Google Workspace) | Data referred to in clause 4.5.1, where submitted through Google Forms | Global |
 
 6.2. The recipients listed in clause 6.1, with the exception of Google in its
 capacity as the provider of YouTube, act as processors on our behalf pursuant
@@ -273,8 +260,10 @@ addressed as provided in clause 1.3.
 | Processing operation | Retention period |
 |---|---|
 | Access to the Website (clause 4.1) | No record of individual requests is retained on our server. Error logs produced by it are overwritten in rotation once they reach a fixed size. Records held by Cloudflare are retained in accordance with its data processing agreement |
+| Map functionality (clause 4.3) | Request records held by CARTO, with the IP address truncated, are deleted thirty days after the request |
 | Audience measurement (clause 4.2) | Twenty-four months from the date of recording, after which the records are deleted |
 | Forms submitted through the Website (clause 4.5) | Three years from the date of submission, after which the submission is deleted from our content management system |
+| Forms submitted through Google Forms (clause 4.5.1) | Three years from the date of submission, after which the response is deleted from the form concerned |
 
 8.2. Notwithstanding clause 8.1, personal data may be retained for a longer
 period where retention is required in order to comply with a legal obligation to
@@ -292,10 +281,9 @@ processed and, where that is the case, access to those data and to the
 information referred to in Article 15 GDPR;
 
 b) to obtain the rectification of inaccurate personal data and the completion of
-incomplete personal data (Article 16 GDPR);
+incomplete personal data by request (Article 16 GDPR);
 
-c) to obtain the erasure of personal data concerning them where one of the
-grounds in Article 17 GDPR applies;
+c) to obtain the erasure of personal data concerning them as requested, where one of the grounds in Article 17 GDPR applies;
 
 d) to obtain the restriction of processing in the circumstances set out in
 Article 18 GDPR;
@@ -319,16 +307,13 @@ its withdrawal.
 
 9.2. The rights set out in clause 9.1 may be exercised by request addressed as
 provided in clause 1.3. We shall provide information on action taken without
-undue delay and in any event within one month of receipt of the request, which
-period may be extended by two further months where necessary, taking into
+undue delay and in any event within one month of receipt of the request, which period may be extended by two further months where necessary, taking into
 account the complexity and number of requests, in which case the data subject
-shall be informed of the extension and of the reasons for the delay within one
-month of receipt. No fee is charged, save in the circumstances provided for in
+shall be informed of the extension and of the reasons for the delay within one month of receipt of the request. No fee is charged, save in the circumstances provided for in
 Article 12(5) GDPR.
 
 9.3. Where necessary in order to confirm the identity of the requesting person,
-we may request the provision of additional information for that purpose, in
-accordance with Article 12(6) GDPR.
+we may request the provision of additional information for that purpose, in accordance with Article 12(6) GDPR. Such provided information will not be stored and will be used solely for the purpose of legitimation.
 
 9.4. Data subjects have the right to lodge a complaint with a supervisory
 authority, in particular in the Member State of their habitual residence, place
