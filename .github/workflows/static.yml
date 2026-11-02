@@ -17,6 +17,7 @@
 #                                      (default: static, the production one)
 #   vars.NEXT_PUBLIC_PAYLOAD_API_URL - Payload REST API base, incl. /api
 #   vars.NEXT_PUBLIC_SERVER_URL      - public URL of this static site
+#   vars.NEXT_PUBLIC_CARTO_API_KEY   - CARTO basemaps key (public, browser)
 name: Static site
 
 on:
@@ -82,6 +83,7 @@ jobs:
           NEXT_PUBLIC_BUILD_TARGET: static
           NEXT_PUBLIC_PAYLOAD_API_URL: ${{ vars.NEXT_PUBLIC_PAYLOAD_API_URL }}
           NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+          NEXT_PUBLIC_CARTO_API_KEY: ${{ vars.NEXT_PUBLIC_CARTO_API_KEY }}
 
       # A build against an empty or unreachable API would otherwise publish a
       # near-empty site without failing.

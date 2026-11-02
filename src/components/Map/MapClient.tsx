@@ -6,9 +6,14 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import Link from 'next/link'
 import { FaArrowUp, FaLocationDot } from 'react-icons/fa6'
 
-const MAP_STYLE_URL = process.env.NEXT_PUBLIC_STADIA_API_KEY
-  ? `https://tiles.stadiamaps.com/styles/alidade_smooth.json?api_key=${process.env.NEXT_PUBLIC_STADIA_API_KEY}`
-  : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
+// CARTO Positron. The privacy policy (clause 4.3) names CARTO as the map
+// provider, so changing this URL means updating that page too. CARTO's terms
+// require our own key; the style passes it on to every tile, sprite and font
+// request. It is public by design (it ships in the browser bundle).
+const CARTO_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY
+const MAP_STYLE_URL = `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json${
+  CARTO_KEY ? `?key=${encodeURIComponent(CARTO_KEY)}` : ''
+}`
 
 export interface MapClientProps {
   latitude: number
