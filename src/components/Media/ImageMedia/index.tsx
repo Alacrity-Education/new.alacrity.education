@@ -9,7 +9,7 @@ import React from 'react'
 import type { Props as MediaProps } from '../types'
 
 import { cssVariables } from '@/cssVariables'
-import { getDisplayMediaUrl } from '@/utilities/getMediaUrl'
+import { getDisplayMediaUrl, getResponsiveImage } from '@/utilities/getMediaUrl'
 
 const { breakpoints } = cssVariables
 
@@ -62,6 +62,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   let height: number | undefined
   let alt = altFromProps
   let src: StaticImageData | string = srcFromProps || ''
+  let responsive: ReturnType<typeof getResponsiveImage> = null
 
   if (!src && resource && typeof resource === 'object') {
     const { alt: altFromResource, height: fullHeight, width: fullWidth } = resource
@@ -71,6 +72,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     alt = altFromResource || ''
 
     src = getDisplayMediaUrl(resource)
+    responsive = getResponsiveImage(resource)
   }
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
@@ -81,6 +83,33 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     : Object.entries(breakpoints)
         .map(([, value]) => `(max-width: ${value}px) ${value * 2}w`)
         .join(', ')
+
+  // Static site: no optimiser to resize per request, so hand the browser every
+  // generated size and let it choose. `sizes` from the caller says how wide the
+  // slot is; without one the image is assumed to span the viewport.
+  if (responsive) {
+    return (
+      <picture className={cn({ 'relative block h-full w-full': fill }, pictureClassName)}>
+        <img
+          alt={alt || ''}
+          className={cn(imgClassName)}
+          decoding="async"
+          fetchPriority={priority ? 'high' : undefined}
+          height={!fill ? height : undefined}
+          loading={priority ? 'eager' : loading}
+          sizes={sizeFromProps || '100vw'}
+          src={responsive.src}
+          srcSet={responsive.srcSet}
+          style={
+            fill
+              ? { position: 'absolute', inset: 0, width: '100%', height: '100%' }
+              : undefined
+          }
+          width={!fill ? width : undefined}
+        />
+      </picture>
+    )
+  }
 
   return (
     // `fill` makes NextImage absolutely positioned, so the <picture> it sits in

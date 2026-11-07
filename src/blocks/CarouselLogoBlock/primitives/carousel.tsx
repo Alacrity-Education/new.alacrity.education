@@ -17,6 +17,7 @@ export const CarouselCard = ({ media, link }: { media: MediaType | number; link:
         pictureClassName="h-full w-full object-contain"
         className="h-full w-full object-contain"
         resource={media}
+        size="160px"
       />
     </div>
   </Link>

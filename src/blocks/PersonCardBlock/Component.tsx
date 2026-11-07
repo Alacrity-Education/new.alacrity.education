@@ -1,6 +1,6 @@
 import React from 'react'
 import { data } from '@/data'
-import { getDisplayMediaUrl } from '@/utilities/getMediaUrl'
+import { getDisplayMediaUrl, getResponsiveImage } from '@/utilities/getMediaUrl'
 
 import type { PersonCardBlock as PersonCardBlockProps, Member } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -16,6 +16,10 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
     member.image && typeof member.image === 'object' && member.image.url
       ? getDisplayMediaUrl(member.image)
       : '/Falcon.svg'
+
+  const responsive =
+    member.image && typeof member.image === 'object' ? getResponsiveImage(member.image) : null
+  const imageSizes = '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw'
 
   const imageAlt =
     member.image && typeof member.image === 'object' && member.image.alt
@@ -33,13 +37,26 @@ const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
 
       {/* Square image at the top with effects */}
       <div className="relative aspect-square w-full">
-        <Image
-          src={imageUrl}
-          alt={imageAlt}
-          fill
-          className="object-cover object-top"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
+        {responsive ? (
+          // Static site: the browser picks a generated size for the card width.
+          <img
+            src={responsive.src}
+            srcSet={responsive.srcSet}
+            sizes={imageSizes}
+            alt={imageAlt}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+        ) : (
+          <Image
+            src={imageUrl}
+            alt={imageAlt}
+            fill
+            className="object-cover object-top"
+            sizes={imageSizes}
+          />
+        )}
 
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-primary via-primary/30 to-transparent pb-4 md:pb-8 lg:pb-4">
           <div className="h-3/5" />

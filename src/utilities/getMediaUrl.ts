@@ -88,3 +88,35 @@ export const getDisplayMediaUrl = (
   }
   return getMediaUrl(url, resource.updatedAt)
 }
+
+/** Width-only sizes, smallest first: the ones that keep the image's shape. */
+const RESPONSIVE_SIZES = ['thumbnail', 'small', 'medium', 'large', 'xlarge'] as const
+
+/**
+ * `src` and `srcSet` for an uploaded image on the static site, which has no
+ * image optimiser: the browser picks the smallest generated size that covers
+ * the slot, given a `sizes` hint, instead of every visitor downloading 1920px.
+ * Returns null in the server build (Next's optimiser does this there) and for
+ * uploads without generated sizes.
+ */
+export const getResponsiveImage = (
+  resource: Pick<Media, 'url' | 'sizes' | 'updatedAt' | 'width'>,
+): { src: string; srcSet: string } | null => {
+  if (!IS_STATIC_EXPORT) return null
+
+  const candidates = RESPONSIVE_SIZES.flatMap((key) => {
+    const size = resource.sizes?.[key]
+    return size?.url && size.width ? [{ url: size.url, width: size.width }] : []
+  })
+  if (candidates.length === 0) return null
+
+  // A size equal to an earlier one's width adds nothing (Payload skips
+  // enlarging, so small uploads can repeat their own width).
+  const seen = new Set<number>()
+  const unique = candidates.filter((c) => !seen.has(c.width) && seen.add(c.width))
+
+  return {
+    src: getMediaUrl(unique[unique.length - 1]!.url, resource.updatedAt),
+    srcSet: unique.map((c) => `${getMediaUrl(c.url, resource.updatedAt)} ${c.width}w`).join(', '),
+  }
+}

@@ -76,6 +76,7 @@ const CellBackground: React.FC<{ media: CellMedia; overlay?: string | null }> = 
       className="absolute inset-0 w-full h-full brightness-90"
       imgClassName="w-full h-full object-cover"
       resource={media}
+      size="(max-width: 1024px) 100vw, 50vw"
     />
     <div className={cn('absolute inset-0', cellOverlay[overlay ?? 'dark'] ?? cellOverlay.dark)} />
   </>

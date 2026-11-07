@@ -101,6 +101,7 @@ const FullCard: React.FC<{ card: BigCard }> = ({ card }) => (
         className="absolute inset-0 h-full w-full"
         imgClassName="h-full w-full object-cover"
         resource={card.image}
+        size="(max-width: 1024px) 90vw, 50vw"
       />
     )}
     <CardTint />
@@ -142,6 +143,7 @@ const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
           className="h-full w-full"
           imgClassName="h-full w-full object-cover"
           resource={card.image}
+          size="(max-width: 1024px) 90vw, 50vw"
         />
       </div>
     )}

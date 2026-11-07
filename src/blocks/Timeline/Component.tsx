@@ -158,6 +158,7 @@ const TimelineEntry: React.FC<{ entry: Entry; index: number }> = ({ entry, index
                   className="h-full w-full"
                   imgClassName="h-full w-full object-cover"
                   resource={entry.image}
+                  size="45vw"
                 />
               </div>
             </div>

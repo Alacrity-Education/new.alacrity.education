@@ -36,6 +36,7 @@ const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
         className="absolute inset-0 h-full w-full"
         imgClassName="h-full w-full object-cover"
         resource={card.image}
+        size="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 30vw"
       />
     )}
 

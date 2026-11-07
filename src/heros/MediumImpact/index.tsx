@@ -35,6 +35,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = ({ links, media, mediaFi
             <div className="w-full mb-8 sm:mb-10 group">
               <Media
                 resource={media}
+                size="(max-width: 1024px) 100vw, 1024px"
                 pictureClassName="w-full"
                 imgClassName={cn(
                   'w-full rounded-2xl aspect-video',

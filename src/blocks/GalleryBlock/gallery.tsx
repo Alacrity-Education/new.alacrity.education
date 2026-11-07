@@ -11,7 +11,7 @@ import 'yet-another-react-lightbox/plugins/counter.css'
 import type { GalleryBlock, Media as MediaType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { SectionTitle } from '@/components/SectionTitle'
-import { getDisplayMediaUrl } from '@/utilities/getMediaUrl'
+import { getDisplayMediaUrl, getMediaUrl } from '@/utilities/getMediaUrl'
 import { richTextToPlainText } from '@/utilities/richText'
 
 interface GalleryContentProps {
@@ -40,6 +40,13 @@ export default function GalleryContent({ title, images }: GalleryContentProps) {
     () =>
       resolved.map((image) => ({
         src: getDisplayMediaUrl(image),
+        // The lightbox picks the size that fits the screen from these.
+        srcSet: (['small', 'medium', 'large', 'xlarge'] as const).flatMap((key) => {
+          const size = image.sizes?.[key]
+          return size?.url && size.width && size.height
+            ? [{ src: getMediaUrl(size.url, image.updatedAt), width: size.width, height: size.height }]
+            : []
+        }),
         alt: image.alt ?? '',
         title: image.alt ?? undefined,
         description: richTextToPlainText(image.caption) || undefined,

@@ -379,6 +379,7 @@ export const ImageStack: React.FC<ImageStackProps> = ({ images, className }) => 
             className="w-full h-full"
             imgClassName="w-full h-full object-cover"
             resource={item.image}
+            size="(max-width: 1024px) 90vw, 50vw"
             priority={i < 2} // preload first two; rest lazy-load fine
           />
         </div>
