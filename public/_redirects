@@ -1,0 +1,17 @@
+# Cloudflare Pages redirects (static export only). 301 = permanent, so search
+# engines move the old pages' ranking to the new URLs.
+#
+# Addresses of the previous alacrity.education site, which had /en and /ro
+# versions of each page. The new site is English only.
+/en               /                301
+/ro               /                301
+/en/about         /about-us        301
+/ro/about         /about-us        301
+/en/contact       /contact         301
+/ro/contact       /contact         301
+/en/airbox        /airbox-v2       301
+/ro/airbox        /airbox-v2       301
+# Anything else under the old language prefixes goes to the home page rather
+# than a 404.
+/en/*             /                301
+/ro/*             /                301

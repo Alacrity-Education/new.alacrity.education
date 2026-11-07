@@ -1,4 +1,6 @@
-import { getClientSideURL } from '@/utilities/getURL'
+import { getClientSideURL, getSiteURL } from '@/utilities/getURL'
+import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
+import type { Media } from '@/payload-types'
 
 /**
  * Origin that serves uploaded media.
@@ -41,7 +43,48 @@ export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | 
     return cacheTag ? `${url}?${cacheTag}` : url
   }
 
-  // Otherwise prepend the origin that serves media
-  const baseUrl = getMediaOrigin()
+  // The static export ships its own copy of every file it references
+  // (scripts/bundle-static-assets.mjs copies them into out/ at the same path),
+  // so the site serves its images itself and never fetches them from the CMS.
+  const baseUrl = IS_STATIC_EXPORT ? '' : getMediaOrigin()
   return cacheTag ? `${baseUrl}${url}?${cacheTag}` : `${baseUrl}${url}`
+}
+
+/**
+ * Absolute media URL on the public website, for places that need a full
+ * address and are read by other hosts — social images in particular. The
+ * static export carries the file at the same path (see above).
+ */
+export const getPublicMediaUrl = (url: string | null | undefined): string => {
+  if (!url) return ''
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  return `${getSiteURL()}${url.startsWith('/') ? '' : '/'}${url}`
+}
+
+/** Largest first; see the Media collection's imageSizes. */
+const DISPLAY_SIZES = ['xlarge', 'large', 'medium', 'small'] as const
+
+/**
+ * URL to display an uploaded image at.
+ *
+ * The server build hands the original to Next's image optimiser, which
+ * resizes it per request. The static export has no optimiser, so the original
+ * itself would be served — camera files of 20–30 MB, which is too heavy for a
+ * page and over Cloudflare Pages' 25 MiB file limit. There the largest size
+ * Payload generated on upload (1920px wide at most) is used instead.
+ */
+export const getDisplayMediaUrl = (
+  resource: Pick<Media, 'url' | 'sizes' | 'updatedAt'>,
+): string => {
+  let url = resource.url
+  if (IS_STATIC_EXPORT) {
+    for (const key of DISPLAY_SIZES) {
+      const sized = resource.sizes?.[key]?.url
+      if (sized) {
+        url = sized
+        break
+      }
+    }
+  }
+  return getMediaUrl(url, resource.updatedAt)
 }

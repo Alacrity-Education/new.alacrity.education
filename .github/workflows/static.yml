@@ -16,7 +16,10 @@
 #   vars.CLOUDFLARE_PAGES_BRANCH     - optional; the Pages branch to deploy to
 #                                      (default: static, the production one)
 #   vars.NEXT_PUBLIC_PAYLOAD_API_URL - Payload REST API base, incl. /api
-#   vars.NEXT_PUBLIC_SERVER_URL      - public URL of this static site
+#   vars.NEXT_PUBLIC_SERVER_URL      - URL of the CMS deployment
+#   vars.NEXT_PUBLIC_SITE_URL        - public URL of the website, used for
+#                                      canonical links, sitemap and social
+#                                      images (default https://alacrity.education)
 #   vars.NEXT_PUBLIC_CARTO_API_KEY   - CARTO basemaps key (public, browser)
 name: Static site
 
@@ -83,7 +86,16 @@ jobs:
           NEXT_PUBLIC_BUILD_TARGET: static
           NEXT_PUBLIC_PAYLOAD_API_URL: ${{ vars.NEXT_PUBLIC_PAYLOAD_API_URL }}
           NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://alacrity.education' }}
           NEXT_PUBLIC_CARTO_API_KEY: ${{ vars.NEXT_PUBLIC_CARTO_API_KEY }}
+
+      # Copies every image the pages reference into out/ (so the site never
+      # loads media from the CMS), and writes sitemap.xml and robots.txt.
+      - name: Bundle media, sitemap and robots.txt
+        run: node scripts/bundle-static-assets.mjs out
+        env:
+          NEXT_PUBLIC_PAYLOAD_API_URL: ${{ vars.NEXT_PUBLIC_PAYLOAD_API_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://alacrity.education' }}
 
       # A build against an empty or unreachable API would otherwise publish a
       # near-empty site without failing.

@@ -10,6 +10,8 @@
 # Repository configuration:
 #   vars.NEXT_PUBLIC_SERVER_URL        - public URL of this deployment
 #   vars.NEXT_PUBLIC_CARTO_API_KEY     - CARTO basemaps key (public, browser)
+#   vars.NEXT_PUBLIC_SITE_URL          - public website (canonical links, CORS);
+#                                        default https://alacrity.education
 #   secrets.COOLIFY_WEBHOOK            - optional; deploy webhook from the
 #                                        application's Configuration > Webhooks
 #   secrets.COOLIFY_TOKEN              - optional; API token with deploy rights
@@ -76,6 +78,7 @@ jobs:
           build-args: |
             NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}
             NEXT_PUBLIC_CARTO_API_KEY=${{ vars.NEXT_PUBLIC_CARTO_API_KEY }}
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://alacrity.education' }}
 
       # The standalone runtime image has no Payload CLI, so migrations ship as a
       # separate image built from the `migrator` stage. docker-compose.yml runs

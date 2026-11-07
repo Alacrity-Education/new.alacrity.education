@@ -1,6 +1,6 @@
 import React from 'react'
 import { data } from '@/data'
-import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getDisplayMediaUrl } from '@/utilities/getMediaUrl'
 
 import type { PersonCardBlock as PersonCardBlockProps, Member } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -14,7 +14,7 @@ import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
 const PersonCard: React.FC<{ member: Member }> = ({ member }) => {
   const imageUrl =
     member.image && typeof member.image === 'object' && member.image.url
-      ? getMediaUrl(member.image.url, member.image.updatedAt)
+      ? getDisplayMediaUrl(member.image)
       : '/Falcon.svg'
 
   const imageAlt =

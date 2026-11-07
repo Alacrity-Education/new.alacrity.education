@@ -11,7 +11,7 @@ import 'yet-another-react-lightbox/plugins/counter.css'
 import type { GalleryBlock, Media as MediaType } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { SectionTitle } from '@/components/SectionTitle'
-import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getDisplayMediaUrl } from '@/utilities/getMediaUrl'
 import { richTextToPlainText } from '@/utilities/richText'
 
 interface GalleryContentProps {
@@ -39,7 +39,7 @@ export default function GalleryContent({ title, images }: GalleryContentProps) {
   const slides = useMemo(
     () =>
       resolved.map((image) => ({
-        src: getMediaUrl(image.url, image.updatedAt),
+        src: getDisplayMediaUrl(image),
         alt: image.alt ?? '',
         title: image.alt ?? undefined,
         description: richTextToPlainText(image.caption) || undefined,

@@ -29,7 +29,7 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { MapBlockInline } from '@/blocks/Map/MapBlockInline'
 import { cn } from '@/utilities/ui'
 import { customConverters } from '@/components/RichText/CustomConverter'
-import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getDisplayMediaUrl, getMediaUrl } from '@/utilities/getMediaUrl'
 import type { Media } from '@/payload-types'
 import { textColorClasses, type TextColor } from '@/fields/textColors'
 
@@ -91,7 +91,7 @@ const uploadConverter = ({ node }: { node: SerializedUploadNode }) => {
       key="image"
       alt={alt}
       height={doc.height ?? undefined}
-      src={url}
+      src={getDisplayMediaUrl(doc)}
       width={doc.width ?? undefined}
     />
   )

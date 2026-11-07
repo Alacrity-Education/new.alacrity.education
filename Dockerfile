@@ -39,6 +39,7 @@ ARG DATABASE_URL=postgresql://build:build@127.0.0.1:5432/build
 ARG PAYLOAD_SECRET=build-time-placeholder
 ARG NEXT_PUBLIC_SERVER_URL
 ARG NEXT_PUBLIC_CARTO_API_KEY
+ARG NEXT_PUBLIC_SITE_URL
 # NEXT_PUBLIC_* is inlined into the client bundle here, at build time. Setting
 # these on the container later only reaches server-side code — the browser gets
 # whatever was frozen in now. That also means they end up readable in the
@@ -48,6 +49,7 @@ ENV DATABASE_URL=$DATABASE_URL \
     PAYLOAD_SECRET=$PAYLOAD_SECRET \
     NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL \
     NEXT_PUBLIC_CARTO_API_KEY=$NEXT_PUBLIC_CARTO_API_KEY \
+    NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
     NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=production
 
