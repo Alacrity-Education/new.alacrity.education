@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { cn } from '@/utilities/ui'
 
@@ -36,6 +36,34 @@ export const CardScroller: React.FC<{
 }> = ({ children, className, gapClassName = 'gap-6 md:gap-8' }) => {
   const ref = useRef<HTMLDivElement>(null)
   const drag = useRef<{ startX: number; startLeft: number; moved: boolean } | null>(null)
+  // Whether the row overflows at all (no arrows when every card fits), and
+  // which way it can still move.
+  const [overflows, setOverflows] = useState(false)
+  const [canPrev, setCanPrev] = useState(false)
+  const [canNext, setCanNext] = useState(false)
+
+  const updateArrows = useCallback(() => {
+    const el = ref.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    setOverflows(max > 2)
+    setCanPrev(el.scrollLeft > 2)
+    setCanNext(el.scrollLeft < max - 2)
+  }, [])
+
+  /**
+   * One card along, in either direction. Measured from the first two cards so
+   * the step includes the gap and follows whatever width the breakpoint gives
+   * them; snapping then settles the row exactly on a card.
+   */
+  const step = (dir: -1 | 1) => {
+    const el = ref.current
+    const track = el?.firstElementChild
+    if (!el || !track) return
+    const [a, b] = Array.from(track.children) as HTMLElement[]
+    const width = a && b ? b.offsetLeft - a.offsetLeft : (a?.offsetWidth ?? el.clientWidth)
+    el.scrollBy({ left: dir * width, behavior: 'smooth' })
+  }
 
   /**
    * On a phone a card is far narrower than the screen, so starting it at the
@@ -72,13 +100,21 @@ export const CardScroller: React.FC<{
     if (!el) return
     // The card's own width moves at breakpoints, so watching the element
     // catches what a resize listener alone would miss.
-    const observer = new ResizeObserver(centreOnMobile)
+    const observer = new ResizeObserver(() => {
+      centreOnMobile()
+      updateArrows()
+    })
     observer.observe(el)
     if (el.firstElementChild?.firstElementChild) {
       observer.observe(el.firstElementChild.firstElementChild)
     }
-    return () => observer.disconnect()
-  }, [centreOnMobile, children])
+    el.addEventListener('scroll', updateArrows, { passive: true })
+    updateArrows()
+    return () => {
+      observer.disconnect()
+      el.removeEventListener('scroll', updateArrows)
+    }
+  }, [centreOnMobile, updateArrows, children])
 
   /**
    * Where a snapped card's start edge sits, in viewport coordinates.
@@ -187,33 +223,88 @@ export const CardScroller: React.FC<{
     drag.current = null
   }
 
+  const arrow =
+    'pointer-events-auto absolute top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-slate-900 shadow-lg transition-opacity hover:bg-white disabled:opacity-40 disabled:pointer-events-none'
+
   return (
-    <div
-      ref={ref}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={endDrag}
-      onPointerCancel={endDrag}
-      // Images and links are draggable by default, so without this a real
-      // mouse starts a native drag — the browser lifts a ghost of the card and
-      // the row never moves. dragstart bubbles, so this one handler covers
-      // every image and link inside.
-      onDragStart={(e) => e.preventDefault()}
-      className={cn(
-        'bleed-row',
-        'overflow-x-auto overflow-y-visible',
-        'snap-x snap-mandatory scroll-smooth',
-        // vertical breathing room for card hover lift and shadows
-        'py-6 -my-6',
-        // Only a mouse gets the grab cursor; it means nothing on a touchscreen.
-        'cursor-default [@media(hover:hover)_and_(pointer:fine)]:cursor-grab',
-        '[@media(hover:hover)_and_(pointer:fine)]:active:cursor-grabbing',
-        className,
-      )}
-    >
-      {/* select-none while dragging would need state; this is simpler and the
+    <div className="relative">
+      {/* Same arrows as the logo carousel, so every horizontal row can be moved
+        both ways: by scrolling/swiping/dragging and by clicking. They sit over
+        the row's edges, inside the container gutter, and dim (not vanish) at
+        the ends so the row always reads as scrollable. Absent when it fits. */}
+      <div
+        className={cn(
+          'pointer-events-none absolute inset-0 z-10 container',
+          !overflows && 'hidden',
+        )}
+      >
+        <button
+          type="button"
+          onClick={() => step(-1)}
+          disabled={!canPrev}
+          aria-label="Previous"
+          className={cn(arrow, 'left-0')}
+        >
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={() => step(1)}
+          disabled={!canNext}
+          aria-label="Next"
+          className={cn(arrow, 'right-0')}
+        >
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+      <div
+        ref={ref}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        // Images and links are draggable by default, so without this a real
+        // mouse starts a native drag — the browser lifts a ghost of the card and
+        // the row never moves. dragstart bubbles, so this one handler covers
+        // every image and link inside.
+        onDragStart={(e) => e.preventDefault()}
+        className={cn(
+          'bleed-row',
+          'overflow-x-auto overflow-y-visible',
+          'snap-x snap-mandatory scroll-smooth',
+          // vertical breathing room for card hover lift and shadows
+          'py-6 -my-6',
+          // Only a mouse gets the grab cursor; it means nothing on a touchscreen.
+          'cursor-default [@media(hover:hover)_and_(pointer:fine)]:cursor-grab',
+          '[@media(hover:hover)_and_(pointer:fine)]:active:cursor-grabbing',
+          className,
+        )}
+      >
+        {/* select-none while dragging would need state; this is simpler and the
           cards carry no text worth selecting by dragging across. */}
-      <div className={cn('flex w-max flex-row select-none', gapClassName)}>{children}</div>
+        <div className={cn('flex w-max flex-row select-none', gapClassName)}>{children}</div>
+      </div>
     </div>
   )
 }

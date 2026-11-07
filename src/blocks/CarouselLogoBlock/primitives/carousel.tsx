@@ -34,14 +34,14 @@ const DRAG_THRESHOLD = 5
 const FLICK_MOMENTUM = 8
 
 const Carousel: React.FC<CarouselProps> = ({ children }) => {
-  const trackRef  = useRef<HTMLDivElement>(null)
-  const copy1Ref  = useRef<HTMLDivElement>(null)
-  const wrapRef   = useRef<HTMLDivElement>(null)
-  const posRef    = useRef(0)    // current animated position
-  const targetRef = useRef(0)    // destination the spring chases
+  const trackRef = useRef<HTMLDivElement>(null)
+  const copy1Ref = useRef<HTMLDivElement>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const posRef = useRef(0) // current animated position
+  const targetRef = useRef(0) // destination the spring chases
   const pausedRef = useRef(false)
-  const rafRef    = useRef<number | null>(null)
-  const dragRef   = useRef<{
+  const rafRef = useRef<number | null>(null)
+  const dragRef = useRef<{
     pointerId: number
     startX: number
     startPos: number
@@ -62,7 +62,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
   // Because all three copies are identical, the wrap is undetectable.
   const normalise = (raw: number, W: number): number => {
     if (W < 1) return raw
-    const x = ((raw + 2 * W) % W + W) % W
+    const x = (((raw + 2 * W) % W) + W) % W
     return x === 0 ? -W : x - 2 * W
   }
 
@@ -77,7 +77,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
   useLayoutEffect(() => {
     const W = getW()
     if (!W) return
-    posRef.current    = -W
+    posRef.current = -W
     targetRef.current = -W
     applyTransform(-W)
     setNumCopies(computeCopies(W))
@@ -93,7 +93,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
         // Use half speed on narrow screens so fast motion doesn't feel jarring.
         if (!pausedRef.current) {
           const speed = window.innerWidth < 640 ? AUTO_SPEED * 0.5 : AUTO_SPEED
-          posRef.current    -= speed
+          posRef.current -= speed
           targetRef.current -= speed
         }
 
@@ -117,35 +117,58 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
     }
 
     rafRef.current = requestAnimationFrame(tick)
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
   }, [items.length])
 
   // Pause auto-scroll on hover and touch
   useEffect(() => {
     const el = wrapRef.current
     if (!el) return
-    const pause  = () => { pausedRef.current = true  }
-    const resume = () => { if (!dragRef.current) pausedRef.current = false }
-    el.addEventListener('mouseenter',  pause)
-    el.addEventListener('mouseleave',  resume)
-    el.addEventListener('touchstart',  pause,  { passive: true })
-    el.addEventListener('touchend',    resume)
+    const pause = () => {
+      pausedRef.current = true
+    }
+    const resume = () => {
+      if (!dragRef.current) pausedRef.current = false
+    }
+    el.addEventListener('mouseenter', pause)
+    el.addEventListener('mouseleave', resume)
+    el.addEventListener('touchstart', pause, { passive: true })
+    el.addEventListener('touchend', resume)
     el.addEventListener('touchcancel', resume)
     return () => {
-      el.removeEventListener('mouseenter',  pause)
-      el.removeEventListener('mouseleave',  resume)
-      el.removeEventListener('touchstart',  pause)
-      el.removeEventListener('touchend',    resume)
+      el.removeEventListener('mouseenter', pause)
+      el.removeEventListener('mouseleave', resume)
+      el.removeEventListener('touchstart', pause)
+      el.removeEventListener('touchend', resume)
       el.removeEventListener('touchcancel', resume)
     }
   }, [])
 
+  // Horizontal trackpad swipes and shift+wheel move the track too. Vertical
+  // wheel movement is left to the page.
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0
+      if (!dx) return
+      e.preventDefault()
+      posRef.current -= dx
+      targetRef.current = posRef.current
+      applyTransform(posRef.current)
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [])
+
   /**
-   * Drag to scroll, mouse only.
-   *
-   * Touch is left alone: the track is a transform, not a scroller, so taking
-   * touch over would mean reimplementing momentum and fighting the browser for
-   * the gesture. A finger gets the auto-scroll and the arrows.
+   * Drag to scroll — mouse, finger and pen alike, so the logos move the same
+   * way the card rows do (they scroll natively; this one is a transform, so the
+   * gesture is implemented here). `touch-action: pan-y` on the wrapper keeps a
+   * vertical swipe scrolling the page: the browser takes those and cancels the
+   * pointer, and only horizontal movement reaches these handlers.
    *
    * The drag writes pos and target together so the track tracks the cursor
    * exactly — letting the spring chase the cursor instead adds a lag that
@@ -154,7 +177,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
    * loop's spring eases the rest.
    */
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== 'mouse' || e.button !== 0) return
+    if (e.pointerType === 'mouse' && e.button !== 0) return
     dragRef.current = {
       pointerId: e.pointerId,
       startX: e.clientX,
@@ -181,7 +204,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
     drag.velocity = e.clientX - drag.lastX
     drag.lastX = e.clientX
 
-    posRef.current    = drag.startPos + dx
+    posRef.current = drag.startPos + dx
     targetRef.current = posRef.current
     applyTransform(posRef.current)
   }
@@ -208,8 +231,9 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
     }
 
     dragRef.current = null
-    // Hovering still counts as paused; mouseleave resumes.
-    pausedRef.current = e.currentTarget.matches(':hover')
+    // A mouse still hovering keeps it paused (mouseleave resumes). Touch has no
+    // real hover — :hover sticks after a tap — so a finger always resumes.
+    pausedRef.current = e.pointerType === 'mouse' && e.currentTarget.matches(':hover')
   }
 
   // Re-anchor when copy width changes (e.g. responsive card size breakpoint hit)
@@ -256,10 +280,9 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
       // Each logo is an image inside a link, both draggable by default: a real
       // mouse would lift a ghost of the logo instead of moving the track.
       onDragStart={(e) => e.preventDefault()}
-      className="w-full py-16 select-none cursor-default [@media(hover:hover)_and_(pointer:fine)]:cursor-grab [@media(hover:hover)_and_(pointer:fine)]:active:cursor-grabbing"
+      className="w-full py-16 select-none touch-pan-y cursor-default [@media(hover:hover)_and_(pointer:fine)]:cursor-grab [@media(hover:hover)_and_(pointer:fine)]:active:cursor-grabbing"
     >
       <div className="relative">
-
         {/* Arrows live outside the overflow-hidden clip so they are never cropped */}
         <div className="absolute inset-0 container pointer-events-none z-10">
           <button
@@ -267,8 +290,18 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
             className="pointer-events-auto absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all"
             aria-label="Scroll left"
           >
-            <svg className="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="w-6 h-6 text-slate-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
           <button
@@ -276,7 +309,12 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
             className="pointer-events-auto absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all"
             aria-label="Scroll right"
           >
-            <svg className="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-6 h-6 text-slate-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -288,13 +326,16 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
               pr-6 on each copy adds a trailing gap equal to the inter-item gap,
               so the loop point is visually seamless. */}
           <div ref={trackRef} className="flex will-change-transform">
-            <div ref={copy1Ref} className="flex gap-6 shrink-0 pr-6">{items}</div>
+            <div ref={copy1Ref} className="flex gap-6 shrink-0 pr-6">
+              {items}
+            </div>
             {Array.from({ length: numCopies - 1 }, (_, i) => (
-              <div key={i} className="flex gap-6 shrink-0 pr-6">{items}</div>
+              <div key={i} className="flex gap-6 shrink-0 pr-6">
+                {items}
+              </div>
             ))}
           </div>
         </div>
-
       </div>
     </div>
   )
