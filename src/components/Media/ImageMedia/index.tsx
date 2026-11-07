@@ -118,9 +118,12 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         className={cn(imgClassName)}
         fill={fill}
         height={!fill ? height : undefined}
-        priority={priority}
+        // Next 16 deprecated `priority`. For the image that decides LCP (the
+        // hero), what matters is that the request starts early and at high
+        // priority — `fetchPriority` on the <img>, which is in the HTML anyway.
+        fetchPriority={priority ? 'high' : undefined}
         quality={100}
-        loading={loading}
+        loading={priority ? 'eager' : loading}
         sizes={sizes}
         src={src}
         width={!fill ? width : undefined}

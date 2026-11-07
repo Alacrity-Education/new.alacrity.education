@@ -76,6 +76,11 @@ const nextConfig = {
     // lift in. See src/components/PageTransition and the view-transition rules
     // in globals.css. Without browser support navigation simply isn't animated.
     viewTransition: true,
+    // Static site only: the stylesheets go into each page's <head> instead of
+    // six render-blocking requests. Tailwind keeps the CSS small, and on a
+    // first visit over a slow connection those requests were most of the time
+    // before first paint. The CMS host keeps cacheable stylesheets.
+    ...(isStatic ? { inlineCss: true } : {}),
   },
   // Next cannot serve redirects from an export; Cloudflare Pages does it with
   // its own _redirects file instead.
