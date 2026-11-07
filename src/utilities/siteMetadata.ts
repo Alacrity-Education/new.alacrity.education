@@ -24,5 +24,11 @@ export const SITE_OG_IMAGE = '/logo.png'
  * Titles a page. A document gets `Its Title | Alacrity Education` rather than
  * the full tagline appended, which would run past what search results show.
  */
-export const titleFor = (docTitle?: string | null): string =>
-  docTitle ? `${docTitle} | ${SITE_NAME}` : SITE_TITLE
+export const titleFor = (docTitle?: string | null): string => {
+  if (!docTitle) return SITE_TITLE
+  // SEO titles written in the CMS often carry the brand already
+  // ("About Us | Alacrity Education"); appending it again doubles it.
+  return docTitle.toLowerCase().includes(SITE_NAME.toLowerCase())
+    ? docTitle
+    : `${docTitle} | ${SITE_NAME}`
+}

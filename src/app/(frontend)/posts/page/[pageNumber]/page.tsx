@@ -68,6 +68,8 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { pageNumber } = await paramsPromise
   return {
     title: titleFor(`Posts${pageNumber ? ` — page ${pageNumber}` : ''}`),
+    // Page 1 is the same list as /posts.
+    alternates: { canonical: pageNumber === '1' ? '/posts' : `/posts/page/${pageNumber}` },
   }
 }
 

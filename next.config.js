@@ -80,6 +80,15 @@ const nextConfig = {
   // Next cannot serve redirects from an export; Cloudflare Pages does it with
   // its own _redirects file instead.
   ...(isStatic ? {} : { redirects }),
+  // The server build is the CMS host. Keep all of it — pages, API, media —
+  // out of search results; the public site is the static export.
+  ...(isStatic
+    ? {}
+    : {
+        headers: async () => [
+          { source: '/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
+        ],
+      }),
   typescript: {
     ignoreBuildErrors: true,
   },

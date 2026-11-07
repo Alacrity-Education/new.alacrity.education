@@ -3,29 +3,34 @@ import type { Metadata } from 'next'
 import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
-import { getServerSideURL } from './getURL'
-import { getMediaUrl } from './getMediaUrl'
+import { getSiteURL } from './getURL'
+import { getPublicMediaUrl } from './getMediaUrl'
 import { SITE_OG_IMAGE, titleFor } from './siteMetadata'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
-  const serverUrl = getServerSideURL()
-
-  let url = serverUrl + SITE_OG_IMAGE
-
   if (image && typeof image === 'object' && 'url' in image) {
-    const ogUrl = image.sizes?.og?.url
-
-    // Uploaded media is served by the Payload instance, not this site.
-    url = getMediaUrl(ogUrl || image.url)
+    return getPublicMediaUrl(image.sizes?.og?.url || image.url)
   }
 
-  return url
+  return getSiteURL() + SITE_OG_IMAGE
+}
+
+/**
+ * Site-relative path of a page or post: `/` for the home page, `/about-us`,
+ * `/posts/hello`. Relative on purpose — the root layout's metadataBase (the
+ * public site URL) turns it into the absolute canonical and og:url.
+ */
+export const pathFor = (collection: 'pages' | 'posts', slug?: string | null): string => {
+  if (collection === 'posts') return `/posts/${slug ?? ''}`
+  return !slug || slug === 'home' ? '/' : `/${slug}`
 }
 
 export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Post> | null
+  /** Where this document lives on the site; see pathFor. */
+  path: string
 }): Promise<Metadata> => {
-  const { doc } = args
+  const { doc, path } = args
 
   const ogImage = getImageURL(doc?.meta?.image)
 
@@ -39,6 +44,7 @@ export const generateMeta = async (args: {
     .filter(Boolean)
 
   return {
+    alternates: { canonical: path },
     description: doc?.meta?.description,
     keywords: keywords?.length ? keywords : undefined,
     openGraph: mergeOpenGraph({
@@ -51,7 +57,7 @@ export const generateMeta = async (args: {
           ]
         : undefined,
       title,
-      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
+      url: path,
     }),
     title,
   }

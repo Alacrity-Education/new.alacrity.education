@@ -7,12 +7,12 @@ import React, { cache } from 'react'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { PageTransition } from '@/components/PageTransition'
-import { generateMeta } from '@/utilities/generateMeta'
+import { generateMeta, pathFor } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PageBackground } from '@/components/PageBackground'
 import { data } from '@/data'
-import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getDisplayMediaUrl } from '@/utilities/getMediaUrl'
 import { IS_STATIC_EXPORT } from '@/utilities/buildTarget'
 import { isDraftEnabled } from '@/utilities/draft'
 
@@ -62,7 +62,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const bgMedia = background?.image
   const bgUrl =
     typeof bgMedia === 'object' && bgMedia !== null
-      ? getMediaUrl(bgMedia.url, bgMedia.updatedAt)
+      ? getDisplayMediaUrl(bgMedia)
       : null
 
   return (
@@ -92,7 +92,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
     slug: decodedSlug,
   })
 
-  return generateMeta({ doc: page })
+  return generateMeta({ doc: page, path: pathFor('pages', decodedSlug) })
 }
 
 const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {

@@ -19,7 +19,7 @@ import { isDraftEnabled } from '@/utilities/draft'
 const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend', display: 'swap' })
 const lexendDeca = Lexend_Deca({ subsets: ['latin'], variable: '--font-lexend-deca', display: 'swap' })
 import './globals.css'
-import { getServerSideURL } from '@/utilities/getURL'
+import { getSiteURL } from '@/utilities/getURL'
 import { SITE_TAGLINE, SITE_TITLE } from '@/utilities/siteMetadata'
 
 /**
@@ -75,7 +75,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(getServerSideURL()),
+  // Relative canonicals and og:urls resolve against the public site, not the
+  // host that rendered the page.
+  metadataBase: new URL(getSiteURL()),
+  // Only the static export is the public website. The server build renders the
+  // same pages on the CMS host for previews; indexing them would compete with
+  // the real site, so they say noindex (next.config.js adds the header form for
+  // non-HTML responses such as media files).
+  robots: IS_STATIC_EXPORT ? undefined : { index: false, follow: false },
   openGraph: mergeOpenGraph(),
   title: SITE_TITLE,
   description: `${SITE_TAGLINE}.`,

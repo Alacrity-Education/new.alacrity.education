@@ -4,10 +4,10 @@ import { unstable_cache } from 'next/cache'
 
 const getPagesSitemap = unstable_cache(
   async () => {
-    const SITE_URL =
+    const SITE_URL = (
       process.env.NEXT_PUBLIC_SERVER_URL ||
       process.env.VERCEL_PROJECT_PRODUCTION_URL ||
-      'https://example.com'
+      'https://example.com').replace(/\/+$/, '')
 
     const results = await data.find({
       collection: 'pages',

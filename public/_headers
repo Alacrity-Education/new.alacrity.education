@@ -1,0 +1,8 @@
+# Cloudflare Pages response headers (static export only; see
+# .github/workflows/static.yml). Ignored by the server build.
+
+# The *.pages.dev address serves the same site as alacrity.education. Keep it
+# out of search results so the two never compete; canonical links already
+# point at the real domain, this makes it explicit.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex

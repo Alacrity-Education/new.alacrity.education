@@ -58,5 +58,6 @@ export default async function Page() {
 export function generateMetadata(): Metadata {
   return {
     title: titleFor('Posts'),
+    alternates: { canonical: '/posts' },
   }
 }

@@ -35,5 +35,9 @@ export default function Page() {
 export function generateMetadata(): Metadata {
   return {
     title: titleFor('Search'),
+    alternates: { canonical: '/search' },
+    // Result lists are thin, query-dependent pages; keep them out of the index
+    // but let crawlers follow through to the documents they list.
+    robots: { index: false, follow: true },
   }
 }
