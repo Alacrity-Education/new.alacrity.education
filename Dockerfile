@@ -57,6 +57,13 @@ ENV DATABASE_URL=$DATABASE_URL \
 # image, gated before the app starts (see docker-compose.yml). Running them
 # from a build would migrate the target database on every image build,
 # including builds that then fail, and before the new code is live.
+#
+# Payload's generated files are rebuilt from the config first, so the image never
+# depends on someone having remembered to regenerate and commit them. The import
+# map matters at runtime: an admin component missing from it is silently not
+# rendered (that is how the rebuild webhook's save banner went missing).
+RUN npx payload generate:types && npx payload generate:importmap
+
 RUN npm run build
 
 # ---- runtime ----------------------------------------------------------------
