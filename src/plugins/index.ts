@@ -108,16 +108,21 @@ export const plugins: Plugin[] = [
     // Everything that can change the built output, not just what the routes query
     // directly: a member rendered inside a person-card block, or a swapped image,
     // changes a page without that page being written to.
+    //
+    // Only pages and posts have drafts, so only they can be filtered to
+    // published saves (a draft save changes nothing on the live site). The
+    // rest have no _status at all: filtering them on it matched nothing, so
+    // header, footer, media, member and category saves never fired.
     collections: {
       pages: { filter: publishedOnly },
       posts: { filter: publishedOnly },
-      categories: { filter: publishedOnly },
-      media: { filter: publishedOnly },
-      members: { filter: publishedOnly },
+      categories: true,
+      media: true,
+      members: true,
     },
     globals: {
-      header: { filter: publishedOnly },
-      footer: { filter: publishedOnly },
+      header: true,
+      footer: true,
     },
   }),
 ]
