@@ -101,10 +101,13 @@ export const plugins: Plugin[] = [
     },
   }),
   payloadPluginCollectionsGlobalsWebhook({
+    // Always enabled, even without a URL. Disabling it when the variable was
+    // unset also dropped its admin component from the import map, which is
+    // generated on machines without the variable — so production, which has the
+    // URL, shipped an admin that never called the webhook. Without a URL the
+    // plugin now says so in the edit view on save ("Webhook target is not
+    // configured") instead of doing nothing silently.
     url: process.env.PAYLOAD_WEBHOOK_URL,
-    // Without a URL there is nothing to call, so the plugin stays inert rather than
-    // failing every write.
-    disabled: !process.env.PAYLOAD_WEBHOOK_URL,
     // Everything that can change the built output, not just what the routes query
     // directly: a member rendered inside a person-card block, or a swapped image,
     // changes a page without that page being written to.
