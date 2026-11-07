@@ -30,7 +30,9 @@ const CARD_TINT = 'bg-linear-to-b from-primary/85 via-primary/79 to-primary/72'
  * colour — one treatment, so a row of them reads as a set.
  */
 const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
-  <article className="relative flex aspect-4/5 w-full flex-col overflow-hidden rounded-box bg-primary shadow-lg">
+  // overflow-clip, not hidden: 4:5 is then the minimum and a card whose copy
+  // needs more room grows rather than clipping it (see BigVariant's CARD_SHELL).
+  <article className="relative flex aspect-4/5 w-full flex-col overflow-clip rounded-box bg-primary shadow-lg">
     {card.image && (
       <Media
         className="absolute inset-0 h-full w-full"
@@ -44,7 +46,8 @@ const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
     <div className={cn('pointer-events-none absolute inset-0 z-10', CARD_TINT)} />
 
     {/* Scaled down from the big card's p-8/10/12 — same inset, smaller card. */}
-    <div className="relative z-20 flex min-h-0 flex-1 flex-col p-6 lg:p-8">
+    {/* grow, not flex-1: see BigVariant's copy layer. */}
+    <div className="relative z-20 flex min-h-0 grow flex-col p-6 lg:p-8">
       {/* Both fields are rich text now, the same shape the big cards hold.
           prose-card does the scaling: the title's h2 and the description's
           paragraphs come down to the sizes this card used as plain markup. */}
@@ -64,16 +67,18 @@ const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
       )}
 
       {card.link?.label && (
-        <CMSLink
-          {...card.link}
-          appearance="default"
-          size="sm"
-          // mt-auto, not the big card's mt-8: the aspect is fixed here, so
-          // anything else leaves the button stranded above dead space.
-          // text-sm! overrides the appearance's own text-lg, which btn-sm
-          // otherwise fights.
-          className="mt-auto w-max text-sm!"
-        />
+        <>
+          {/* Bottom edge, but at least 1rem from the copy — see BigVariant. */}
+          <div aria-hidden className="min-h-4 grow" />
+          <CMSLink
+            {...card.link}
+            appearance="default"
+            size="sm"
+            // text-sm! overrides the appearance's own text-lg, which btn-sm
+            // otherwise fights.
+            className="w-max text-sm!"
+          />
+        </>
       )}
     </div>
   </article>

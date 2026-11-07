@@ -43,16 +43,28 @@ const PARTIAL_IMAGE_BASIS = 'basis-3/5'
  */
 const CARD_ASPECT = 'aspect-4/5'
 
-/** Fixed proportions, so the two cards in a row always match. */
+/**
+ * 4:5 as the minimum, not a fixed size: a card grows when its copy needs more
+ * room (a narrow phone, or larger system text) instead of clipping it and
+ * dropping the button onto the text. Cards in a row still match — the row
+ * stretches the others to the tallest.
+ *
+ * That growth comes from `overflow-clip`. An aspect-ratio box may grow to fit
+ * its content only if it is not a scroll container; `overflow: hidden` makes
+ * it one (so the 4:5 height was final), `clip` clips the rounded corners just
+ * the same without doing so.
+ */
 const CARD_SHELL = cn(
-  'relative flex flex-col w-full overflow-hidden rounded-box bg-primary',
+  'relative flex flex-col w-full overflow-clip rounded-box bg-primary',
   CARD_ASPECT,
 )
 
 /** The copy layer for FullCard: stretches to own the whole card. */
 const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
   // z-20 keeps the copy above the tint (z-10) and the image (absolute, z-auto).
-  <div className="relative z-20 flex min-h-0 flex-1 flex-col p-6 lg:p-8">
+  // `grow`, not `flex-1`: a zero flex-basis made this layer count as 0px when
+  // the card sized itself to its content, so CARD_SHELL's min-h-fit never grew.
+  <div className="relative z-20 flex min-h-0 grow flex-col p-6 lg:p-8">
     {/* Sizes come from .prose-alacrity, same as every other rich text field
         in the app. `prose-on-primary` repoints only the colour palette. The
         two fields render as one block of copy — the heading the editor put in
@@ -74,15 +86,18 @@ const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
     )}
 
     {card.link && (
-      <CMSLink
-        {...card.link}
-        appearance="default"
-        // No size: that is the button's regular size. mt-auto rather than the
-        // old mt-8, so it sits on the bottom edge of the copy whatever the
-        // rich text above it runs to — the card's aspect is fixed, so a
-        // fixed gap left it stranded mid-card.
-        className="mt-auto w-max"
-      />
+      <>
+        {/* Pushes the button to the card's bottom edge (what mt-auto did) but
+            never closer than 1.5rem to the copy: when the copy fills a card
+            that has grown to fit it, mt-auto left no gap at all. */}
+        <div aria-hidden className="min-h-6 grow" />
+        <CMSLink
+          {...card.link}
+          appearance="default"
+          // No size: that is the button's regular size.
+          className="w-max"
+        />
+      </>
     )}
   </div>
 )
