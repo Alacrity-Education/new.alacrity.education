@@ -8,6 +8,10 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { PageTransition } from '@/components/PageTransition'
 import { generateMeta, pathFor } from '@/utilities/generateMeta'
+import { JsonLd } from '@/components/JsonLd'
+import { homeStructuredData } from '@/utilities/structuredData'
+import { getCachedGlobal } from '@/utilities/getGlobals'
+import type { Footer } from '@/payload-types'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PageBackground } from '@/components/PageBackground'
@@ -65,6 +69,15 @@ export default async function Page({ params: paramsPromise }: Args) {
       ? getDisplayMediaUrl(bgMedia)
       : null
 
+  // Organization + WebSite structured data belongs on the home page only.
+  const structuredData =
+    decodedSlug === 'home'
+      ? homeStructuredData({
+          description: page.meta?.description,
+          socialLinks: ((await getCachedGlobal('footer', 1)()) as Footer | null)?.socialLinks,
+        })
+      : null
+
   return (
     // Keyed by slug: one page to another is a page leaving and a page arriving.
     <PageTransition key={decodedSlug}>
@@ -74,6 +87,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
+      {structuredData && <JsonLd data={structuredData} />}
 
       {bgUrl && <PageBackground url={bgUrl} opacity={background?.opacity ?? 10} />}
 

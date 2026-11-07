@@ -9,6 +9,8 @@ import type { Post } from '@/payload-types'
 
 import { PostHero } from '@/heros/PostHero'
 import { generateMeta, pathFor } from '@/utilities/generateMeta'
+import { JsonLd } from '@/components/JsonLd'
+import { postStructuredData } from '@/utilities/structuredData'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { data } from '@/data'
@@ -63,6 +65,7 @@ export default async function Post({ params: paramsPromise }: Args) {
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
+      <JsonLd data={postStructuredData(post, pathFor('posts', decodedSlug))} />
 
       <PostHero post={post} />
 
