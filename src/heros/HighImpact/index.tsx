@@ -10,7 +10,6 @@ import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 import { customConverters } from '@/components/RichText/CustomConverter'
 import { cn } from '@/utilities/ui'
-import { Link } from '@payloadcms/ui'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 const Media3D = dynamic(

@@ -11,7 +11,7 @@ import type {
   TextStateFeatureProps,
 } from 'node_modules/@payloadcms/richtext-lexical/dist/features/textState/feature.server'
 
-import { defaultColors } from '@payloadcms/richtext-lexical/client'
+import { lexicalTextColors } from './lexicalTextColors'
 
 const ArrowUnderline = () => (
   <svg
@@ -39,7 +39,7 @@ const stateClasses: Record<string, string> = {
 }
 const colorState = {
   color: {
-    ...defaultColors.text,
+    ...lexicalTextColors,
     primary: {
       label: 'Highlight',
         css: {
