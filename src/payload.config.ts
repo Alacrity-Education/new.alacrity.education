@@ -12,7 +12,7 @@ import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
-import { getServerSideURL } from './utilities/getURL'
+import { getServerSideURL, getSiteURL } from './utilities/getURL'
 import { SITE_NAME, SITE_OG_IMAGE } from './utilities/siteMetadata'
 import { Member } from './collections/Member'
 
@@ -73,7 +73,9 @@ export default buildConfig({
     Users,
     Member,
   ],
-  cors: [getServerSideURL()].filter(Boolean),
+  // The public site is a static export on another host; its forms post
+  // straight to this API, so the browser needs that origin allowed.
+  cors: [...new Set([getServerSideURL(), getSiteURL()])].filter(Boolean),
   globals: [Header, Footer],
   plugins,
   secret: process.env.PAYLOAD_SECRET,

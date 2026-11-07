@@ -1,7 +1,7 @@
 import type { Config } from '@/payload-types'
 
 import { PayloadSDK } from '@payloadcms/sdk'
-import { getClientSideURL } from '@/utilities/getURL'
+import { getPayloadAPIURL } from '@/utilities/getURL'
 
 /**
  * Base URL of the Payload REST API.
@@ -11,7 +11,7 @@ import { getClientSideURL } from '@/utilities/getURL'
  * unset it falls back to this site's own `/api`, which is what the server
  * build serves, so client components can use this module in either build.
  */
-const baseURL = process.env.NEXT_PUBLIC_PAYLOAD_API_URL || `${getClientSideURL()}/api`
+const baseURL = getPayloadAPIURL()
 
 /**
  * Payload over REST.

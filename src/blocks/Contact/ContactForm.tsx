@@ -6,7 +6,7 @@ import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import RichText from '@/components/RichText'
 import { fields } from '@/blocks/Form/fields'
-import { getClientSideURL } from '@/utilities/getURL'
+import { getPayloadAPIURL } from '@/utilities/getURL'
 
 interface ContactFormProps {
   form: FormType
@@ -45,7 +45,7 @@ export function ContactForm({ form: formFromProps }: ContactFormProps) {
         loadingTimerID = setTimeout(() => setIsLoading(true), 1000)
 
         try {
-          const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
+          const req = await fetch(`${getPayloadAPIURL()}/form-submissions`, {
             body: JSON.stringify({ form: formID, submissionData: dataToSend }),
             headers: { 'Content-Type': 'application/json' },
             method: 'POST',

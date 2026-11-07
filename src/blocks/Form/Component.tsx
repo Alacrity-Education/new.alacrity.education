@@ -10,7 +10,7 @@ import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 import { FaPhone, FaEnvelope } from 'react-icons/fa6'
 
 import { fields } from './fields'
-import { getClientSideURL } from '@/utilities/getURL'
+import { getPayloadAPIURL } from '@/utilities/getURL'
 import FormMap from './Map'
 import { hasRichTextContent } from '@/utilities/richText'
 
@@ -78,7 +78,7 @@ export const FormBlock: React.FC<{ id?: string } & FormBlockType> = (props) => {
         }, 1000)
 
         try {
-          const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
+          const req = await fetch(`${getPayloadAPIURL()}/form-submissions`, {
             body: JSON.stringify({
               form: formID,
               submissionData: dataToSend,
