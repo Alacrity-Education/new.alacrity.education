@@ -661,6 +661,12 @@
   margin-top: 0.5rem;
 }
 
+/* Headings are link targets (ids from RichText's headingConverter). Land them
+   below the fixed header rather than underneath it. */
+.prose-alacrity :is(h1, h2, h3, h4)[id] {
+  scroll-margin-top: 7.5rem;
+}
+
 /* On a phone a single long word in a big heading can be wider than the screen
    — "Implementing" in the about-us hero, once Android's larger text setting is
    on — and it was clipped. Hyphenate instead, but only words of 10+ letters

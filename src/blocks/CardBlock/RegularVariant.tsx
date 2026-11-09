@@ -66,7 +66,7 @@ const CardItem: React.FC<{ card: RegularCards[number] }> = ({ card }) => (
         />
       )}
 
-      {card.link?.label && (
+      {card.showLink !== false && card.link?.label && (
         <>
           {/* Bottom edge, but at least 1rem from the copy — see BigVariant. */}
           <div aria-hidden className="min-h-4 grow" />

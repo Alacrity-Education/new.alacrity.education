@@ -85,7 +85,7 @@ const FullCardCopy: React.FC<{ card: BigCard }> = ({ card }) => (
       />
     )}
 
-    {card.link && (
+    {card.showLink !== false && card.link && (
       <>
         {/* Pushes the button to the card's bottom edge (what mt-auto did) but
             never closer than 1.5rem to the copy: when the copy fills a card
@@ -141,7 +141,7 @@ const PartialCard: React.FC<{ card: BigCard }> = ({ card }) => (
           className="prose-on-primary prose-md prose-big-card mx-0 mt-1"
         />
       )}
-      {card.link && (
+      {card.showLink !== false && card.link && (
         <CMSLink
           {...card.link}
           appearance="default"

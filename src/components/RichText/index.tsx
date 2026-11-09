@@ -2,6 +2,7 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import {
   DefaultNodeTypes,
   SerializedBlockNode,
+  SerializedHeadingNode,
   SerializedLinkNode,
   SerializedUploadNode,
   type DefaultTypedEditorState,
@@ -165,9 +166,38 @@ const tableConverters = {
   },
 }
 
+/** Plain text of a node and everything under it. */
+const plainText = (node: { text?: string; children?: unknown[] }): string =>
+  node.text ?? (node.children ?? []).map((c) => plainText(c as typeof node)).join('')
+
+/**
+ * "Digital Fabrication & Mechanical Work" -> "digital-fabrication-mechanical-work".
+ * Accents are folded so Romanian headings give plain ASCII anchors.
+ */
+export const headingAnchor = (text: string): string =>
+  text
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+/**
+ * Headings carry an id made from their text, so a link elsewhere — a card's
+ * button, say — can point at a section with `#digital-fabrication-...`.
+ * Empty headings get none. scroll-margin in globals.css keeps the target clear
+ * of the fixed header.
+ */
+const headingConverter = ({ node, nodesToJSX }: JSXConverterArgs<SerializedHeadingNode>) => {
+  const Tag = node.tag
+  const id = headingAnchor(plainText(node)) || undefined
+  return <Tag id={id}>{nodesToJSX({ nodes: node.children })}</Tag>
+}
+
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...tableConverters,
+  heading: headingConverter,
   ...LinkJSXConverter({ internalDocToHref }),
   upload: uploadConverter,
 

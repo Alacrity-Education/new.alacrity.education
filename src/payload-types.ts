@@ -925,7 +925,11 @@ export interface CardBlock {
          * Big variant only. Full bleeds the image behind the whole card with the text over it; Partial puts it in the lower 3/5 with the text above.
          */
         backgroundType?: ('full' | 'partial') | null;
-        link: {
+        /**
+         * Untick to hide this card’s button. The link below is kept, so ticking it again brings the button back as it was.
+         */
+        showLink?: boolean | null;
+        link?: {
           type?: ('reference' | 'custom') | null;
           newTab?: boolean | null;
           reference?:
@@ -1933,6 +1937,7 @@ export interface CardBlockSelect<T extends boolean = true> {
         description?: T;
         image?: T;
         backgroundType?: T;
+        showLink?: T;
         link?:
           | T
           | {

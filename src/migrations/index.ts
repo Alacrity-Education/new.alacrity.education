@@ -23,6 +23,7 @@ import * as migration_20261002_160000_footer_link_url_nullable from './20261002_
 import * as migration_20261015_234500_card_title_description_rich_text from './20261015_234500_card_title_description_rich_text';
 import * as migration_20261017_140000_footer_tiktok from './20261017_140000_footer_tiktok';
 import * as migration_20261018_120000_card_block_single_array from './20261018_120000_card_block_single_array';
+import * as migration_20261110_120000_card_show_link from './20261110_120000_card_show_link';
 
 export const migrations = [
   {
@@ -149,5 +150,10 @@ export const migrations = [
     up: migration_20261018_120000_card_block_single_array.up,
     down: migration_20261018_120000_card_block_single_array.down,
     name: '20261018_120000_card_block_single_array'
+  },
+  {
+    up: migration_20261110_120000_card_show_link.up,
+    down: migration_20261110_120000_card_show_link.down,
+    name: '20261110_120000_card_show_link'
   },
 ];

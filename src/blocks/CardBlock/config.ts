@@ -138,9 +138,24 @@ export const CardBlock: Block = {
               'Big variant only. Full bleeds the image behind the whole card with the text over it; Partial puts it in the lower 3/5 with the text above.',
           },
         },
+        {
+          name: 'showLink',
+          type: 'checkbox',
+          label: 'Show button',
+          defaultValue: true,
+          admin: {
+            description:
+              'Untick to hide this card’s button. The link below is kept, so ticking it again brings the button back as it was.',
+          },
+        },
         // No appearance choice: these cards are a single treatment now, and the
         // block renders the link itself so it stays legible over the tint.
-        link({ appearances: false }),
+        // Hidden with the button: a hidden field is not validated, so a card
+        // without a button does not need a label and destination either.
+        link({
+          appearances: false,
+          overrides: { admin: { condition: (_: unknown, siblingData: { showLink?: boolean }) => siblingData?.showLink !== false } },
+        }),
       ],
     },
 
