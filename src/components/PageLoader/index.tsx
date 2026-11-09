@@ -62,6 +62,7 @@ export const PageLoader: React.FC = () => {
   const pathname = usePathname()
   const [shown, setShown] = useState(false)
   const pending = useRef<Pending | null>(null)
+  const hideTimer = useRef<number | undefined>(undefined)
   const svg = useRef<SVGSVGElement>(null)
 
   // Arrival: the address has moved on from where the navigation started.
@@ -72,12 +73,28 @@ export const PageLoader: React.FC = () => {
     pending.current = null
     // Arrived before the loader was needed: nothing was ever shown.
     if (p.shownAt === undefined) return
-    const t = window.setTimeout(
+    // Held in a ref, not returned as this effect's cleanup: a cleanup runs on
+    // the next address change too, so going back within MIN_SHOWN_MS of
+    // arriving cancelled the only timer that hides the cover, and it stayed up.
+    window.clearTimeout(hideTimer.current)
+    hideTimer.current = window.setTimeout(
       () => setShown(false),
       Math.max(0, MIN_SHOWN_MS - (performance.now() - p.shownAt)),
     )
-    return () => window.clearTimeout(t)
   }, [pathname])
+
+  // Back and forward never show the loader, and drop any navigation a click
+  // had started, so a stale pending one cannot bring the cover up later.
+  useEffect(() => {
+    const onPop = () => {
+      window.clearTimeout(pending.current?.timer)
+      pending.current = null
+      window.clearTimeout(hideTimer.current)
+      setShown(false)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {

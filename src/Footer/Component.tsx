@@ -53,7 +53,10 @@ export async function Footer() {
 
       <div className="container relative z-10 flex flex-col gap-10 px-6 py-4 text-sm sm:px-10 lg:flex-row lg:gap-16">
         <aside className="flex shrink-0 flex-col items-start gap-4 lg:w-56 ">
-          <Logo />
+          {/* Back to the home page, like the header's logo. */}
+          <Link href="/" aria-label="Alacrity Education home page" className="text-primary">
+            <Logo />
+          </Link>
 
           {socialLinks.length > 0 && (
             <nav className="flex flex-row flex-wrap gap-2 mt-3" aria-label="Social media">

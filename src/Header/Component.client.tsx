@@ -22,7 +22,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
 
         <div className="navbar-start h-max">
-          <Link href="/" className=" h-max text-primary md:text-xl">
+          <Link href="/" aria-label="Alacrity Education home page" className=" h-max text-primary md:text-xl">
             <Logo loading="eager" priority="high"  />
           </Link>
         </div>
